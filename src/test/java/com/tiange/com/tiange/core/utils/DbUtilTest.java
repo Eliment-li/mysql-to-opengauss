@@ -1,9 +1,7 @@
 package com.tiange.com.tiange.core.utils;
 
-import org.apache.commons.dbutils.BasicRowProcessor;
-import org.apache.commons.dbutils.BeanProcessor;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
+import com.tiange.com.tiange.temp.Employee;
+import org.apache.commons.dbutils.*;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.sql.Connection;
@@ -11,10 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 public class DbUtilTest {
 
@@ -51,6 +45,23 @@ public class DbUtilTest {
 
         url += "&serverTimezone=" + timeZone;
 
-        getConnection(url, "root","root123..0");
+        Connection conn = getConnection(url, "root","root123..0");
+
+
+
+        QueryRunner queryRunner = new QueryRunner();
+        ResultSetHandler<List<Employee>> resultHandler = new BeanListHandler<>(Employee.class);
+        try {
+            List<Employee> empList = queryRunner.query(conn, "SELECT * FROM employees", resultHandler);
+            for(Employee emp: empList ) {
+                //Display values
+                System.out.print("ID: " + emp.getId());
+                System.out.print(", Age: " + emp.getAge());
+                System.out.print(", First: " + emp.getFirst());
+                System.out.println(", Last: " + emp.getLast());
+            }
+            DbUtils.close(conn);
+        } catch (Exception e){
+            e.printStackTrace();
     }
 }
