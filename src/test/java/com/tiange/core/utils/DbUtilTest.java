@@ -1,7 +1,7 @@
-package com.tiange.com.tiange.core.utils;
+package com.tiange.core.utils;
 
 import com.tiange.com.tiange.temp.Employee;
-import org.apache.commons.dbutils.*;
+import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.sql.Connection;
@@ -36,6 +36,23 @@ public class DbUtilTest {
         runner.update(connection, sql);
     }
 
+    public static List<?> queryForBeans(Connection connection, String sql, Class clazz) {
+
+        QueryRunner queryRunner = new QueryRunner();
+
+        BeanListHandler<?> beanListHandler = new BeanListHandler(clazz);
+        try {
+            List<?> empList = queryRunner.query(connection, sql, beanListHandler);
+
+            return empList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     public static void main(String[] args) {
 
         String url = "jdbc:mysql://" + "localhost" + ":" + "3333" + "/" + "mysqltest";
@@ -45,23 +62,14 @@ public class DbUtilTest {
 
         url += "&serverTimezone=" + timeZone;
 
-        Connection conn = getConnection(url, "root","root123..0");
+        Connection conn = getConnection(url, "root", "root123..0");
 
+        List<?> empList = queryForBeans(conn, "select * from employees", Employee.class);
 
+        List<Employee> realList = (List<Employee>) empList;
+        for (Employee employee : realList) {
+            System.out.println(employee.getId());
+        }
 
-        QueryRunner queryRunner = new QueryRunner();
-        ResultSetHandler<List<Employee>> resultHandler = new BeanListHandler<>(Employee.class);
-        try {
-            List<Employee> empList = queryRunner.query(conn, "SELECT * FROM employees", resultHandler);
-            for(Employee emp: empList ) {
-                //Display values
-                System.out.print("ID: " + emp.getId());
-                System.out.print(", Age: " + emp.getAge());
-                System.out.print(", First: " + emp.getFirst());
-                System.out.println(", Last: " + emp.getLast());
-            }
-            DbUtils.close(conn);
-        } catch (Exception e){
-            e.printStackTrace();
     }
 }
