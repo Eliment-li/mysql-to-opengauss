@@ -1,16 +1,8 @@
 package com.tiange.core.entity.mysql;
 
-import com.tiange.core.utils.database.MySqlDbUtil;
-import com.tiange.core.utils.others.FileUtils;
-
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Procedure结构定义
@@ -28,7 +20,7 @@ public class Procedure implements Serializable {
 
     private List<Routine> routines = new ArrayList<>();
 
-    public static List<Procedure> configure(Connection connection, Database database) throws SQLException {
+  /*  public static List<Procedure> configure(Connection connection, Database database) throws SQLException {
         List<?> beanListTemp = MySqlDbUtil.queryForBeans(connection, FileUtils.getStringByClasspath("sql/detail/procedure.sql"), Routine.class);
         Map<String, Procedure> procedures = new HashMap<>(0);
 
@@ -48,9 +40,9 @@ public class Procedure implements Serializable {
             procedures.put(routine.getName(), procedure);
         }
         return new ArrayList<>(procedures.values());
-    }
+    }*/
 
-    public String getCreateSql() {
+  /*  public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE PROCEDURE `").append(this.name).append("`");
         sb.append("(");
@@ -69,17 +61,8 @@ public class Procedure implements Serializable {
         sb.append(" ").append(this.source).append(";");
         return sb.toString();
     }
+*/
 
-
-/*    @Override
-    public boolean equals(Object o) {
-
-    }
-
-    @Override
-    public int hashCode(){
-
-    }*/
 
     /*getter & setter */
 

@@ -1,63 +1,36 @@
 package com.tiange.core.entity.mysql;
 
-import cn.codeforfun.migrate.core.diff.Difference;
-import cn.codeforfun.migrate.core.entity.structure.annotations.DbUtilProperty;
-import cn.codeforfun.migrate.core.utils.DbUtil;
-import cn.codeforfun.migrate.core.utils.FileUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * @author wangbin
  */
-@Getter
-@Setter
-public class Trigger implements Serializable, Difference {
+public class Trigger {
     private static final long serialVersionUID = 182067591134835538L;
 
-    @DbUtilProperty("TRIGGER_SCHEMA")
     private String trigger_schema;
-    @DbUtilProperty("TRIGGER_NAME")
     private String trigger_name;
-    @DbUtilProperty("DEFINER")
     private String definer;
-    @DbUtilProperty("ACTION_TIMING")
     private String action_timing;
-    @DbUtilProperty("EVENT_MANIPULATION")
     private String event_manipulation;
-    @DbUtilProperty("EVENT_OBJECT_SCHEMA")
     private String event_object_schema;
-    @DbUtilProperty("EVENT_OBJECT_TABLE")
     private String event_object_table;
-    @DbUtilProperty("ACTION_ORIENTATION")
     private String action_orientation;
-    @DbUtilProperty("ACTION_STATEMENT")
     private String action_statement;
 
     private Database database;
 
-    public static List<Trigger> configure(Connection connection, Database database) throws SQLException {
+    /*public static List<Trigger> configure(Connection connection, Database database) throws SQLException {
         return DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/trigger.sql"),
                 Trigger.class, database.getInfo().getName())
                 .stream().peek(s -> s.setDatabase(database)).collect(Collectors.toList());
-    }
+    }*/
 
-    @JsonIgnore
-    @Override
-    public String getCreateSql() {
+ /*   public String getCreateSql() {
         return "CREATE TRIGGER " + this.name + " " +
                 this.actionTiming + " " + this.eventManipulation + " ON `" + this.objectTable + "` " +
                 "FOR EACH " + this.actionOrientation + " " + this.source + ";";
     }
-
+*/
 
 
     /*getter & setter*/

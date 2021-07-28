@@ -7,7 +7,6 @@ import com.tiange.core.utils.others.ObjectUtils;
 import com.tiange.core.utils.others.StringUtils;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -37,7 +36,21 @@ public class Table implements Serializable {
 
     private Database database;
 
-    public static final String SQL = FileUtils.getStringByClasspath("sql/diff/create-table.sql");
+    private String TABLE_SQL = FileUtils.getStringByClasspath("mysql/table.sql");
+    private String COlUMN_SQL = FileUtils.getStringByClasspath("mysql/column.sql");
+    private String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
+
+    public Table() {
+        System.out.println("create table");
+    }
+
+    public Table(Database database) {
+
+        this.database = database;
+        TABLE_SQL = TABLE_SQL.replace("?", "'" + this.database.getName() + "'");
+        COlUMN_SQL = COlUMN_SQL.replace("?", "'" + this.database.getName() + "'");
+        KEY_SQL = KEY_SQL.replace("?", "'" + this.database.getName() + "'");
+    }
 
     /**
      * 是否含有外键
@@ -59,7 +72,7 @@ public class Table implements Serializable {
 
 
     public String toCreateSql() {
-        String sql = SQL;
+        String sql = TABLE_SQL;
         sql = sql.replace("${tableName}", this.table_name);
         sql = sql.replace("${engine}", " ENGINE = " + this.engine);
 
@@ -76,10 +89,11 @@ public class Table implements Serializable {
         sql = sql.replace("${comment}", StringUtils.isEmpty(this.table_comment) ? "" : " COMMENT = '" + this.table_comment + "'");
         StringBuilder sb = new StringBuilder();
         for (Column column : this.columns) {
-            String columnSql = column.toCreateSqlFragment();
+            String columnSql = column.toCreateTableSql();
             sb.append(columnSql);
         }
 
+        //todo 优化groupingBy方式，直接根据tableName去查询
         //获取 UNIQUE KEY
         List<Key> uniqueIndexList = this.keys.stream().filter(s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
                 StringUtils.isEmpty(s.getReferenced_column_name())).collect(Collectors.toList());
@@ -132,25 +146,35 @@ public class Table implements Serializable {
         return sql;
     }
 
-    public static List<Table> configure(Connection connection, Database database) throws SQLException {
+    public List<Table> readData() throws SQLException {
+
+        MySqlDbUtil dbUtil = new MySqlDbUtil(this.database.getConfig());
+
         //todo 把参数加进去
-        List<Table> list1 = (List<Table>) MySqlDbUtil.queryForBeans(connection,
-                FileUtils.getStringByClasspath("sql/detail/table.sql"),
+        List<Table> list1 = (List<Table>) dbUtil.queryForBeans(
+                TABLE_SQL,
                 Table.class);
 
-        List<Column> list2 = (List<Column>) MySqlDbUtil.queryForBeans(connection,
-                FileUtils.getStringByClasspath("sql/detail/column.sql"),
+        List<Column> list2 = (List<Column>) dbUtil.queryForBeans(
+                COlUMN_SQL,
                 Column.class);
 
-        List<Key> list3 = (List<Key>) MySqlDbUtil.queryForBeans(connection,
-                FileUtils.getStringByClasspath("sql/detail/key.sql"),
+        List<Key> list3 = (List<Key>) dbUtil.queryForBeans(
+                KEY_SQL,
                 Key.class);
 
-        return list1.stream().peek(o -> {
+        //(List<Table>)
+
+
+        List<Table> tabls = list1.stream().peek(o -> {
             o.setDatabase(database);
-            o.setColumns(list2.stream().peek(s -> s.setTable(o)).filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
-            o.setKeys(list3.stream().peek(s -> s.setTable(o)).filter(s -> o.getName().equals(s.getTableName())).collect(Collectors.toList()));
+
+            o.setColumns(list2.stream().peek(s -> s.setTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
+
+            o.setKeys(list3.stream().peek(s -> s.setTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
         }).collect(Collectors.toList());
+
+        return tabls;
     }
     /* getter & setter */
 
@@ -250,7 +274,4 @@ public class Table implements Serializable {
         this.database = database;
     }
 
-    public static String getSQL() {
-        return SQL;
-    }
 }

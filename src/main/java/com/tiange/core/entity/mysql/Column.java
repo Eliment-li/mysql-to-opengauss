@@ -3,8 +3,6 @@ package com.tiange.core.entity.mysql;
 
 import com.tiange.core.utils.others.StringUtils;
 
-import java.util.Objects;
-
 /**
  * 数据库表字段 JAVABEAN
  */
@@ -14,174 +12,166 @@ public class Column {
     public static final String FLAG_DEFAULT_NULL = "YES";
     public static final String FLAG_AUTO_INCREMENT = "auto_increment";
 
-    private String schema;
-    private String tableName;
-    private String name;
-    private String defaultValue;
-    private String nullable;
-    private String type;
-    private Long maxLength;
-    private Long numericPrecision;
-    private Long numericScale;
-    private Long datetimePrecision;
-    private String character;
-    private String collation;
-    private String columnType;
-    private String columnKey;
+    private String table_schema;
+    private String table_name;
+    private String column_name;
+    private String column_default;
+    private String is_nullable;
+    private String data_type;
+    private Long character_maximum_length;
+    private Long numeric_precision;
+    private Long numeric_scale;
+    private Long datetime_precision;
+    private String character_set_name;
+    private String collation_name;
+    private String column_type;
+    private String column_key;
     private String extra;
-    private String comment;
-    private String generationExpression;
+    private String column_comment;
+    private String generation_expression;
 
-
-    public String getDeleteSql() {
-        return "ALTER TABLE `" + this.tableName + "` DROP COLUMN `" + this.name + "`;";
-    }
+    private Table table;
 
     /**
      * @return return example: " 'id' varchar, "
      * @description 用于创建表
      */
-    public String toCreateSqlFragment() {
+    public String toCreateTableSql() {
         StringBuilder sb = new StringBuilder();
-        sb.append("`").append(this.name).append("`").append(" ");
-        sb.append(this.columnType).append(" ");
-        if (!this.getTable().getDatabase().getInfo().getIgnoreCharacterCompare() && !StringUtils.isEmpty(this.collation)) {
-            sb.append("COLLATE ").append(this.collation).append(" ");
+        sb.append("`").append(this.column_name).append("`").append(" ");
+        sb.append(this.column_type).append(" ");
+        if (!this.getTable().getDatabase().getConfig().getIgnoreCharacterCompare() && !StringUtils.isEmpty(this.collation_name)) {
+            sb.append("COLLATE ").append(this.collation_name).append(" ");
         }
         //是否为NOT NULL
-        if (FLAG_NOT_NULL.equals(this.nullable)) {
+        if (FLAG_NOT_NULL.equals(this.is_nullable)) {
             sb.append("NOT NULL ");
         }
-        if (!StringUtils.isEmpty(this.defaultValue)) {
-            sb.append("DEFAULT ").append(this.defaultValue).append(" ");
-        } else if (FLAG_DEFAULT_NULL.equals(this.nullable)) {
+        if (!StringUtils.isEmpty(this.column_default)) {
+            sb.append("DEFAULT ").append(this.column_default).append(" ");
+        } else if (FLAG_DEFAULT_NULL.equals(this.is_nullable)) {
             sb.append("DEFAULT NULL ");
         }
         sb.append(this.extra).append(" ");
-        if (!StringUtils.isEmpty(this.comment)) {
-            sb.append("COMMENT '").append(this.comment).append("' ");
+        if (!StringUtils.isEmpty(this.column_comment)) {
+            sb.append("COMMENT '").append(this.column_comment).append("' ");
         }
         sb.append(",");
         return sb.toString();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getTableName(), getName(), getDefaultValue(), getNullable(), getType(), getMaxLength(), getNumericPrecision(), getNumericScale(), getDatetimePrecision(), getCharacter(), getCollation(), getColumnType(), getExtra(), getComment(), getGenerationExpression());
-    }
-    //getter&setter
+    /* getter & setter */
 
-
-    public String getSchema() {
-        return schema;
+    public String getTable_schema() {
+        return table_schema;
     }
 
-    public void setSchema(String schema) {
-        this.schema = schema;
+    public void setTable_schema(String table_schema) {
+        this.table_schema = table_schema;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getTable_name() {
+        return table_name;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setTable_name(String table_name) {
+        this.table_name = table_name;
     }
 
-    public String getName() {
-        return name;
+    public String getColumn_name() {
+        return column_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setColumn_name(String column_name) {
+        this.column_name = column_name;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
+    public String getColumn_default() {
+        return column_default;
     }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
+    public void setColumn_default(String column_default) {
+        this.column_default = column_default;
     }
 
-    public String getNullable() {
-        return nullable;
+    public String getIs_nullable() {
+        return is_nullable;
     }
 
-    public void setNullable(String nullable) {
-        this.nullable = nullable;
+    public void setIs_nullable(String is_nullable) {
+        this.is_nullable = is_nullable;
     }
 
-    public String getType() {
-        return type;
+    public String getData_type() {
+        return data_type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setData_type(String data_type) {
+        this.data_type = data_type;
     }
 
-    public Long getMaxLength() {
-        return maxLength;
+    public Long getCharacter_maximum_length() {
+        return character_maximum_length;
     }
 
-    public void setMaxLength(Long maxLength) {
-        this.maxLength = maxLength;
+    public void setCharacter_maximum_length(Long character_maximum_length) {
+        this.character_maximum_length = character_maximum_length;
     }
 
-    public Long getNumericPrecision() {
-        return numericPrecision;
+    public Long getNumeric_precision() {
+        return numeric_precision;
     }
 
-    public void setNumericPrecision(Long numericPrecision) {
-        this.numericPrecision = numericPrecision;
+    public void setNumeric_precision(Long numeric_precision) {
+        this.numeric_precision = numeric_precision;
     }
 
-    public Long getNumericScale() {
-        return numericScale;
+    public Long getNumeric_scale() {
+        return numeric_scale;
     }
 
-    public void setNumericScale(Long numericScale) {
-        this.numericScale = numericScale;
+    public void setNumeric_scale(Long numeric_scale) {
+        this.numeric_scale = numeric_scale;
     }
 
-    public Long getDatetimePrecision() {
-        return datetimePrecision;
+    public Long getDatetime_precision() {
+        return datetime_precision;
     }
 
-    public void setDatetimePrecision(Long datetimePrecision) {
-        this.datetimePrecision = datetimePrecision;
+    public void setDatetime_precision(Long datetime_precision) {
+        this.datetime_precision = datetime_precision;
     }
 
-    public String getCharacter() {
-        return character;
+    public String getCharacter_set_name() {
+        return character_set_name;
     }
 
-    public void setCharacter(String character) {
-        this.character = character;
+    public void setCharacter_set_name(String character_set_name) {
+        this.character_set_name = character_set_name;
     }
 
-    public String getCollation() {
-        return collation;
+    public String getCollation_name() {
+        return collation_name;
     }
 
-    public void setCollation(String collation) {
-        this.collation = collation;
+    public void setCollation_name(String collation_name) {
+        this.collation_name = collation_name;
     }
 
-    public String getColumnType() {
-        return columnType;
+    public String getColumn_type() {
+        return column_type;
     }
 
-    public void setColumnType(String columnType) {
-        this.columnType = columnType;
+    public void setColumn_type(String column_type) {
+        this.column_type = column_type;
     }
 
-    public String getColumnKey() {
-        return columnKey;
+    public String getColumn_key() {
+        return column_key;
     }
 
-    public void setColumnKey(String columnKey) {
-        this.columnKey = columnKey;
+    public void setColumn_key(String column_key) {
+        this.column_key = column_key;
     }
 
     public String getExtra() {
@@ -192,19 +182,27 @@ public class Column {
         this.extra = extra;
     }
 
-    public String getComment() {
-        return comment;
+    public String getColumn_comment() {
+        return column_comment;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setColumn_comment(String column_comment) {
+        this.column_comment = column_comment;
     }
 
-    public String getGenerationExpression() {
-        return generationExpression;
+    public String getGeneration_expression() {
+        return generation_expression;
     }
 
-    public void setGenerationExpression(String generationExpression) {
-        this.generationExpression = generationExpression;
+    public void setGeneration_expression(String generation_expression) {
+        this.generation_expression = generation_expression;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
     }
 }

@@ -1,7 +1,8 @@
 package com.tiange.core.entity.mysql;
 
 
-import java.sql.Connection;
+import com.tiange.core.utils.database.MySqlDbUtil;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,9 +10,11 @@ import java.util.List;
  * 数据库结构定义
  */
 public class Database {
-    // private DatabaseInfo info;
+    /**
+     * 数据库配置
+     */
+    private DatabaseConfig config;
 
-    private Connection connection;
     //SCHEMA_NAME
     //DEFAULT_CHARACTER_SET_NAME
     //DEFAULT_COLLATION_NAME
@@ -39,7 +42,52 @@ public class Database {
      */
     private List<Trigger> triggers;
 
-    public static final String SQL = //FileUtil.getStringByClasspath("sql/detail/database.sql");
+    private String SQL = "SELECT CONSTRAINT_CATALOG," +
+            "       CONSTRAINT_SCHEMA," +
+            "       CONSTRAINT_NAME," +
+            "       TABLE_CATALOG," +
+            "       TABLE_SCHEMA," +
+            "       TABLE_NAME," +
+            "       COLUMN_NAME," +
+            "       ORDINAL_POSITION," +
+            "       POSITION_IN_UNIQUE_CONSTRAINT," +
+            "       REFERENCED_TABLE_SCHEMA," +
+            "       REFERENCED_TABLE_NAME," +
+            "       REFERENCED_COLUMN_NAME" +
+            " FROM   KEY_COLUMN_USAGE " +
+            " WHERE TABLE_SCHEMA = ? ";
+
+
+    /**
+     * 初始化
+     */
+    public void Init(DatabaseConfig config) {
+        this.config = config;
+    }
+
+    public void Init() {
+        this.name = "mysqltest";
+        SQL = SQL.replace("?", "'" + this.name + "'");
+        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
+    }
+
+    /**
+     * 从数据库中读取数据
+     */
+    public Database ReadData() throws SQLException {
+
+        MySqlDbUtil dbUtil = new MySqlDbUtil(this.config);
+
+        Database database = (Database) dbUtil.queryForObject(SQL, Database.class);
+
+        database.Init();
+
+        //读取数据库表
+        database.setTables(new Table(this).readData());
+
+        return database;
+
+    }
 
     /**
      * 初始化数据库结构
@@ -71,5 +119,75 @@ public class Database {
         bean.setConnection(this.connection);
         return bean;
     }*/
+    public DatabaseConfig getConfig() {
+        return config;
+    }
 
+    public void setConfig(DatabaseConfig config) {
+        this.config = config;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
+    }
+
+    public String getCollate() {
+        return collate;
+    }
+
+    public void setCollate(String collate) {
+        this.collate = collate;
+    }
+
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<Table> tables) {
+        this.tables = tables;
+    }
+
+    public List<View> getViews() {
+        return views;
+    }
+
+    public void setViews(List<View> views) {
+        this.views = views;
+    }
+
+    public List<Function> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
+    }
+
+    public List<Procedure> getProcedures() {
+        return procedures;
+    }
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
+    }
+
+    public List<Trigger> getTriggers() {
+        return triggers;
+    }
+
+    public void setTriggers(List<Trigger> triggers) {
+        this.triggers = triggers;
+    }
 }

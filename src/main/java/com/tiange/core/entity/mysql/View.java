@@ -1,14 +1,7 @@
 package com.tiange.core.entity.mysql;
 
-import cn.codeforfun.migrate.core.utils.DbUtil;
-import cn.codeforfun.migrate.core.utils.FileUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * View结构定义
@@ -29,18 +22,16 @@ public class View implements Serializable {
 
     private Database database;
 
-    public static List<View> configure(Connection connection, Database database) throws SQLException {
+    /*public static List<View> configure(Connection connection, Database database) throws SQLException {
         return DbUtil.getBeanList(connection,
                 FileUtil.getStringByClasspath("sql/detail/view.sql"),
                 View.class, database.getInfo().getName())
                 .stream().peek(s -> s.setDatabase(database)).collect(Collectors.toList());
-    }
+    }*/
 
-    @JsonIgnore
-    @Override
-    public String getCreateSql() {
+ /*   public String getCreateSql() {
         return getString("CREATE ");
-    }
+    }*/
 
 
 

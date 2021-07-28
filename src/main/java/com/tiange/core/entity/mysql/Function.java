@@ -2,13 +2,13 @@ package com.tiange.core.entity.mysql;
 
 import com.tiange.core.utils.database.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
-import com.tiange.core.utils.others.StringUtils;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Function结构定义
@@ -26,24 +26,26 @@ public class Function implements Serializable {
 
     private List<Routine> routines = new ArrayList<>();
 
-    public static List<Function> configure(Connection connection, Database database) throws SQLException {
-        List<Routine> beanList = MySqlDbUtil.queryForBeans(connection,
-                FileUtils.getStringByClasspath("sql/detail/function.sql"),
-                Routine.class, database.getInfo().getName());
+
+    public List<Function> readData() throws SQLException {
+
+        MySqlDbUtil dbUtil = new MySqlDbUtil(this.database.getConfig());
+
+        List<Routine> beanList = (List<Routine>) dbUtil.queryForBeans(FileUtils.getStringByClasspath("sql/detail/function.sql"), Routine.class);
         Map<String, Function> functions = new HashMap<>(0);
         for (Routine routine : beanList) {
-            Function function = functions.get(routine.getName());
+            Function function = functions.get(routine.getSpecific_name());
             if (function == null) {
                 function = new Function();
             }
             function.setDatabase(database);
             function.getRoutines().add(routine);
             function.setDefiner(routine.getDefiner());
-            function.setSecurityType(routine.getSecurityType());
-            function.setSchema(routine.getSchema());
-            function.setName(routine.getName());
-            function.setSource(routine.getSource());
-            functions.put(routine.getName(), function);
+            function.setSecurityType(routine.getSecurity_type());
+            function.setSchema(routine.getRoutine_schema());
+            function.setName(routine.getSpecific_name());
+            function.setSource(routine.getRoutine_definition());
+            functions.put(routine.getSpecific_name(), function);
         }
         return new ArrayList<>(functions.values());
     }
@@ -51,7 +53,7 @@ public class Function implements Serializable {
     /**
      * @return 创建 FUNCTION 的 sql
      */
-    public String getCreateSql() {
+  /*  public String getCreateSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE FUNCTION `").append(this.name).append("`");
         sb.append("(");
@@ -70,41 +72,13 @@ public class Function implements Serializable {
         }
         sb.append(" ").append(this.source).append(";");
         return sb.toString();
-    }
+    }*/
 
 
-    public String getUpdateSql() {
-        return null;
-    }
 
-    public String getDeleteSql() {
-        return "DROP FUNCTION `" + this.name + "`;";
-    }
 
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Function)) {
-            return false;
-        }
-        Function function = (Function) o;
-        return
-                Objects.equals(getName(), function.getName()) &&
-                        Objects.equals(getSource(), function.getSource()) &&
-                        Objects.equals(getRoutines(), function.getRoutines());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(),
-                getSource(),
-                getRoutines());
-    }
 
     //getter&setter
-
-
     public String getSecurityType() {
         return securityType;
     }
