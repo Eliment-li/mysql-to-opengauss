@@ -40,6 +40,9 @@ public class Table implements Serializable {
     private String COlUMN_SQL = FileUtils.getStringByClasspath("mysql/column.sql");
     private String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
 
+    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("mysql/create_table.sql");
+
+
     public Table() {
         System.out.println("create table");
     }
@@ -72,9 +75,14 @@ public class Table implements Serializable {
 
 
     public String toCreateSql() {
-        String sql = TABLE_SQL;
+
+        String sql = CREATE_TABLE_SQL;
+
+        //table
         sql = sql.replace("${tableName}", this.table_name);
-        sql = sql.replace("${engine}", " ENGINE = " + this.engine);
+
+        //engine
+        //  sql = sql.replace("${engine}", " ENGINE = " + this.engine);
 
         //charset
        /* if (this.getDatabase().getInfo().getIgnoreCharacterCompare()) {
@@ -86,20 +94,33 @@ public class Table implements Serializable {
         }*/
 
         //comment
-        sql = sql.replace("${comment}", StringUtils.isEmpty(this.table_comment) ? "" : " COMMENT = '" + this.table_comment + "'");
+        String comment = toOpenGausscomment(this.table_comment);
+
+        sql = sql.replace("${comment}", comment);
+
         StringBuilder sb = new StringBuilder();
+
+        //Column
         for (Column column : this.columns) {
+
             String columnSql = column.toCreateTableSql();
+
             sb.append(columnSql);
+
         }
 
         //todo 优化groupingBy方式，直接根据tableName去查询
-        //获取 UNIQUE KEY
-        List<Key> uniqueIndexList = this.keys.stream().filter(s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
-                StringUtils.isEmpty(s.getReferenced_column_name())).collect(Collectors.toList());
+
+        //UNIQUE KEY
+        List<Key> uniqueIndexList = this.keys.stream().filter(
+                s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
+                        StringUtils.isEmpty(s.getReferenced_column_name())
+        ).collect(Collectors.toList());
 
         if (!ObjectUtils.isEmpty(uniqueIndexList)) {
+
             //通过索引获取tablelist 根据getTable_name来去重  <表名：LIST<key>>
+
             Map<String, List<Key>> tableList = uniqueIndexList.stream().collect(Collectors.groupingBy(Key::getTable_name));
 
             if (!ObjectUtils.isEmpty(tableList)) {
@@ -114,7 +135,11 @@ public class Table implements Serializable {
                         for (Map.Entry<String, List<Key>> j : listMap.entrySet()) {
 
                             sb.append("UNIQUE KEY `").append(j.getKey()).append("`(");
-                            List<String> columnList = j.getValue().stream().map(Key::getColumn_name).collect(Collectors.toList());
+
+                            List<String> columnList = j.getValue().stream()
+                                    .map(Key::getColumn_name)
+                                    .collect(Collectors.toList());
+
                             if (!ObjectUtils.isEmpty(columnList)) {
                                 for (String s : columnList) {
                                     sb.append("`").append(s).append("`, ");
@@ -274,4 +299,12 @@ public class Table implements Serializable {
         this.database = database;
     }
 
+    // convertt
+    private String toOpenGausscomment(String table_comment) {
+
+        if (StringUtils.isEmpty(table_comment))
+            return "";
+        else
+            return " COMMENT ON TABLE \"public\".\"" + this.table_name + "\" IS '" + table_comment + "' ";
+    }
 }

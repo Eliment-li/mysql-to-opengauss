@@ -1,6 +1,8 @@
 package com.tiange.core.entity.mysql;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
 /**
@@ -32,31 +34,55 @@ public class Column {
 
     private Table table;
 
+
+    /**
+     * 将 MySQL 字段类型转换为 OpenGauss 的类型
+     *
+     * @return 转换后的类型
+     */
+    private String toOpenGaussType() {
+
+        String dataTypeJson = FileUtils.getStringByClasspath("mysql/dataTypeMap.json");
+
+        JSONObject map = JSONObject.parseObject(dataTypeJson);
+
+        return (String) map.get(this.data_type);
+
+    }
     /**
      * @return return example: " 'id' varchar, "
      * @description 用于创建表
      */
     public String toCreateTableSql() {
+
         StringBuilder sb = new StringBuilder();
-        sb.append("`").append(this.column_name).append("`").append(" ");
-        sb.append(this.column_type).append(" ");
-        if (!this.getTable().getDatabase().getConfig().getIgnoreCharacterCompare() && !StringUtils.isEmpty(this.collation_name)) {
+
+        sb.append("\"").append(this.column_name).append("\"").append(" ");
+
+        sb.append(getData_type()).append(" ");
+
+        //COLLATE
+      /*  if (!this.getTable().getDatabase().getConfig().getIgnoreCharacterCompare() && !StringUtils.isEmpty(this.collation_name)) {
             sb.append("COLLATE ").append(this.collation_name).append(" ");
-        }
+        }*/
         //是否为NOT NULL
         if (FLAG_NOT_NULL.equals(this.is_nullable)) {
-            sb.append("NOT NULL ");
+            sb.append(" NOT NULL ");
         }
         if (!StringUtils.isEmpty(this.column_default)) {
-            sb.append("DEFAULT ").append(this.column_default).append(" ");
+            sb.append(" DEFAULT ").append(this.column_default).append(" ");
         } else if (FLAG_DEFAULT_NULL.equals(this.is_nullable)) {
-            sb.append("DEFAULT NULL ");
+            sb.append(" DEFAULT NULL ");
         }
         sb.append(this.extra).append(" ");
-        if (!StringUtils.isEmpty(this.column_comment)) {
+
+        //COMMENT
+
+       /* if (!StringUtils.isEmpty(this.column_comment)) {
+            String  COMMENT="COMMENT ON COLUMN"
             sb.append("COMMENT '").append(this.column_comment).append("' ");
-        }
-        sb.append(",");
+        }*/
+        //   sb.append(",");
         return sb.toString();
     }
 
@@ -103,7 +129,8 @@ public class Column {
     }
 
     public String getData_type() {
-        return data_type;
+        return toOpenGaussType();
+        // return data_type;
     }
 
     public void setData_type(String data_type) {
@@ -159,7 +186,9 @@ public class Column {
     }
 
     public String getColumn_type() {
+
         return column_type;
+
     }
 
     public void setColumn_type(String column_type) {

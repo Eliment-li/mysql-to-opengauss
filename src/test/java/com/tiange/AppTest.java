@@ -22,13 +22,18 @@ public class AppTest
     public static void main(String[] args) {
 
         Database database = new Database();
-        database.Init();
-        try {
-            database.ReadData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        database.Init();
+
+        try {
+
+            database.ReadData();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
 
     }
 }
