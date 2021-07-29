@@ -16,5 +16,7 @@
     <orderEntry type="library" name="Maven: commons-dbutils:commons-dbutils:1.7" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:6.0.6" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.75" level="project" />
+    <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.18" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
   </component>
 </module>

@@ -22,16 +22,14 @@ public class View implements Serializable {
 
     private Database database;
 
-    /*public static List<View> configure(Connection connection, Database database) throws SQLException {
-        return DbUtil.getBeanList(connection,
-                FileUtil.getStringByClasspath("sql/detail/view.sql"),
-                View.class, database.getInfo().getName())
-                .stream().peek(s -> s.setDatabase(database)).collect(Collectors.toList());
-    }*/
+    public void readData() {
+        //todo
+    }
 
- /*   public String getCreateSql() {
-        return getString("CREATE ");
-    }*/
+    public String toCreateSql() {
+        //todo
+        return null;
+    }
 
 
 

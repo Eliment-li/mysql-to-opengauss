@@ -1,7 +1,7 @@
 package com.tiange.core.entity.mysql;
 
 
-import com.tiange.core.utils.database.MySqlDbUtil;
+import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.ObjectUtils;
 import com.tiange.core.utils.others.StringUtils;
@@ -44,7 +44,7 @@ public class Table implements Serializable {
 
 
     public Table() {
-        System.out.println("create table");
+
     }
 
     public Table(Database database) {
@@ -111,7 +111,7 @@ public class Table implements Serializable {
 
         //todo 优化groupingBy方式，直接根据tableName去查询
 
-        //UNIQUE KEY
+
         List<Key> uniqueIndexList = this.keys.stream().filter(
                 s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
                         StringUtils.isEmpty(s.getReferenced_column_name())
@@ -119,7 +119,7 @@ public class Table implements Serializable {
 
         if (!ObjectUtils.isEmpty(uniqueIndexList)) {
 
-            //通过索引获取tablelist 根据getTable_name来去重  <表名：LIST<key>>
+            //根据getTable_name来去重  <表名：LIST<key>>
 
             Map<String, List<Key>> tableList = uniqueIndexList.stream().collect(Collectors.groupingBy(Key::getTable_name));
 

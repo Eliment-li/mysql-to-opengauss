@@ -1,7 +1,7 @@
 package com.tiange.core.entity.mysql;
 
 
-import com.tiange.core.utils.database.MySqlDbUtil;
+import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 
 import java.sql.SQLException;
 import java.util.List;

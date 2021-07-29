@@ -50,9 +50,15 @@
           <version>1.2.75</version>
       </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql   使用 PostgreSQL 的驱动代替 OpenGauss 驱动 -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.18</version>
+    </dependency>
+
+
   </dependencies>
-
-
 
 
   <build>

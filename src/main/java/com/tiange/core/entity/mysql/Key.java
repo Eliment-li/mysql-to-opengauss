@@ -57,9 +57,7 @@ public class Key implements Serializable {
         return sb.toString();
     }
 
-    // public String getCreateSql() {}
 
-    // public int hashCode() { }
 
     //getter&setter
 

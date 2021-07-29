@@ -1,4 +1,4 @@
-package com.tiange.core.utils.database;
+package com.tiange.core.utils.database.jdbc;
 
 import com.tiange.core.entity.mysql.DatabaseConfig;
 import com.tiange.core.utils.database.manager.Manager;

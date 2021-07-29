@@ -1,6 +1,6 @@
 package com.tiange.core.entity.mysql;
 
-import com.tiange.core.utils.database.MySqlDbUtil;
+import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
 
 import java.io.Serializable;
@@ -50,29 +50,11 @@ public class Function implements Serializable {
         return new ArrayList<>(functions.values());
     }
 
-    /**
-     * @return 创建 FUNCTION 的 sql
-     */
-  /*  public String getCreateSql() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("CREATE FUNCTION `").append(this.name).append("`");
-        sb.append("(");
-        List<Routine> inputTypeList = this.getRoutines().stream().filter(s -> "IN".equals(s.getParamMode())).collect(Collectors.toList());
-        List<Routine> resultTypeList = this.getRoutines().stream().filter(s -> null == s.getParamMode()).collect(Collectors.toList());
-        for (Routine param : inputTypeList) {
-            sb.append(param.getParamName()).append(" ").append(param.getResultType()).append(",");
-        }
-        sb = new StringBuilder(sb.substring(0, sb.length() - 1));
-        sb.append(") ");
-        sb.append(" RETURNS ");
-        Routine param = resultTypeList.get(0);
-        sb.append(param.getResultType());
-        if (!StringUtils.isEmpty(param.getCharacter()) && !StringUtils.isEmpty(param.getCollation())) {
-            sb.append(" CHARSET ").append(param.getCharacter()).append(" COLLATE ").append(param.getCollation());
-        }
-        sb.append(" ").append(this.source).append(";");
-        return sb.toString();
-    }*/
+
+    public String toCreateSql() {
+        //todo
+        return null;
+    }
 
 
 

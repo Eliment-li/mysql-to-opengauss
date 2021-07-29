@@ -18,19 +18,14 @@ public class Trigger {
 
     private Database database;
 
-    /*public static List<Trigger> configure(Connection connection, Database database) throws SQLException {
-        return DbUtil.getBeanList(connection,
-                FileUtil.getStringByClasspath("sql/detail/trigger.sql"),
-                Trigger.class, database.getInfo().getName())
-                .stream().peek(s -> s.setDatabase(database)).collect(Collectors.toList());
-    }*/
-
- /*   public String getCreateSql() {
-        return "CREATE TRIGGER " + this.name + " " +
-                this.actionTiming + " " + this.eventManipulation + " ON `" + this.objectTable + "` " +
-                "FOR EACH " + this.actionOrientation + " " + this.source + ";";
+    public void readData() {
+        //todo
     }
-*/
+
+    public String toCreateSql() {
+        //todo
+        return null;
+    }
 
 
     /*getter & setter*/
