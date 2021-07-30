@@ -1,1 +1,1 @@
-# mysql-to-opengauss
+# 代码正在开发中，随时更新
