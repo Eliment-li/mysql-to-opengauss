@@ -16,17 +16,43 @@ public class Column {
 
     private String table_schema;
     private String table_name;
+    /*column_name is the type name only with no other information*/
     private String column_name;
     private String column_default;
     private String is_nullable;
+
+    /*data_type contains the type name and possibly other information such as the precision or length.*/
     private String data_type;
+
     private Long character_maximum_length;
+
+    /*对于数值类型，表示长度*/
     private Long numeric_precision;
+
+    /*对于数值类型，表示小数点后的精度*/
     private Long numeric_scale;
+
+    /*For temporal columns, the fractional seconds precision.*/
     private Long datetime_precision;
+
+
     private String character_set_name;
+
     private String collation_name;
     private String column_type;
+
+    /*If COLUMN_KEY is empty, the column either is not indexed or is indexed only as a secondary column in a multiple-column, nonunique index.
+
+      If COLUMN_KEY is PRI, the column is a PRIMARY KEY or is one of the columns in a multiple-column PRIMARY KEY.
+
+      If COLUMN_KEY is UNI, the column is the first column of a UNIQUE index. (A UNIQUE index permits multiple NULL values, but you can tell whether the column permits NULL by checking the Null column.)
+
+      If COLUMN_KEY is MUL, the column is the first column of a nonunique index in which multiple occurrences of a given value are permitted within the column.
+
+      If more than one of the COLUMN_KEY values applies to a given column of a table, COLUMN_KEY displays the one with the highest priority, in the order PRI, UNI, MUL.
+
+      A UNIQUE index may be displayed as PRI if it cannot contain NULL values and there is no PRIMARY KEY in the table. A UNIQUE index may display as MUL if several columns form a composite UNIQUE index; although the combination of the columns is unique, each column can still hold multiple occurrences of a given value
+    * */
     private String column_key;
     private String extra;
     private String column_comment;
@@ -54,6 +80,9 @@ public class Column {
      * @description 用于创建表
      */
     public String toCreateTableSql() {
+        //todo 重写 toCreateTableSql，根据不同字段类型，利用numeric_precision等字段，拼接sql语句
+
+        //todo  类型转换器，mysql 不同类型 对应 opengauss 类型
 
         StringBuilder sb = new StringBuilder();
 

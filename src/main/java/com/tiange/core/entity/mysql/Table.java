@@ -53,6 +53,7 @@ public class Table implements Serializable {
         TABLE_SQL = TABLE_SQL.replace("?", "'" + this.database.getName() + "'");
         COlUMN_SQL = COlUMN_SQL.replace("?", "'" + this.database.getName() + "'");
         KEY_SQL = KEY_SQL.replace("?", "'" + this.database.getName() + "'");
+
     }
 
     /**
@@ -74,12 +75,16 @@ public class Table implements Serializable {
     }
 
 
+    /**
+     * @return 创建数据库表的Sql语句
+     */
     public String toCreateSql() {
 
         String sql = CREATE_TABLE_SQL;
 
-        //table
-        sql = sql.replace("${tableName}", this.table_name);
+        // openGauss 的表名前要加上模式名  例如 "jack"."test";
+        String tableName = "\"public\"." + "\"" + this.table_name + "\"";
+        sql = sql.replace("${tableName}", tableName);
 
         //engine
         //  sql = sql.replace("${engine}", " ENGINE = " + this.engine);
@@ -98,19 +103,21 @@ public class Table implements Serializable {
 
         sql = sql.replace("${comment}", comment);
 
+        //建表语句
         StringBuilder sb = new StringBuilder();
 
-        //Column
+        //拼接 Column 语句
         for (Column column : this.columns) {
 
             String columnSql = column.toCreateTableSql();
 
             sb.append(columnSql);
-
+            sb.append(",");
         }
+        //去除最后一个逗号
+        sb.deleteCharAt(sb.length() - 1);
 
         //todo 优化groupingBy方式，直接根据tableName去查询
-
 
         List<Key> uniqueIndexList = this.keys.stream().filter(
                 s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
@@ -127,7 +134,7 @@ public class Table implements Serializable {
 
                 for (Map.Entry<String, List<Key>> e : tableList.entrySet()) {
 
-                    //对每个table中的 key 根据Constraint去中
+                    //对每个table中的 key 根据Constraint去重
                     Map<String, List<Key>> listMap = e.getValue().stream().collect(Collectors.groupingBy(Key::getConstraint_name));
 
                     if (!ObjectUtils.isEmpty(listMap)) {
