@@ -2,6 +2,7 @@ package com.tiange.core.entity.mysql;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.tiange.core.entity.opengauss.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
@@ -115,6 +116,12 @@ public class Column {
         return sb.toString();
     }
 
+    public GaussColumn toGaussColumn() {
+        GaussColumn gaussColumn = new GaussColumn();
+
+        return gaussColumn;
+    }
+
     /*转换器 开始  将字段转换为 sql 语句，用于建表*/
 
     /**
@@ -167,6 +174,9 @@ public class Column {
         return "";
     }
 
+    private String map2GaussType() {
+        return null;
+    }
 
 
     /*转换器 结束  */

@@ -29,13 +29,21 @@ public class GaussColumn {
     private String numeric_precision_radix;
 
     /*
-    If data_type identifies an exact numeric type, this column contains the (declared or implicit) scale of the type
+     If data_type identifies an exact numeric type, this column contains the (declared or implicit) scale of the type
      for this column. The scale indicates the number of significant digits to the right of the decimal point. It can
      be expressed in decimal (base 10) or binary (base 2) terms, as specified in the column numeric_precision_radix.
+
      For all other data types, this column is null.
      */
     private String numeric_scale;
 
+    /*
+     If data_type identifies a date, time, timestamp, or interval type, this column contains the (declared or implicit)
+     fractional seconds precision of the type for this column, that is, the number of decimal digits maintained following
+     the decimal point in the seconds value.
+
+     For all other data types, this column is null.
+     */
     private String datetime_precision;
 
     /*
@@ -57,10 +65,13 @@ public class GaussColumn {
     table. This is mainly useful for joining with other instances of such identifiers. (The specific format of the
     identifier is not defined and not guaranteed to remain the same in future versions.)
     */
-
     private String dtd_identifier;
 
 
+    public String toCreateTableSql() {
+
+        return null;
+    }
 
 
     /* getter & setter */

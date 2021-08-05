@@ -1,41 +1,25 @@
 {
-  "bigint": "",
-  "binary": "",
-  "bit": "",
-  "blob": "",
-  "char": "",
-  "data": "",
-  "datatime": "",
-  "decimal": "",
-  "double": "",
-  "enum": "",
-  "float": "",
-  "geometry": "",
-  "geometrycollection": "",
-  "int": "int",
-  "integer": "",
-  "linestring": "",
-  "longblob": "",
-  "longtext": "",
-  "mediumblob": "",
-  "mediumint": "",
-  "mediumtext": "",
-  "multilinestring": "",
-  "multipoint": "",
-  "multipolygon": "",
-  "numeric": "",
-  "point": "",
-  "polygon": "",
-  "real": "",
-  "set": "",
-  "smallint": "",
-  "text": "",
-  "time": "",
-  "timestamp": "",
-  "tinyblob": "",
-  "tinyint": "",
-  "tinytext": "",
-  "varbinary": "",
-  "varchar": "",
-  "year": ""
+  "_number": "",
+  "_int": "",
+  "TINYINT": "TINYINT",
+  "SMALLINT": "SMALLINT",
+  "MEDIUMINT": "INTEGER",
+  "INT": "INTEGER",
+  "BIGINT": "BIGINT",
+  "": "",
+  "": "",
+  "": "",
+  "": "",
+  "": ""
+
+
+
+
+
+
+
+
+
+
+
 }
