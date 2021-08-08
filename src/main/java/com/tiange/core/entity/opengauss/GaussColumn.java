@@ -19,6 +19,7 @@ public class GaussColumn {
     If data_type identifies a numeric type, this column contains the (declared or implicit) precision of the type for this column.
     The precision indicates the number of significant digits. It can be expressed in decimal (base 10) or binary (base 2) terms,
      as specified in the column numeric_precision_radix. For all other data types, this column is null.
+     在opengauss中，该字段的值是固定的 例如 int4 的 numeric_precision 固定为 32 ( base 2)
      */
     private String numeric_precision;
 

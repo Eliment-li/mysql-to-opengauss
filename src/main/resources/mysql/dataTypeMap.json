@@ -1,15 +1,17 @@
 {
   "_number": "",
-  "_int": "",
+
   "TINYINT": "TINYINT",
   "SMALLINT": "SMALLINT",
   "MEDIUMINT": "INTEGER",
   "INT": "INTEGER",
   "BIGINT": "BIGINT",
-  "": "",
-  "": "",
-  "": "",
-  "": "",
+  "DECIMAL": "DECIMAL",
+  "FLOAT": "FLOAT4",
+  "DOUBLE": "FLOAT8",
+  "REAL": "FLOAT4",
+
+
   "": ""
 
 

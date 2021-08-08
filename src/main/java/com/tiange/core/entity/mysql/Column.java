@@ -6,6 +6,9 @@ import com.tiange.core.entity.opengauss.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 数据库表字段 JAVABEAN
  */
@@ -67,13 +70,13 @@ public class Column {
      *
      * @return 转换后的类型
      */
-    private String toOpenGaussType() {
+    private String toOpenGaussType(String mysqlDataType) {
 
         String dataTypeJson = FileUtils.getStringByClasspath("mysql/dataTypeMap.json");
 
         JSONObject map = JSONObject.parseObject(dataTypeJson);
 
-        return (String) map.get(this.data_type);
+        return (String) map.get(mysqlDataType);
 
     }
     /**
@@ -119,6 +122,14 @@ public class Column {
     public GaussColumn toGaussColumn() {
         GaussColumn gaussColumn = new GaussColumn();
 
+        String datetype = toOpenGaussType(this.getData_type());//字段类型
+
+        /*Numeric 类型的长度为固定的，不需要处理长度*/
+        if (isNumeric()) {
+            gaussColumn.setColumn_name(this.getColumn_name());//字段名
+            gaussColumn.setDatetype(datetype);
+        }
+
         return gaussColumn;
     }
 
@@ -152,8 +163,21 @@ public class Column {
      *
      * @return
      */
-    private boolean isNumeric() {
-        return false;
+    private boolean isnteger() {
+        Set<String> IntGroup = new HashSet<String>(10) {
+            {
+                add("int");
+                add("tinyint");
+                add("smallint");
+                add("mediumint");
+                add("bigint");
+            }
+        };
+        //decimal float double
+        if (IntGroup.contains(this.data_type))
+            return true;
+        else
+            return false;
     }
 
 
@@ -223,8 +247,7 @@ public class Column {
     }
 
     public String getData_type() {
-        return toOpenGaussType();
-        // return data_type;
+        return data_type;
     }
 
     public void setData_type(String data_type) {
