@@ -1,0 +1,13 @@
+{
+  "_number": "",
+  "tinyint": "TINYINT",
+  "smallint": "SMALLINT",
+  "mediumint": "INTEGER",
+  "int": "INTEGER",
+  "bigint": "BIGINT",
+  "decimal": "DECIMAL",
+  "float": "FLOAT4",
+  "double": "FLOAT8",
+  "real": "FLOAT4",
+  "": ""
+}

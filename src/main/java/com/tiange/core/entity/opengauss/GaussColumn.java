@@ -12,8 +12,10 @@ public class GaussColumn {
     private String column_default;
     private String is_nullable;
     private String datetype;
-    private String character_maximum_length;
+    private Long character_maximum_length;
     private String character_octet_length;
+    private String comment;
+    private ColumnGroupEnum groupEnum;
 
     /*
     If data_type identifies a numeric type, this column contains the (declared or implicit) precision of the type for this column.
@@ -21,13 +23,13 @@ public class GaussColumn {
      as specified in the column numeric_precision_radix. For all other data types, this column is null.
      在opengauss中，该字段的值是固定的 例如 int4 的 numeric_precision 固定为 32 ( base 2)
      */
-    private String numeric_precision;
+    private Long numeric_precision;
 
     /*
     if data_type identifies a numeric type, this column indicates in which base the values in the columns numeric_precision
     and numeric_scale are expressed. The value is either 2 or 10. For all other data types, this column is null.
     */
-    private String numeric_precision_radix;
+    private int numeric_precision_radix;
 
     /*
      If data_type identifies an exact numeric type, this column contains the (declared or implicit) scale of the type
@@ -36,7 +38,7 @@ public class GaussColumn {
 
      For all other data types, this column is null.
      */
-    private String numeric_scale;
+    private Long numeric_scale;
 
     /*
      If data_type identifies a date, time, timestamp, or interval type, this column contains the (declared or implicit)
@@ -45,7 +47,7 @@ public class GaussColumn {
 
      For all other data types, this column is null.
      */
-    private String datetime_precision;
+    private Long datetime_precision;
 
     /*
     Name of the database that the column data type (the underlying type of the domain, if applicable) is defined
@@ -70,8 +72,9 @@ public class GaussColumn {
 
 
     public String toCreateTableSql() {
+        
+        return "";
 
-        return null;
     }
 
 
@@ -133,11 +136,11 @@ public class GaussColumn {
         this.datetype = datetype;
     }
 
-    public String getCharacter_maximum_length() {
+    public Long getCharacter_maximum_length() {
         return character_maximum_length;
     }
 
-    public void setCharacter_maximum_length(String character_maximum_length) {
+    public void setCharacter_maximum_length(Long character_maximum_length) {
         this.character_maximum_length = character_maximum_length;
     }
 
@@ -149,35 +152,51 @@ public class GaussColumn {
         this.character_octet_length = character_octet_length;
     }
 
-    public String getNumeric_precision() {
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public ColumnGroupEnum getGroupEnum() {
+        return groupEnum;
+    }
+
+    public void setGroupEnum(ColumnGroupEnum groupEnum) {
+        this.groupEnum = groupEnum;
+    }
+
+    public Long getNumeric_precision() {
         return numeric_precision;
     }
 
-    public void setNumeric_precision(String numeric_precision) {
+    public void setNumeric_precision(Long numeric_precision) {
         this.numeric_precision = numeric_precision;
     }
 
-    public String getNumeric_precision_radix() {
+    public int getNumeric_precision_radix() {
         return numeric_precision_radix;
     }
 
-    public void setNumeric_precision_radix(String numeric_precision_radix) {
+    public void setNumeric_precision_radix(int numeric_precision_radix) {
         this.numeric_precision_radix = numeric_precision_radix;
     }
 
-    public String getNumeric_scale() {
+    public Long getNumeric_scale() {
         return numeric_scale;
     }
 
-    public void setNumeric_scale(String numeric_scale) {
+    public void setNumeric_scale(Long numeric_scale) {
         this.numeric_scale = numeric_scale;
     }
 
-    public String getDatetime_precision() {
+    public Long getDatetime_precision() {
         return datetime_precision;
     }
 
-    public void setDatetime_precision(String datetime_precision) {
+    public void setDatetime_precision(Long datetime_precision) {
         this.datetime_precision = datetime_precision;
     }
 
@@ -212,4 +231,5 @@ public class GaussColumn {
     public void setDtd_identifier(String dtd_identifier) {
         this.dtd_identifier = dtd_identifier;
     }
+
 }

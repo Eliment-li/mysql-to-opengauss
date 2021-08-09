@@ -2,15 +2,13 @@ package com.tiange.core.entity.mysql;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.tiange.core.entity.opengauss.ColumnGroupEnum;
 import com.tiange.core.entity.opengauss.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * 数据库表字段 JAVABEAN
+ * 数据库表字段 实体类
  */
 public class Column {
 
@@ -20,13 +18,16 @@ public class Column {
 
     private String table_schema;
     private String table_name;
-    /*column_name is the type name only with no other information*/
-    private String column_name;
+
     private String column_default;
     private String is_nullable;
 
+    /*column_name is the type name only with no other information*/
+    private String column_name;
     /*data_type contains the type name and possibly other information such as the precision or length.*/
     private String data_type;
+
+    private String column_type;
 
     private Long character_maximum_length;
 
@@ -39,11 +40,10 @@ public class Column {
     /*For temporal columns, the fractional seconds precision.*/
     private Long datetime_precision;
 
-
     private String character_set_name;
 
     private String collation_name;
-    private String column_type;
+
 
     /*If COLUMN_KEY is empty, the column either is not indexed or is indexed only as a secondary column in a multiple-column, nonunique index.
 
@@ -72,7 +72,7 @@ public class Column {
      */
     private String toOpenGaussType(String mysqlDataType) {
 
-        String dataTypeJson = FileUtils.getStringByClasspath("mysql/dataTypeMap.json");
+        String dataTypeJson = FileUtils.getStringByClasspath("mysql/json/dataTypeMap.json");
 
         JSONObject map = JSONObject.parseObject(dataTypeJson);
 
@@ -124,12 +124,31 @@ public class Column {
 
         String datetype = toOpenGaussType(this.getData_type());//字段类型
 
-        /*Numeric 类型的长度为固定的，不需要处理长度*/
-        if (isNumeric()) {
+        /* 整数类型的长度为固定的，不需要处理长度*/
+       /* if (isInteger()) {
             gaussColumn.setColumn_name(this.getColumn_name());//字段名
             gaussColumn.setDatetype(datetype);
-        }
+        }*/
+        //字段名
+        gaussColumn.setColumn_name(this.column_name);
+        //时间类型的精度
+        gaussColumn.setDatetime_precision(this.datetime_precision);
+        //数字类型的长度
+        gaussColumn.setNumeric_precision(this.numeric_precision);
+        //数字类型的精度
+        gaussColumn.setNumeric_scale(this.numeric_scale);
+        //注释
+        gaussColumn.setComment(this.column_comment);
+        //默认值
+        gaussColumn.setColumn_default(this.column_default);
+        //是否可以为null
+        gaussColumn.setIs_nullable(this.is_nullable);
+        //最大长度
+        gaussColumn.setCharacter_maximum_length(this.character_maximum_length);
 
+        //类型组
+        gaussColumn.setGroupEnum(getColunGroupEnum());
+        //column key
         return gaussColumn;
     }
 
@@ -159,27 +178,14 @@ public class Column {
     }
 
     /**
-     * 判断数据类型是否为数字类型
-     *
-     * @return
+     * 获取数据类型的组名
      */
-    private boolean isnteger() {
-        Set<String> IntGroup = new HashSet<String>(10) {
-            {
-                add("int");
-                add("tinyint");
-                add("smallint");
-                add("mediumint");
-                add("bigint");
-            }
-        };
-        //decimal float double
-        if (IntGroup.contains(this.data_type))
-            return true;
-        else
-            return false;
+    private ColumnGroupEnum getColunGroupEnum() {
+
+        return ColumnGroupEnum.map.get(this.column_type);
     }
 
+    //decimal float double
 
     /* The date and time data types for representing temporal values are DATE, TIME, DATETIME, TIMESTAMP, and YEAR. */
     private String dateAndTimeTypeConvertor() {
