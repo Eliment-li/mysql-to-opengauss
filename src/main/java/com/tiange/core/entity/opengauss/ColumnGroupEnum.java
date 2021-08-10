@@ -36,7 +36,11 @@ public enum ColumnGroupEnum {
     /**
      * 字符串类型 包括 char 和 varchar
      */
-    CHARS("chars");
+    CHARS("chars"),
+    /**
+     * 字符串类型 包括 tinytext text mediumtext longtext
+     */
+    TEXT("text");
 
     private String name;
 

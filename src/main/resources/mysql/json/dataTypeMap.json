@@ -19,9 +19,9 @@
   "tinyblob": "varchar",
   "mediumblob": "varchar",
   "longblob": "varchar",
-  "text": "varchar",
-  "tinytext": "varchar",
-  "mediumtext": "varchar",
-  "longtext": "varchar",
+  "text": "text",
+  "tinytext": "text",
+  "mediumtext": "text",
+  "longtext": "text",
   "": ""
 }

@@ -90,7 +90,10 @@ public class GaussColumn {
             case DATE_AND_TIME:
                 createTableSql = toTimeAndTimeTypeSql();
                 break;
-
+            case CHARS:
+                createTableSql = toCharsTypeSql();
+            case TEXT:
+                createTableSql = toTextTypeSql();
 
             default:
                 break;
@@ -155,9 +158,23 @@ public class GaussColumn {
     }
 
     /*The string data types are CHAR, VARCHAR, BINARY, VARBINARY, BLOB, TEXT, ENUM, and SET.*/
-    private String stringTypeConvertor() {
+    private StringBuilder toCharsTypeSql() {
+        StringBuilder sql = new StringBuilder(16);
+        sql.append(QUOTE + this.column_name + QUOTE);
+        sql.append(" ");
+        sql.append(this.datetype);
+        sql.append("(" + this.character_maximum_length + ")");
 
-        return "";
+        return sql;
+    }
+
+    private StringBuilder toTextTypeSql() {
+        StringBuilder sql = new StringBuilder(16);
+        sql.append(QUOTE + this.column_name + QUOTE);
+        sql.append(" ");
+        sql.append(this.datetype);
+
+        return sql;
     }
 
     private String spatialTypeConvertor() {
