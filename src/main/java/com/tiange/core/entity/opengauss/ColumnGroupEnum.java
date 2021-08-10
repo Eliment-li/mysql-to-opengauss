@@ -26,15 +26,17 @@ public enum ColumnGroupEnum {
      */
     NUMERIC("numeric"),
 
-    /**
-     * 日期类型
-     */
-    DATE("date"),
 
     /**
-     * 时间类型
+     * TIMESTAMP[(p)]
+     * 日期和时间。p表示小数点后的精度，取值范围为0~6。
      */
-    TIME("time");
+    DATE_AND_TIME("date_and_time"),
+
+    /**
+     * 字符串类型 包括 char 和 varchar
+     */
+    CHARS("chars");
 
     private String name;
 

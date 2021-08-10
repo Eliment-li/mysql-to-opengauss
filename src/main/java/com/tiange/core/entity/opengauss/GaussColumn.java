@@ -71,12 +71,101 @@ public class GaussColumn {
     private String dtd_identifier;
 
 
-    public String toCreateTableSql() {
-        
-        return "";
+    private static String QUOTE = "\"";
 
+    /**
+     * @return 建表语句片段
+     */
+    public StringBuilder toCreateTableSql() {
+        StringBuilder createTableSql = new StringBuilder(16);
+
+        /*不同类型的数据，使用不同的转换器 */
+        switch (this.groupEnum) {
+            case INT:
+                createTableSql = toIntTypeSql();
+                break;
+            case NUMERIC:
+                createTableSql = toNumericTypeSql();
+                break;
+            case DATE_AND_TIME:
+                createTableSql = toTimeAndTimeTypeSql();
+                break;
+
+
+            default:
+                break;
+        }
+
+        createTableSql = toIntTypeSql();
+
+
+        return createTableSql;
     }
 
+    /**
+     * 适用于 int 类型
+     *
+     * @return 建表语句
+     * @see ColumnGroupEnum
+     */
+    public StringBuilder toIntTypeSql() {
+
+        StringBuilder sql = new StringBuilder(16);
+        sql.append(QUOTE + this.column_name + QUOTE);
+        sql.append(" ");
+        sql.append(this.datetype);
+
+        return sql;
+    }
+
+    /**
+     * 适用于 小数类型
+     *
+     * @return 建表语句
+     * @see ColumnGroupEnum
+     */
+    public StringBuilder toNumericTypeSql() {
+
+        StringBuilder sql = new StringBuilder(16);
+        sql.append(QUOTE + this.column_name + QUOTE);
+        sql.append(" ");
+        sql.append(this.datetype);
+        sql.append("(" + this.numeric_precision + ")");
+
+        //todo 处理 mysql侧对应的 float,float(p), float(M,D) 类型
+
+        return sql;
+    }
+
+    /**
+     * 适用于 时间类型
+     *
+     * @return 建表语句
+     * @see ColumnGroupEnum
+     */
+    private StringBuilder toTimeAndTimeTypeSql() {
+        // todo 解決 mysql 日期中出现0 的问题
+        StringBuilder sql = new StringBuilder(16);
+        sql.append(QUOTE + this.column_name + QUOTE);
+        sql.append(" ");
+        sql.append(this.datetype);
+        sql.append("(" + this.datetime_precision + ")");
+
+        return sql;
+    }
+
+    /*The string data types are CHAR, VARCHAR, BINARY, VARBINARY, BLOB, TEXT, ENUM, and SET.*/
+    private String stringTypeConvertor() {
+
+        return "";
+    }
+
+    private String spatialTypeConvertor() {
+
+        return "";
+    }
+
+    //todo  实现各种类型的数据生成sql语句
 
     /* getter & setter */
 

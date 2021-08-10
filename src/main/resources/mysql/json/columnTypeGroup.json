@@ -1,8 +1,0 @@
-{
-  "this_is_comments": "左侧数据类型：右侧组名",
-  "int": "int",
-  "tinyint": "int",
-  "smallint": "int",
-  "mediumint": "int",
-  "bigint": "int"
-}

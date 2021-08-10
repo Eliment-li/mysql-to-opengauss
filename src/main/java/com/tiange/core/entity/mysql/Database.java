@@ -84,7 +84,7 @@ public class Database {
 
         //读取数据库表
         database.setTables(new Table(this).readData());
-        System.out.println(database.getTables().get(2).toCreateSql());
+        System.out.println(database.getTables().get(3).toCreateSql());
 
         return database;
 

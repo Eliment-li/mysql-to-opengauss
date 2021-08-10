@@ -182,31 +182,12 @@ public class Column {
      */
     private ColumnGroupEnum getColunGroupEnum() {
 
-        return ColumnGroupEnum.map.get(this.column_type);
+        return ColumnGroupEnum.map.get(this.data_type);
     }
 
-    //decimal float double
 
-    /* The date and time data types for representing temporal values are DATE, TIME, DATETIME, TIMESTAMP, and YEAR. */
-    private String dateAndTimeTypeConvertor() {
-        // todo 解決 mysql 日期中出现0 的问题
-        return "";
-    }
 
-    /*The string data types are CHAR, VARCHAR, BINARY, VARBINARY, BLOB, TEXT, ENUM, and SET.*/
-    private String stringTypeConvertor() {
 
-        return "";
-    }
-
-    private String spatialTypeConvertor() {
-
-        return "";
-    }
-
-    private String map2GaussType() {
-        return null;
-    }
 
 
     /*转换器 结束  */
