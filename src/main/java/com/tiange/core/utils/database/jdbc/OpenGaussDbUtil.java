@@ -7,7 +7,7 @@ public class OpenGaussDbUtil {
     //创建数据库连接。
     public static Connection GetConnection(String username, String passwd) {
         String driver = "org.postgresql.Driver";
-        String sourceURL = "jdbc:postgresql://41689cd16960d394.natapp.cc:65521/test";
+        String sourceURL = "jdbc:postgresql://aa71e16381066044.natapp.cc:12321/postgres";
         Connection conn = null;
         try {
             //加载数据库驱动。
@@ -30,6 +30,33 @@ public class OpenGaussDbUtil {
     }
 
     ;
+
+    public static int execute(String sql) {
+        {
+            Statement stmt = null;
+            try {
+                stmt = GetConnection("jack", "root123..0").createStatement();
+
+                //执行普通SQL语句。
+                int rc = stmt
+                        .executeUpdate(sql);
+
+                stmt.close();
+                return rc;
+            } catch (SQLException e) {
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+    }
 
     //执行普通SQL语句，创建customer_t1表。
     public static void CreateTable(Connection conn) {

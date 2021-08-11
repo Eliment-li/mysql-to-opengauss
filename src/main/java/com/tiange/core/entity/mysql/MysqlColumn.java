@@ -93,8 +93,11 @@ public class MysqlColumn {
 
         String datetype = toOpenGaussType(this.getData_type());//字段类型
 
+
         //字段名
         gaussColumn.setColumn_name(this.column_name);
+        //字段类型
+        gaussColumn.setDatetype(datetype);
         //时间类型的精度
         gaussColumn.setDatetime_precision(this.datetime_precision);
         //数字类型的长度
@@ -145,8 +148,11 @@ public class MysqlColumn {
      * 获取数据类型的组名
      */
     private ColumnGroupEnum getColunGroupEnum() {
-
-        return ColumnGroupEnum.map.get(this.data_type);
+        ColumnGroupEnum groupEnum = ColumnGroupEnum.map.get(this.data_type);
+        if (groupEnum == null) {
+            System.out.println("未找到匹配的Group:  " + this.data_type);
+        }
+        return groupEnum;
     }
 
 

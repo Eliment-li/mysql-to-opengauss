@@ -42,7 +42,7 @@ public enum ColumnGroupEnum {
      */
     TEXT("text");
 
-    private String name;
+    private String msg;
 
     /**
      * 数据类型与组名的映射关系
@@ -51,13 +51,13 @@ public enum ColumnGroupEnum {
     public static final Map<String, ColumnGroupEnum> map = new HashMap<String, ColumnGroupEnum>();
 
     // 构造方法
-    private ColumnGroupEnum(String name) {
-        this.name = name;
+    private ColumnGroupEnum(String msg) {
+        this.msg = msg;
     }
 
     public static ColumnGroupEnum findByName(String Name) {
         for (ColumnGroupEnum v : values()) {
-            if (v.name().equals(Name)) {
+            if (v.msg.equals(Name)) {
                 return v;
             }
         }
@@ -67,7 +67,7 @@ public enum ColumnGroupEnum {
     //初始化映射关系
     static {
         //加载 配置文件
-        String columnTypeGroup = FileUtils.getStringByClasspath("mysql/json/dataTypeMap.json");
+        String columnTypeGroup = FileUtils.getStringByClasspath("mysql/json/dataTypeGroup.json");
         JSONObject GroupMap = JSONObject.parseObject(columnTypeGroup);
 
         for (Map.Entry<String, Object> entry : GroupMap.entrySet()) {

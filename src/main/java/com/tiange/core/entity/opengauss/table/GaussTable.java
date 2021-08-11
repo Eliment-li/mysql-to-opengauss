@@ -2,6 +2,7 @@ package com.tiange.core.entity.opengauss.table;
 
 import com.tiange.core.entity.opengauss.column.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
+import com.tiange.core.utils.others.StringUtils;
 
 import java.util.List;
 
@@ -25,15 +26,39 @@ public class GaussTable {
         StringBuilder sql = new StringBuilder(CREATE_TABLE_SQL);
 
         // openGauss 的表名前要加上模式名  例如 "jack"."test";
-        String tableName = "\"public\"." + "\"" + this.table_name + "\"";
+        StringBuilder tableName = new StringBuilder("\"jack\"." + "\"" + this.table_name + "\"");
 
-        //替换表名
-        int index = sql.indexOf("${tableName}");
+        //替换表名 ${tableName}
+        StringUtils.replace("${tableName}", tableName, sql);
 
-        sql = sql.replace(index, index + "${tableName}".length(), tableName);
+        //替换字段 ${columnSql}
+        StringBuilder columnSql = new StringBuilder(144);
 
+        //  columnSql=gaussColumns.stream().collect(Collectors.joining(","))
+
+        for (GaussColumn gaussColumn : this.gaussColumns) {
+            columnSql.append(gaussColumn.toCreateTableSql());
+            columnSql.append(",");
+        }
+
+        //去掉最后一个逗号
+        columnSql = columnSql.deleteCharAt(columnSql.length() - 1);
+        StringUtils.replace(" ${columnSql}", columnSql, sql);
+
+        //comment
+
+        StringUtils.replace("${comment}", new StringBuilder(" "), sql);
         return sql;
     }
+
+    private StringBuilder getColumnsSql() {
+        StringBuilder sql = new StringBuilder(144);
+
+
+        return sql;
+
+    }
+
 
     /* getter & setter */
 

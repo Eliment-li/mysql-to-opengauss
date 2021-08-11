@@ -112,16 +112,10 @@ public class MysqlTable implements Serializable {
         sql = sql.replace("${tableName}", tableName);
 
         //engine
-        //  sql = sql.replace("${engine}", " ENGINE = " + this.engine);
+
 
         //charset
-       /* if (this.getMysqlDatabase().getInfo().getIgnoreCharacterCompare()) {
-            sql = sql.replace("${charset}", "");
-            sql = sql.replace("${collate}", "");
-        } else {
-            sql = sql.replace("${charset}", " DEFAULT CHARSET = " + this.character_set_name);
-            sql = sql.replace("${collate}", " COLLATE = " + this.table_collation);
-        }*/
+
 
         //comment
         String comment = toOpenGausscomment(this.table_comment);
@@ -131,14 +125,6 @@ public class MysqlTable implements Serializable {
         //建表语句
         StringBuilder sb = new StringBuilder();
 
-        //拼接Column 语句
-       /* for (MysqlColumn mysqlColumn : this.mysqlColumns) {
-
-            StringBuilder columnSql = mysqlColumn.toCreateTableSql();
-
-            sb.append(columnSql);
-            sb.append(",");
-        }*/
         //去除最后一个逗号
         sb.deleteCharAt(sb.length() - 1);
 

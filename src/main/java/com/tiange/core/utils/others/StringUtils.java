@@ -6,4 +6,13 @@ public class StringUtils {
 
         return str == null || str.length() == 0;
     }
+
+    //todo  优化字符串替换的方式
+    public static void replace(String target, StringBuilder replacement,
+                               StringBuilder builder) {
+        int indexOfTarget = -1;
+        while ((indexOfTarget = builder.indexOf(target)) >= 0) {
+            builder.replace(indexOfTarget, indexOfTarget + target.length(), replacement.toString());
+        }
+    }
 }
