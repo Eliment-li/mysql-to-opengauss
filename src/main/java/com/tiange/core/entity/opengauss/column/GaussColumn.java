@@ -79,11 +79,13 @@ public class GaussColumn {
     public StringBuilder toCreateTableSql() {
         StringBuilder createTableSql = new StringBuilder(16);
 
+        if (this.datetype.equals("float")) System.out.println(this.groupEnum);
         /*不同类型的数据，使用不同的转换器 */
         //跳过没有指定组的字段
         if (this.groupEnum == null) {
             //todo alert
             createTableSql = new StringBuilder(" ");
+            return createTableSql;
         }
         switch (this.groupEnum) {
             case INT:
@@ -92,21 +94,22 @@ public class GaussColumn {
             case NUMERIC:
                 createTableSql = toNumericTypeSql();
                 break;
+            case FLOAT:
+                createTableSql = toFloatTypeSql();
+                break;
             case DATE_AND_TIME:
                 createTableSql = toTimeAndTimeTypeSql();
                 break;
             case CHARS:
                 createTableSql = toCharsTypeSql();
+                break;
             case TEXT:
                 createTableSql = toTextTypeSql();
-
+                break;
             default:
                 createTableSql = new StringBuilder(" ");
                 break;
         }
-
-        createTableSql = toIntTypeSql();
-
 
         return createTableSql;
     }
@@ -128,8 +131,25 @@ public class GaussColumn {
     }
 
     /**
-     * 适用于 小数类型
-     *
+     * 适用于 固定长度的小数类型
+     * @return 建表语句
+     * @see ColumnGroupEnum
+     */
+    public StringBuilder toFloatTypeSql() {
+        {
+
+            StringBuilder sql = new StringBuilder(16);
+            sql.append(QUOTE + this.column_name + QUOTE);
+            sql.append(" ");
+            sql.append(this.datetype);
+
+            return sql;
+        }
+
+    }
+
+    /**
+     * 适用于 非固定长度的小数类型
      * @return 建表语句
      * @see ColumnGroupEnum
      */
@@ -139,9 +159,14 @@ public class GaussColumn {
         sql.append(QUOTE + this.column_name + QUOTE);
         sql.append(" ");
         sql.append(this.datetype);
-        sql.append("(" + this.numeric_precision + ")");
 
-        //todo 处理 mysql侧对应的 float,float(p), float(M,D) 类型
+        if (numeric_precision != 0 && numeric_scale != 0)
+
+            sql.append("(" + this.numeric_precision + "," + numeric_scale + ")");
+
+        else if (numeric_precision != 0)
+
+            sql.append("(" + this.numeric_precision + ")");
 
         return sql;
     }
@@ -158,12 +183,20 @@ public class GaussColumn {
         sql.append(QUOTE + this.column_name + QUOTE);
         sql.append(" ");
         sql.append(this.datetype);
-        sql.append("(" + this.datetime_precision + ")");
+
+        if (this.datetime_precision != null)
+            sql.append("(" + this.datetime_precision + ")");
 
         return sql;
     }
 
-    /*The string data types are CHAR, VARCHAR, BINARY, VARBINARY, BLOB, TEXT, ENUM, and SET.*/
+
+    /**
+     * 适用于字符串类型
+     *
+     * @return 建表语句
+     * @see ColumnGroupEnum
+     */
     private StringBuilder toCharsTypeSql() {
         StringBuilder sql = new StringBuilder(16);
         sql.append(QUOTE + this.column_name + QUOTE);

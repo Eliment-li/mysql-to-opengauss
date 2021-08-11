@@ -22,10 +22,15 @@ public enum ColumnGroupEnum {
     INT("int"),
 
     /**
-     * 除整数外的其他数字类型
+     * 小数类型
      */
     NUMERIC("numeric"),
 
+    /**
+     * 包裹 float4 ，float8 这些类型长度固定
+     * 建表的时候，不能指定它的长度 例如 float4(10) ，这样是错误的
+     */
+    FLOAT("float"),
 
     /**
      * TIMESTAMP[(p)]

@@ -5,9 +5,8 @@
   "smallint": "int",
   "mediumint": "int",
   "bigint": "int",
-
-  "float": "numeric",
-  "double": "numeric",
+  "float": "float",
+  "double": "float",
   "decimal": "numeric",
 
   "time": "date_and_time",

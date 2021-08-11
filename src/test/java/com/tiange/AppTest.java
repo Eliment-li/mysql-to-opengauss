@@ -24,9 +24,6 @@ public class AppTest
 
     public static void main(String[] args) {
 
-
-        //mysqlDatabase.Init();
-
         try {
 
 
@@ -39,17 +36,9 @@ public class AppTest
                 System.out.println(mysqlTable.toOpenGaussTable().toCreateSql());
                 OpenGaussDbUtil.execute(mysqlTable.toOpenGaussTable().toCreateSql().toString());
             }
-            //输出建表语句
-            // MysqlTable mysqlTable = mysqlDatabase.getMysqlTables().get(0);
 
-            //  System.out.println(mysqlTable.toOpenGaussTable().toCreateSql());
-
-
-            //todo  执行语句
         } catch (Exception e) {
-
             e.printStackTrace();
-
         }
 
     }
