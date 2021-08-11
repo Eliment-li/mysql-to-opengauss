@@ -1,6 +1,7 @@
 package com.tiange.core.entity.opengauss.table;
 
 import com.tiange.core.entity.opengauss.column.GaussColumn;
+import com.tiange.core.utils.others.FileUtils;
 
 import java.util.List;
 
@@ -14,8 +15,25 @@ public class GaussTable {
     String table_collation;
     String table_comment;
 
+    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("mysql/create_table.sql");
+
     private List<GaussColumn> gaussColumns;
 //private List<Key> keys;
+
+    public StringBuilder toCreateSql() {
+        //将长度设置的大一点，减少 StringBuilder 扩容次数
+        StringBuilder sql = new StringBuilder(CREATE_TABLE_SQL);
+
+        // openGauss 的表名前要加上模式名  例如 "jack"."test";
+        String tableName = "\"public\"." + "\"" + this.table_name + "\"";
+
+        //替换表名
+        int index = sql.indexOf("${tableName}");
+
+        sql = sql.replace(index, index + "${tableName}".length(), tableName);
+
+        return sql;
+    }
 
     /* getter & setter */
 

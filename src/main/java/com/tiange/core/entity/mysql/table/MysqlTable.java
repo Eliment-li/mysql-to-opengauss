@@ -62,7 +62,7 @@ public class MysqlTable implements Serializable {
 
         //set columns
         gaussTable.setGaussColumns(listGaussColumns());
-        
+
         return gaussTable;
 
     }

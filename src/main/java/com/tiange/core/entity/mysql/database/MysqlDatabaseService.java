@@ -1,7 +1,6 @@
 package com.tiange.core.entity.mysql.database;
 
-import com.tiange.core.entity.mysql.table.MysqlTable;
-import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
+import com.tiange.core.entity.mysql.table.MysqlTableService;
 
 import java.sql.SQLException;
 
@@ -11,7 +10,7 @@ public class MysqlDatabaseService {
      * 数据库配置
      */
     private DatabaseConfig config;
-
+    private MysqlDatabase database;
 
     private String SQL = "SELECT CONSTRAINT_CATALOG," +
             "       CONSTRAINT_SCHEMA," +
@@ -30,40 +29,40 @@ public class MysqlDatabaseService {
 
 
     public MysqlDatabaseService() {
-        Init();
+        Init("mysqltest");
     }
 
-    public MysqlDatabaseService(DatabaseConfig config) {
-        this.config = config;
+    public MysqlDatabaseService(MysqlDatabase database) {
+        this.database = database;
+        SQL = SQL.replace("?", "'" + database.getName() + "'");
+        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
     }
 
     /**
      * 初始化
      */
 
-    public void Init() {
-        String databaseMame = "mysqltest";
-        SQL = SQL.replace("?", "'" + databaseMame + "'");
-        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
+    public void Init(String databaseMame) {
+        // String databaseMame = "mysqltest";
+
     }
 
 
     /**
-     * 从数据库中读取数据
+     * 从数据库中读取元数据
      */
     public MysqlDatabase ReadMetaData() throws SQLException {
 
-        MySqlDbUtil dbUtil = new MySqlDbUtil(this.config);
-
-        MysqlDatabase mysqlDatabase = (MysqlDatabase) dbUtil.queryForObject(SQL, MysqlDatabase.class);
+        //   MySqlDbUtil dbUtil = new MySqlDbUtil(this.config);
+        //Init(this.database.getName());
+        //database.setName("mysqltest");
+        //(MysqlDatabase) dbUtil.queryForObject(SQL, MysqlDatabase.class);
 
         //读取数据库表
-        mysqlDatabase.setMysqlTables(new MysqlTable(mysqlDatabase).readData());
+        database.setMysqlTables(new MysqlTableService(database).listTables());
 
-        //输出建表语句
-        System.out.println(mysqlDatabase.getMysqlTables().get(0).toCreateSql());
 
-        return mysqlDatabase;
+        return database;
 
     }
 
@@ -73,5 +72,13 @@ public class MysqlDatabaseService {
 
     public void setConfig(DatabaseConfig config) {
         this.config = config;
+    }
+
+    public MysqlDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(MysqlDatabase database) {
+        this.database = database;
     }
 }

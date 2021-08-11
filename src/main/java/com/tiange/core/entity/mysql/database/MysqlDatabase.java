@@ -42,6 +42,9 @@ public class MysqlDatabase {
      */
     private List<Trigger> triggers;
 
+    public MysqlDatabase(String name) {
+        this.name = name;
+    }
 
     /**
      * 初始化数据库结构

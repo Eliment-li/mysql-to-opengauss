@@ -28,7 +28,7 @@ public class MysqlTableService {
     }
 
     public MysqlTableService(MysqlDatabase database) {
-
+        this.mysqlDatabase = database;
         TABLE_SQL = TABLE_SQL.replace("?", "'" + database.getName() + "'");
         COlUMN_SQL = COlUMN_SQL.replace("?", "'" + database.getName() + "'");
         KEY_SQL = KEY_SQL.replace("?", "'" + database.getName() + "'");
@@ -36,7 +36,8 @@ public class MysqlTableService {
 
 
     /*获取该数据库下所有的表*/
-    public List<MysqlTable> listTables(String databaseName) throws SQLException {
+    public List<MysqlTable> listTables() throws SQLException {
+        String databaseName = this.mysqlDatabase.getName();
 
         TABLE_SQL = TABLE_SQL.replace("?", "'" + databaseName + "'");
         COlUMN_SQL = COlUMN_SQL.replace("?", "'" + databaseName + "'");
