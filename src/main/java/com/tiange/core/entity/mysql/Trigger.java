@@ -1,6 +1,8 @@
 package com.tiange.core.entity.mysql;
 
 
+import com.tiange.core.entity.mysql.database.MysqlDatabase;
+
 /**
  */
 public class Trigger {
@@ -16,7 +18,7 @@ public class Trigger {
     private String action_orientation;
     private String action_statement;
 
-    private Database database;
+    private MysqlDatabase mysqlDatabase;
 
     public void readData() {
         //todo
@@ -102,11 +104,11 @@ public class Trigger {
         this.action_statement = action_statement;
     }
 
-    public Database getDatabase() {
-        return database;
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
+    public void setMysqlDatabase(MysqlDatabase mysqlDatabase) {
+        this.mysqlDatabase = mysqlDatabase;
     }
 }

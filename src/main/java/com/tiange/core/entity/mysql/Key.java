@@ -1,5 +1,6 @@
 package com.tiange.core.entity.mysql;
 
+import com.tiange.core.entity.mysql.table.MysqlTable;
 import com.tiange.core.utils.others.StringUtils;
 
 import java.io.Serializable;
@@ -22,7 +23,7 @@ public class Key implements Serializable {
     private String referenced_table_name;
     private String referenced_column_name;
 
-    private Table table;
+    private MysqlTable mysqlTable;
 
     public enum KeyType {
         PRIMARY, FOREIGN, UNIQUE
@@ -137,11 +138,11 @@ public class Key implements Serializable {
         this.referenced_column_name = referenced_column_name;
     }
 
-    public Table getTable() {
-        return table;
+    public MysqlTable getMysqlTable() {
+        return mysqlTable;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
+    public void setMysqlTable(MysqlTable mysqlTable) {
+        this.mysqlTable = mysqlTable;
     }
 }

@@ -1,6 +1,6 @@
 package com.tiange;
 
-import com.tiange.core.entity.mysql.Database;
+import com.tiange.core.entity.mysql.database.MysqlDatabaseService;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -21,13 +21,12 @@ public class AppTest
 
     public static void main(String[] args) {
 
-        Database database = new Database();
 
-        database.Init();
+        //mysqlDatabase.Init();
 
         try {
 
-            database.ReadData();
+            new MysqlDatabaseService().ReadMetaData();
 
         } catch (Exception e) {
 

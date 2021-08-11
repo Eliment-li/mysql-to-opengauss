@@ -1,6 +1,6 @@
 package com.tiange.core.utils.database.jdbc;
 
-import com.tiange.core.entity.mysql.DatabaseConfig;
+import com.tiange.core.entity.mysql.database.DatabaseConfig;
 import com.tiange.core.utils.database.manager.Manager;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
@@ -19,6 +19,9 @@ public class MySqlDbUtil implements Manager {
 
     DatabaseConfig config;
 
+    public MySqlDbUtil() {
+        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
+    }
     public MySqlDbUtil(DatabaseConfig config) {
         this.config = config;
     }

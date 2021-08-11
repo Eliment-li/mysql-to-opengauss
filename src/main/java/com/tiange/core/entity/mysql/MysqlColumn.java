@@ -2,15 +2,15 @@ package com.tiange.core.entity.mysql;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.tiange.core.entity.opengauss.ColumnGroupEnum;
-import com.tiange.core.entity.opengauss.GaussColumn;
+import com.tiange.core.entity.mysql.table.MysqlTable;
+import com.tiange.core.entity.opengauss.column.ColumnGroupEnum;
+import com.tiange.core.entity.opengauss.column.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
-import com.tiange.core.utils.others.StringUtils;
 
 /**
  * 数据库表字段 实体类
  */
-public class Column {
+public class MysqlColumn {
 
     public static final String FLAG_NOT_NULL = "NO";
     public static final String FLAG_DEFAULT_NULL = "YES";
@@ -53,16 +53,16 @@ public class Column {
 
       If COLUMN_KEY is MUL, the column is the first column of a nonunique index in which multiple occurrences of a given value are permitted within the column.
 
-      If more than one of the COLUMN_KEY values applies to a given column of a table, COLUMN_KEY displays the one with the highest priority, in the order PRI, UNI, MUL.
+      If more than one of the COLUMN_KEY values applies to a given column of a mysqlTable, COLUMN_KEY displays the one with the highest priority, in the order PRI, UNI, MUL.
 
-      A UNIQUE index may be displayed as PRI if it cannot contain NULL values and there is no PRIMARY KEY in the table. A UNIQUE index may display as MUL if several columns form a composite UNIQUE index; although the combination of the columns is unique, each column can still hold multiple occurrences of a given value
+      A UNIQUE index may be displayed as PRI if it cannot contain NULL values and there is no PRIMARY KEY in the mysqlTable. A UNIQUE index may display as MUL if several columns form a composite UNIQUE index; although the combination of the columns is unique, each column can still hold multiple occurrences of a given value
     * */
     private String column_key;
     private String extra;
     private String column_comment;
     private String generation_expression;
 
-    private Table table;
+    private MysqlTable mysqlTable;
 
 
     /**
@@ -83,40 +83,9 @@ public class Column {
      * @return return example: " 'id' varchar, "
      * @description 用于创建表
      */
-    public String toCreateTableSql() {
-        //todo 重写 toCreateTableSql，根据不同字段类型，利用numeric_precision等字段，拼接sql语句
+    public StringBuilder toCreateTableSql() {
 
-        //todo  类型转换器，mysql 不同类型 对应 opengauss 类型
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("\"").append(this.column_name).append("\"").append(" ");
-
-        sb.append(getData_type()).append(" ");
-
-        //COLLATE
-      /*  if (!this.getTable().getDatabase().getConfig().getIgnoreCharacterCompare() && !StringUtils.isEmpty(this.collation_name)) {
-            sb.append("COLLATE ").append(this.collation_name).append(" ");
-        }*/
-        //是否为NOT NULL
-        if (FLAG_NOT_NULL.equals(this.is_nullable)) {
-            sb.append(" NOT NULL ");
-        }
-        if (!StringUtils.isEmpty(this.column_default)) {
-            sb.append(" DEFAULT ").append(this.column_default).append(" ");
-        } else if (FLAG_DEFAULT_NULL.equals(this.is_nullable)) {
-            sb.append(" DEFAULT NULL ");
-        }
-        sb.append(this.extra).append(" ");
-
-        //COMMENT
-
-       /* if (!StringUtils.isEmpty(this.column_comment)) {
-            String  COMMENT="COMMENT ON COLUMN"
-            sb.append("COMMENT '").append(this.column_comment).append("' ");
-        }*/
-        //   sb.append(",");
-        return sb.toString();
+        return this.toGaussColumn().toCreateTableSql();
     }
 
     public GaussColumn toGaussColumn() {
@@ -124,11 +93,6 @@ public class Column {
 
         String datetype = toOpenGaussType(this.getData_type());//字段类型
 
-        /* 整数类型的长度为固定的，不需要处理长度*/
-       /* if (isInteger()) {
-            gaussColumn.setColumn_name(this.getColumn_name());//字段名
-            gaussColumn.setDatetype(datetype);
-        }*/
         //字段名
         gaussColumn.setColumn_name(this.column_name);
         //时间类型的精度
@@ -331,11 +295,11 @@ public class Column {
         this.generation_expression = generation_expression;
     }
 
-    public Table getTable() {
-        return table;
+    public MysqlTable getMysqlTable() {
+        return mysqlTable;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
+    public void setMysqlTable(MysqlTable mysqlTable) {
+        this.mysqlTable = mysqlTable;
     }
 }

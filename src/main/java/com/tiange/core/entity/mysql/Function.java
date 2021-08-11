@@ -1,5 +1,6 @@
 package com.tiange.core.entity.mysql;
 
+import com.tiange.core.entity.mysql.database.MysqlDatabase;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
 
@@ -22,14 +23,14 @@ public class Function implements Serializable {
     private String name;
     private String source;
 
-    private Database database;
+    private MysqlDatabase mysqlDatabase;
 
     private List<Routine> routines = new ArrayList<>();
 
 
     public List<Function> readData() throws SQLException {
 
-        MySqlDbUtil dbUtil = new MySqlDbUtil(this.database.getConfig());
+        MySqlDbUtil dbUtil = new MySqlDbUtil();
 
         List<Routine> beanList = (List<Routine>) dbUtil.queryForBeans(FileUtils.getStringByClasspath("sql/detail/function.sql"), Routine.class);
         Map<String, Function> functions = new HashMap<>(0);
@@ -38,7 +39,7 @@ public class Function implements Serializable {
             if (function == null) {
                 function = new Function();
             }
-            function.setDatabase(database);
+            function.setMysqlDatabase(mysqlDatabase);
             function.getRoutines().add(routine);
             function.setDefiner(routine.getDefiner());
             function.setSecurityType(routine.getSecurity_type());
@@ -101,12 +102,12 @@ public class Function implements Serializable {
         this.source = source;
     }
 
-    public Database getDatabase() {
-        return database;
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
+    public void setMysqlDatabase(MysqlDatabase mysqlDatabase) {
+        this.mysqlDatabase = mysqlDatabase;
     }
 
     public List<Routine> getRoutines() {

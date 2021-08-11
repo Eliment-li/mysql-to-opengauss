@@ -1,6 +1,8 @@
 package com.tiange.core.entity.mysql;
 
 
+import com.tiange.core.entity.mysql.database.MysqlDatabase;
+
 import java.io.Serializable;
 
 /**
@@ -20,7 +22,7 @@ public class View implements Serializable {
     private String checkOption;
     private String updatable;
 
-    private Database database;
+    private MysqlDatabase mysqlDatabase;
 
     public void readData() {
         //todo
@@ -107,11 +109,11 @@ public class View implements Serializable {
         this.updatable = updatable;
     }
 
-    public Database getDatabase() {
-        return database;
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
+    public void setMysqlDatabase(MysqlDatabase mysqlDatabase) {
+        this.mysqlDatabase = mysqlDatabase;
     }
 }

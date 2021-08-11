@@ -1,5 +1,7 @@
 package com.tiange.core.entity.mysql;
 
+import com.tiange.core.entity.mysql.database.MysqlDatabase;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public class Procedure implements Serializable {
     private String name;
     private String source;
 
-    private Database database;
+    private MysqlDatabase mysqlDatabase;
 
     private List<Routine> routines = new ArrayList<>();
 
@@ -74,12 +76,12 @@ public class Procedure implements Serializable {
         this.source = source;
     }
 
-    public Database getDatabase() {
-        return database;
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
+    public void setMysqlDatabase(MysqlDatabase mysqlDatabase) {
+        this.mysqlDatabase = mysqlDatabase;
     }
 
     public List<Routine> getRoutines() {

@@ -1,4 +1,4 @@
-package com.tiange.core.entity.opengauss;
+package com.tiange.core.entity.opengauss.column;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tiange.core.utils.others.FileUtils;

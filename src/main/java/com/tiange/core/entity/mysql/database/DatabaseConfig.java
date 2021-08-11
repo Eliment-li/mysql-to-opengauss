@@ -1,4 +1,4 @@
-package com.tiange.core.entity.mysql;
+package com.tiange.core.entity.mysql.database;
 
 import com.tiange.core.utils.others.ObjectUtils;
 

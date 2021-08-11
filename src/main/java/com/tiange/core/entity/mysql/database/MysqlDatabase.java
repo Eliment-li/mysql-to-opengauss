@@ -1,7 +1,10 @@
-package com.tiange.core.entity.mysql;
+package com.tiange.core.entity.mysql.database;
 
-
-import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
+import com.tiange.core.entity.mysql.Function;
+import com.tiange.core.entity.mysql.Procedure;
+import com.tiange.core.entity.mysql.Trigger;
+import com.tiange.core.entity.mysql.View;
+import com.tiange.core.entity.mysql.table.MysqlTable;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -9,11 +12,8 @@ import java.util.List;
 /**
  * 数据库结构定义
  */
-public class Database {
-    /**
-     * 数据库配置
-     */
-    private DatabaseConfig config;
+public class MysqlDatabase {
+
 
     //SCHEMA_NAME
     //DEFAULT_CHARACTER_SET_NAME
@@ -24,7 +24,7 @@ public class Database {
     /**
      * 包含的tables
      */
-    private List<Table> tables;
+    private List<MysqlTable> mysqlTables;
     /**
      * 包含的views
      */
@@ -42,53 +42,6 @@ public class Database {
      */
     private List<Trigger> triggers;
 
-    private String SQL = "SELECT CONSTRAINT_CATALOG," +
-            "       CONSTRAINT_SCHEMA," +
-            "       CONSTRAINT_NAME," +
-            "       TABLE_CATALOG," +
-            "       TABLE_SCHEMA," +
-            "       TABLE_NAME," +
-            "       COLUMN_NAME," +
-            "       ORDINAL_POSITION," +
-            "       POSITION_IN_UNIQUE_CONSTRAINT," +
-            "       REFERENCED_TABLE_SCHEMA," +
-            "       REFERENCED_TABLE_NAME," +
-            "       REFERENCED_COLUMN_NAME" +
-            " FROM   KEY_COLUMN_USAGE " +
-            " WHERE TABLE_SCHEMA = ? ";
-
-
-    /**
-     * 初始化
-     */
-    public void Init(DatabaseConfig config) {
-        this.config = config;
-    }
-
-    public void Init() {
-        this.name = "mysqltest";
-        SQL = SQL.replace("?", "'" + this.name + "'");
-        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
-    }
-
-    /**
-     * 从数据库中读取数据
-     */
-    public Database ReadData() throws SQLException {
-
-        MySqlDbUtil dbUtil = new MySqlDbUtil(this.config);
-
-        Database database = (Database) dbUtil.queryForObject(SQL, Database.class);
-
-        database.Init();
-
-        //读取数据库表
-        database.setTables(new Table(this).readData());
-        System.out.println(database.getTables().get(3).toCreateSql());
-
-        return database;
-
-    }
 
     /**
      * 初始化数据库结构
@@ -97,7 +50,7 @@ public class Database {
      * @return 数据库结构
      * @throws SQLException SQL异常
      */
- /*   public Database init(DatabaseInfo info) throws SQLException {
+ /*   public MysqlDatabase init(DatabaseInfo info) throws SQLException {
         this.info = info;
         this.connection = DbUtil.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
         return configure();
@@ -109,9 +62,9 @@ public class Database {
      * @return 数据库结构
      * @throws SQLException SQL异常
      */
-/*    private Database configure() throws SQLException {
-        Database bean = DbUtil.getBean(this.connection, SQL, Database.class, this.info.getName());
-        bean.setTables(Table.configure(this.connection, this));
+/*    private MysqlDatabase configure() throws SQLException {
+        MysqlDatabase bean = DbUtil.getBean(this.connection, SQL, MysqlDatabase.class, this.info.getName());
+        bean.setMysqlTables(MysqlTable.configure(this.connection, this));
         bean.setViews(View.configure(this.connection, this));
         bean.setFunctions(Function.configure(this.connection, this));
         bean.setProcedures(Procedure.configure(this.connection, this));
@@ -120,13 +73,7 @@ public class Database {
         bean.setConnection(this.connection);
         return bean;
     }*/
-    public DatabaseConfig getConfig() {
-        return config;
-    }
 
-    public void setConfig(DatabaseConfig config) {
-        this.config = config;
-    }
 
     public String getName() {
         return name;
@@ -152,12 +99,12 @@ public class Database {
         this.collate = collate;
     }
 
-    public List<Table> getTables() {
-        return tables;
+    public List<MysqlTable> getMysqlTables() {
+        return mysqlTables;
     }
 
-    public void setTables(List<Table> tables) {
-        this.tables = tables;
+    public void setMysqlTables(List<MysqlTable> mysqlTables) {
+        this.mysqlTables = mysqlTables;
     }
 
     public List<View> getViews() {

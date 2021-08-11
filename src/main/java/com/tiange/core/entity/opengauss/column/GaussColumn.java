@@ -1,4 +1,4 @@
-package com.tiange.core.entity.opengauss;
+package com.tiange.core.entity.opengauss.column;
 
 /**
  * openGauss 表字段实体类
@@ -169,6 +169,7 @@ public class GaussColumn {
     }
 
     private StringBuilder toTextTypeSql() {
+
         StringBuilder sql = new StringBuilder(16);
         sql.append(QUOTE + this.column_name + QUOTE);
         sql.append(" ");

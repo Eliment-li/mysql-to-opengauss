@@ -1,14 +1,17 @@
-package com.tiange.core.entity.mysql;
+package com.tiange.core.entity.mysql.table;
 
 
-import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
-import com.tiange.core.utils.others.FileUtils;
+import com.tiange.core.entity.mysql.Key;
+import com.tiange.core.entity.mysql.MysqlColumn;
+import com.tiange.core.entity.mysql.database.MysqlDatabase;
+import com.tiange.core.entity.opengauss.column.GaussColumn;
+import com.tiange.core.entity.opengauss.table.GaussTable;
 import com.tiange.core.utils.others.ObjectUtils;
 import com.tiange.core.utils.others.StringUtils;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,7 +21,7 @@ import static com.tiange.core.entity.mysql.Key.FLAG_PRIMARY;
 /**
  * 表结构定义
  */
-public class Table implements Serializable {
+public class MysqlTable implements Serializable {
     private static final long serialVersionUID = 1108952612345752323L;
 
     private String table_schema;
@@ -31,29 +34,51 @@ public class Table implements Serializable {
     private String table_collation;
     private String table_comment;
 
-    private List<Column> columns;
+    private List<MysqlColumn> mysqlColumns;
     private List<Key> keys;
 
-    private Database database;
-
-    private String TABLE_SQL = FileUtils.getStringByClasspath("mysql/table.sql");
-    private String COlUMN_SQL = FileUtils.getStringByClasspath("mysql/column.sql");
-    private String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
-
-    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("mysql/create_table.sql");
+    private MysqlDatabase mysqlDatabase;
 
 
-    public Table() {
+    public MysqlTable() {
 
     }
 
-    public Table(Database database) {
+    public MysqlTable(MysqlDatabase mysqlDatabase) {
 
-        this.database = database;
-        TABLE_SQL = TABLE_SQL.replace("?", "'" + this.database.getName() + "'");
-        COlUMN_SQL = COlUMN_SQL.replace("?", "'" + this.database.getName() + "'");
-        KEY_SQL = KEY_SQL.replace("?", "'" + this.database.getName() + "'");
+        this.mysqlDatabase = mysqlDatabase;
 
+    }
+
+    /**
+     * @return openGauss 数据库中，Table对应的实体类
+     */
+    public GaussTable toOpenGaussTable() {
+        GaussTable gaussTable = new GaussTable();
+
+        gaussTable.setTable_name(this.table_name);
+        gaussTable.setTable_schema(this.table_schema);
+        gaussTable.setTable_type(this.table_type);
+
+        //set columns
+        gaussTable.setGaussColumns(listGaussColumns());
+        
+        return gaussTable;
+
+    }
+
+    /**
+     * 将 mysql 的 columns 转换成 openGauss 的 columns
+     *
+     * @return
+     */
+    private List<GaussColumn> listGaussColumns() {
+
+        List<GaussColumn> gaussColumns = new ArrayList<>();
+
+        mysqlColumns.forEach(e -> gaussColumns.add(e.toGaussColumn()));
+
+        return gaussColumns;
     }
 
     /**
@@ -80,7 +105,7 @@ public class Table implements Serializable {
      */
     public String toCreateSql() {
 
-        String sql = CREATE_TABLE_SQL;
+        String sql = "";
 
         // openGauss 的表名前要加上模式名  例如 "jack"."test";
         String tableName = "\"public\"." + "\"" + this.table_name + "\"";
@@ -90,7 +115,7 @@ public class Table implements Serializable {
         //  sql = sql.replace("${engine}", " ENGINE = " + this.engine);
 
         //charset
-       /* if (this.getDatabase().getInfo().getIgnoreCharacterCompare()) {
+       /* if (this.getMysqlDatabase().getInfo().getIgnoreCharacterCompare()) {
             sql = sql.replace("${charset}", "");
             sql = sql.replace("${collate}", "");
         } else {
@@ -106,19 +131,21 @@ public class Table implements Serializable {
         //建表语句
         StringBuilder sb = new StringBuilder();
 
-        //拼接 Column 语句
-        for (Column column : this.columns) {
+        //拼接Column 语句
+       /* for (MysqlColumn mysqlColumn : this.mysqlColumns) {
 
-            String columnSql = column.toCreateTableSql();
+            StringBuilder columnSql = mysqlColumn.toCreateTableSql();
 
             sb.append(columnSql);
             sb.append(",");
-        }
+        }*/
         //去除最后一个逗号
         sb.deleteCharAt(sb.length() - 1);
 
         //todo 优化groupingBy方式，直接根据tableName去查询
 
+
+        //获取 unique 索引
         List<Key> uniqueIndexList = this.keys.stream().filter(
                 s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
                         StringUtils.isEmpty(s.getReferenced_column_name())
@@ -178,36 +205,6 @@ public class Table implements Serializable {
         return sql;
     }
 
-    public List<Table> readData() throws SQLException {
-
-        MySqlDbUtil dbUtil = new MySqlDbUtil(this.database.getConfig());
-
-        //todo 把参数加进去
-        List<Table> list1 = (List<Table>) dbUtil.queryForBeans(
-                TABLE_SQL,
-                Table.class);
-
-        List<Column> list2 = (List<Column>) dbUtil.queryForBeans(
-                COlUMN_SQL,
-                Column.class);
-
-        List<Key> list3 = (List<Key>) dbUtil.queryForBeans(
-                KEY_SQL,
-                Key.class);
-
-        //(List<Table>)
-
-
-        List<Table> tabls = list1.stream().peek(o -> {
-            o.setDatabase(database);
-
-            o.setColumns(list2.stream().peek(s -> s.setTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
-
-            o.setKeys(list3.stream().peek(s -> s.setTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
-        }).collect(Collectors.toList());
-
-        return tabls;
-    }
     /* getter & setter */
 
     public String getTable_schema() {
@@ -282,12 +279,12 @@ public class Table implements Serializable {
         this.table_comment = table_comment;
     }
 
-    public List<Column> getColumns() {
-        return columns;
+    public List<MysqlColumn> getMysqlColumns() {
+        return mysqlColumns;
     }
 
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
+    public void setMysqlColumns(List<MysqlColumn> mysqlColumns) {
+        this.mysqlColumns = mysqlColumns;
     }
 
     public List<Key> getKeys() {
@@ -298,12 +295,12 @@ public class Table implements Serializable {
         this.keys = keys;
     }
 
-    public Database getDatabase() {
-        return database;
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
+    public void setMysqlDatabase(MysqlDatabase mysqlDatabase) {
+        this.mysqlDatabase = mysqlDatabase;
     }
 
     // convertt
