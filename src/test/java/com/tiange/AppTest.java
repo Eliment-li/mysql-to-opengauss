@@ -35,15 +35,16 @@ public class AppTest
 
             //填充元数据 包裹数据库表等
             new MysqlDatabaseService(mysqlDatabase).ReadMetaData();
-           /* for (MysqlTable mysqlTable : mysqlDatabase.getMysqlTables()) {
+            for (MysqlTable mysqlTable : mysqlDatabase.getMysqlTables()) {
                 System.out.println(mysqlTable.toOpenGaussTable().toCreateSql());
-            }*/
+                OpenGaussDbUtil.execute(mysqlTable.toOpenGaussTable().toCreateSql().toString());
+            }
             //输出建表语句
-            MysqlTable mysqlTable = mysqlDatabase.getMysqlTables().get(0);
+            // MysqlTable mysqlTable = mysqlDatabase.getMysqlTables().get(0);
 
-            System.out.println(mysqlTable.toOpenGaussTable().toCreateSql());
+            //  System.out.println(mysqlTable.toOpenGaussTable().toCreateSql());
 
-            OpenGaussDbUtil.execute(mysqlTable.toOpenGaussTable().toCreateSql().toString());
+
             //todo  执行语句
         } catch (Exception e) {
 

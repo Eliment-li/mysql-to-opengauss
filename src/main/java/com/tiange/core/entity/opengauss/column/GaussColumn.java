@@ -80,6 +80,11 @@ public class GaussColumn {
         StringBuilder createTableSql = new StringBuilder(16);
 
         /*不同类型的数据，使用不同的转换器 */
+        //跳过没有指定组的字段
+        if (this.groupEnum == null) {
+            //todo alert
+            createTableSql = new StringBuilder(" ");
+        }
         switch (this.groupEnum) {
             case INT:
                 createTableSql = toIntTypeSql();
@@ -96,6 +101,7 @@ public class GaussColumn {
                 createTableSql = toTextTypeSql();
 
             default:
+                createTableSql = new StringBuilder(" ");
                 break;
         }
 
