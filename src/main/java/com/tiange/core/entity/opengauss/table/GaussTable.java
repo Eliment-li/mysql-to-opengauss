@@ -1,6 +1,7 @@
 package com.tiange.core.entity.opengauss.table;
 
 import com.tiange.core.entity.opengauss.column.GaussColumn;
+import com.tiange.core.entity.opengauss.database.GaussDatabase;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
@@ -15,6 +16,8 @@ public class GaussTable {
     String character_set_name;
     String table_collation;
     String table_comment;
+
+    GaussDatabase gaussDatabase;
 
     private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("mysql/create_table.sql");
 
@@ -47,14 +50,21 @@ public class GaussTable {
 
         //comment
 
-        StringUtils.replace("${comment}", new StringBuilder(" "), sql);
+        StringUtils.replace("${comment}", getColumnCommentSql(), sql);
         return sql;
     }
 
-    private StringBuilder getColumnsSql() {
+
+    /**
+     * Opengauss 中的注释是独立与建表语句的，形式如下：
+     * COMMENT ON COLUMN "{databaseName}"."{TableName}"."{columnName}" IS '{comment}';
+     *
+     * @return 表中所有字段的注释
+     */
+    private StringBuilder getColumnCommentSql() {
         StringBuilder sql = new StringBuilder(144);
 
-
+        this.gaussColumns.forEach(e -> sql.append(e.getCommentSql()));
         return sql;
 
     }
@@ -116,5 +126,13 @@ public class GaussTable {
 
     public void setGaussColumns(List<GaussColumn> gaussColumns) {
         this.gaussColumns = gaussColumns;
+    }
+
+    public GaussDatabase getGaussDatabase() {
+        return gaussDatabase;
+    }
+
+    public void setGaussDatabase(GaussDatabase gaussDatabase) {
+        this.gaussDatabase = gaussDatabase;
     }
 }

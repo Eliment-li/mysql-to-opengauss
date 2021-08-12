@@ -115,34 +115,12 @@ public class MysqlColumn {
 
         //类型组
         gaussColumn.setGroupEnum(getColunGroupEnum());
+
         //column key
         return gaussColumn;
     }
 
-    /*转换器 开始  将字段转换为 sql 语句，用于建表*/
 
-    /**
-     * 适用于数字类型
-     * <p>
-     * exact numeric data types (INTEGER, SMALLINT, DECIMAL, NUMERIC)
-     * <p>
-     * approximate numeric data types (FLOAT, REAL, and DOUBLE PRECISION)
-     * <p>
-     * keyword INT is a synonym for INTEGER
-     * <p>
-     * keywords DEC and FIXED are synonyms for DECIMAL
-     * <p>
-     * In MySQL, NUMERIC is implemented as DECIMAL, They are the same for almost all purposes.
-     * <p>
-     * MySQL treats DOUBLE as a synonym for DOUBLE PRECISION (a nonstandard extension)
-     * <p>
-     * MySQL also treats REAL as a synonym for DOUBLE PRECISION (a nonstandard variation), unless the REAL_AS_FLOAT SQL mode is enabled.
-     */
-    private String numericTypeConvertor() {
-        //todo 除了 int  类型外，其他字段用 numeric_precision 和 numeric_scale 判断字段长度和精度
-        return "";
-
-    }
 
     /**
      * 获取数据类型的组名

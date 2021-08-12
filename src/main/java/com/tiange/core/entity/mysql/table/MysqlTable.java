@@ -51,7 +51,9 @@ public class MysqlTable implements Serializable {
     }
 
     /**
-     * @return openGauss 数据库中，Table对应的实体类
+     * Mysql Table 转换成 Opengauss Table
+     *
+     * @return
      */
     public GaussTable toOpenGaussTable() {
         GaussTable gaussTable = new GaussTable();
@@ -61,7 +63,7 @@ public class MysqlTable implements Serializable {
         gaussTable.setTable_type(this.table_type);
 
         //set columns
-        gaussTable.setGaussColumns(listGaussColumns());
+        gaussTable.setGaussColumns(this.listGaussColumns(gaussTable));
 
         return gaussTable;
 
@@ -72,11 +74,15 @@ public class MysqlTable implements Serializable {
      *
      * @return
      */
-    private List<GaussColumn> listGaussColumns() {
+    private List<GaussColumn> listGaussColumns(GaussTable gaussTable) {
 
         List<GaussColumn> gaussColumns = new ArrayList<>();
 
-        mysqlColumns.forEach(e -> gaussColumns.add(e.toGaussColumn()));
+        mysqlColumns.forEach(e -> {
+            GaussColumn gaussColumn = e.toGaussColumn();
+            gaussColumn.setGaussTable(gaussTable);
+            gaussColumns.add(gaussColumn);
+        });
 
         return gaussColumns;
     }

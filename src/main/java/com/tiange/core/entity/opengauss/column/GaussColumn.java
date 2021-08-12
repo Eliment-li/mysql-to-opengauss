@@ -1,5 +1,8 @@
 package com.tiange.core.entity.opengauss.column;
 
+import com.tiange.core.entity.opengauss.table.GaussTable;
+import com.tiange.core.utils.others.StringUtils;
+
 /**
  * openGauss 表字段实体类
  */
@@ -16,6 +19,9 @@ public class GaussColumn {
     private String character_octet_length;
     private String comment;
     private ColumnGroupEnum groupEnum;
+
+    //引用数据库
+    private GaussTable gaussTable;
 
     /*
     If data_type identifies a numeric type, this column contains the (declared or implicit) precision of the type for this column.
@@ -72,6 +78,9 @@ public class GaussColumn {
 
 
     private static String QUOTE = "\"";
+    private static String YES = "YES";
+    private static String NO = "NO";
+    private static String COLUMN_COMMENT_TEMPLATE = "COMMENT ON COLUMN \"${databaseName}\".\"${tableName}\".\"${columnName}\" IS '${comment}' ";
 
     /**
      * @return 建表语句片段
@@ -110,8 +119,34 @@ public class GaussColumn {
                 createTableSql = new StringBuilder(" ");
                 break;
         }
+        //not null
+        if (is_nullable.equals(NO)) {
+            createTableSql.append(" NOT NULL ");
+        }
 
         return createTableSql;
+    }
+
+
+    /**
+     * @return 生成注释的 sql 语句
+     */
+    public StringBuilder getCommentSql() {
+        StringBuilder sql = new StringBuilder(COLUMN_COMMENT_TEMPLATE);
+
+        String databaseName = this.getGaussTable().getGaussDatabase().getName();
+        String tableName = this.getGaussTable().getTable_name();
+
+        StringUtils.replace("${databaseName}", databaseName, sql);
+        StringUtils.replace("${tableName}", tableName, sql);
+        StringUtils.replace("${columnName}", this.column_name, sql);
+        StringUtils.replace("${comment}", this.comment, sql);
+
+        sql.append(";");
+        sql.append("\n");
+
+
+        return sql;
     }
 
     /**
@@ -378,4 +413,11 @@ public class GaussColumn {
         this.dtd_identifier = dtd_identifier;
     }
 
+    public GaussTable getGaussTable() {
+        return gaussTable;
+    }
+
+    public void setGaussTable(GaussTable gaussTable) {
+        this.gaussTable = gaussTable;
+    }
 }

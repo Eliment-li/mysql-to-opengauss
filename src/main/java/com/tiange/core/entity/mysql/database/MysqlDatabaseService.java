@@ -1,8 +1,13 @@
 package com.tiange.core.entity.mysql.database;
 
+import com.tiange.core.entity.mysql.table.MysqlTable;
 import com.tiange.core.entity.mysql.table.MysqlTableService;
+import com.tiange.core.entity.opengauss.database.GaussDatabase;
+import com.tiange.core.entity.opengauss.table.GaussTable;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MysqlDatabaseService {
 
@@ -65,6 +70,26 @@ public class MysqlDatabaseService {
         return database;
 
     }
+
+    public static GaussDatabase Conert2GaussDatabase(MysqlDatabase mysqlDatabase, GaussDatabase gaussDatabase) {
+
+
+        List<GaussTable> gaussTables = new ArrayList<>();
+
+        for (MysqlTable mysqlTable : mysqlDatabase.getMysqlTables()) {
+
+            GaussTable gaussTable = mysqlTable.toOpenGaussTable();
+
+            gaussTable.setGaussDatabase(gaussDatabase);
+
+            gaussTables.add(gaussTable);
+
+        }
+        gaussDatabase.setTables(gaussTables);
+        return gaussDatabase;
+    }
+
+
 
     public DatabaseConfig getConfig() {
         return config;

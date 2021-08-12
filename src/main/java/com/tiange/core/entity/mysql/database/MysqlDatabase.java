@@ -46,18 +46,6 @@ public class MysqlDatabase {
         this.name = name;
     }
 
-    /**
-     * 初始化数据库结构
-     *
-     * @param info 数据库基本信息
-     * @return 数据库结构
-     * @throws SQLException SQL异常
-     */
- /*   public MysqlDatabase init(DatabaseInfo info) throws SQLException {
-        this.info = info;
-        this.connection = DbUtil.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
-        return configure();
-    }*/
 
     /**
      * 配置数据库结构
