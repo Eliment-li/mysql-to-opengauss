@@ -37,20 +37,18 @@ public class GaussTable {
         //替换字段 ${columnSql}
         StringBuilder columnSql = new StringBuilder(144);
 
-        //  columnSql=gaussColumns.stream().collect(Collectors.joining(","))
 
         for (GaussColumn gaussColumn : this.gaussColumns) {
             columnSql.append(gaussColumn.toCreateTableSql());
             columnSql.append(",");
         }
-
-        //去掉最后一个逗号
         columnSql = columnSql.deleteCharAt(columnSql.length() - 1);
+
         StringUtils.replace(" ${columnSql}", columnSql, sql);
 
-        //comment
+        //添加字段的注释
+        StringUtils.replace("${column_comment}", getColumnCommentSql(), sql);
 
-        StringUtils.replace("${comment}", getColumnCommentSql(), sql);
         return sql;
     }
 

@@ -1,3 +1,3 @@
 CREATE TABLE ${tableName}
  ( ${columnSql} );
- ${comment}
+ ${column_comment}

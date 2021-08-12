@@ -33,15 +33,15 @@ public class AppTest
 
             GaussDatabase gaussDatabase = MysqlDatabaseService.Conert2GaussDatabase(mysqlDatabase, new GaussDatabase("jack"));
 
-          /*  for (GaussTable gaussTable : gaussDatabase.getTables()) {
+            for (GaussTable gaussTable : gaussDatabase.getTables()) {
 
                 System.out.println(gaussTable.toCreateSql());
 
-                OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
-            }*/
+                //OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+            }
 
-            GaussTable gaussTable = gaussDatabase.getTables().get(0);
-            System.out.println(gaussTable.toCreateSql());
+          /*  GaussTable gaussTable = gaussDatabase.getTables().get(0);
+            System.out.println(gaussTable.toCreateSql());*/
 
 
         } catch (Exception e) {

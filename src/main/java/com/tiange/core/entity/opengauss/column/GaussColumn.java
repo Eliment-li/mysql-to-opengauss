@@ -78,6 +78,7 @@ public class GaussColumn {
 
 
     private static String QUOTE = "\"";
+    private static String SINGLE_QUOTE = "'";
     private static String YES = "YES";
     private static String NO = "NO";
     private static String COLUMN_COMMENT_TEMPLATE = "COMMENT ON COLUMN \"${databaseName}\".\"${tableName}\".\"${columnName}\" IS '${comment}' ";
@@ -124,8 +125,27 @@ public class GaussColumn {
             createTableSql.append(" NOT NULL ");
         }
 
+        //添加默认值
+        // createTableSql.append(getDefaultValueSql());
+
         return createTableSql;
     }
+
+    /**
+     * @return 字段默认值
+     * 例如：
+     * "DEFAULT 123"
+     */
+ /*   private StringBuilder getDefaultValueSql(){
+
+        StringBuilder sql=new StringBuilder(144);
+
+        sql.append(" DEFAULT ");
+
+        sql.append(this.column_default);
+
+        return sql;
+    }*/
 
 
     /**
@@ -162,6 +182,9 @@ public class GaussColumn {
         sql.append(" ");
         sql.append(this.datetype);
 
+        sql.append(" DEFAULT ");
+        sql.append(this.column_default + " ");
+
         return sql;
     }
 
@@ -177,6 +200,9 @@ public class GaussColumn {
             sql.append(QUOTE + this.column_name + QUOTE);
             sql.append(" ");
             sql.append(this.datetype);
+
+            sql.append(" DEFAULT ");
+            sql.append(this.column_default + " ");
 
             return sql;
         }
@@ -203,6 +229,12 @@ public class GaussColumn {
 
             sql.append("(" + this.numeric_precision + ")");
 
+        //设置默认值
+        sql.append(" DEFAULT ");
+
+        sql.append(this.column_default);
+
+
         return sql;
     }
 
@@ -222,6 +254,15 @@ public class GaussColumn {
         if (this.datetime_precision != null)
             sql.append("(" + this.datetime_precision + ")");
 
+        //设置默认值
+        sql.append(" DEFAULT ");
+        if (this.column_default == null) {
+            //如果为NULL 左右两侧不用加单引号
+            sql.append(" NULL ");
+        } else {
+            sql.append(SINGLE_QUOTE + this.column_default + SINGLE_QUOTE);
+        }
+
         return sql;
     }
 
@@ -239,6 +280,15 @@ public class GaussColumn {
         sql.append(this.datetype);
         sql.append("(" + this.character_maximum_length + ")");
 
+        //设置默认值
+        sql.append(" DEFAULT ");
+        if (this.column_default == null) {
+            //如果为NULL 左右两侧不用加单引号
+            sql.append(" NULL ");
+        } else {
+            sql.append(SINGLE_QUOTE + this.column_default + SINGLE_QUOTE);
+        }
+
         return sql;
     }
 
@@ -248,6 +298,15 @@ public class GaussColumn {
         sql.append(QUOTE + this.column_name + QUOTE);
         sql.append(" ");
         sql.append(this.datetype);
+
+        //设置默认值
+        sql.append(" DEFAULT ");
+        if (this.column_default == null) {
+            //如果为NULL 左右两侧不用加单引号
+            sql.append(" NULL ");
+        } else {
+            sql.append(SINGLE_QUOTE + this.column_default + SINGLE_QUOTE);
+        }
 
         return sql;
     }
