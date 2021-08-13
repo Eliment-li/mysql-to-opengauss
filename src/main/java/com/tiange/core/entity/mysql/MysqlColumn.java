@@ -47,16 +47,16 @@ public class MysqlColumn {
 
     /*If COLUMN_KEY is empty, the column either is not indexed or is indexed only as a secondary column in a multiple-column, nonunique index.
 
-      If COLUMN_KEY is PRI, the column is a PRIMARY KEY or is one of the columns in a multiple-column PRIMARY KEY.
+     If COLUMN_KEY is PRI, the column is a PRIMARY KEY or is one of the columns in a multiple-column PRIMARY KEY.
 
-      If COLUMN_KEY is UNI, the column is the first column of a UNIQUE index. (A UNIQUE index permits multiple NULL values, but you can tell whether the column permits NULL by checking the Null column.)
+     If COLUMN_KEY is UNI, the column is the first column of a UNIQUE index. (A UNIQUE index permits multiple NULL values, but you can tell whether the column permits NULL by checking the Null column.)
 
-      If COLUMN_KEY is MUL, the column is the first column of a nonunique index in which multiple occurrences of a given value are permitted within the column.
+     If COLUMN_KEY is MUL, the column is the first column of a nonunique index in which multiple occurrences of a given value are permitted within the column.
 
-      If more than one of the COLUMN_KEY values applies to a given column of a mysqlTable, COLUMN_KEY displays the one with the highest priority, in the order PRI, UNI, MUL.
+     If more than one of the COLUMN_KEY values applies to a given column of a mysqlTable, COLUMN_KEY displays the one with the highest priority, in the order PRI, UNI, MUL.
 
-      A UNIQUE index may be displayed as PRI if it cannot contain NULL values and there is no PRIMARY KEY in the mysqlTable. A UNIQUE index may display as MUL if several columns form a composite UNIQUE index; although the combination of the columns is unique, each column can still hold multiple occurrences of a given value
-    * */
+     A UNIQUE index may be displayed as PRI if it cannot contain NULL values and there is no PRIMARY KEY in the mysqlTable. A UNIQUE index may display as MUL if several columns form a composite UNIQUE index; although the combination of the columns is unique, each column can still hold multiple occurrences of a given value
+   * */
     private String column_key;
     private String extra;
     private String column_comment;

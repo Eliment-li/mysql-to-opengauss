@@ -125,27 +125,9 @@ public class GaussColumn {
             createTableSql.append(" NOT NULL ");
         }
 
-        //添加默认值
-        // createTableSql.append(getDefaultValueSql());
-
         return createTableSql;
     }
 
-    /**
-     * @return 字段默认值
-     * 例如：
-     * "DEFAULT 123"
-     */
- /*   private StringBuilder getDefaultValueSql(){
-
-        StringBuilder sql=new StringBuilder(144);
-
-        sql.append(" DEFAULT ");
-
-        sql.append(this.column_default);
-
-        return sql;
-    }*/
 
 
     /**
@@ -233,7 +215,6 @@ public class GaussColumn {
         sql.append(" DEFAULT ");
 
         sql.append(this.column_default);
-
 
         return sql;
     }
