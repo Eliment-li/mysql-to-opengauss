@@ -5,7 +5,7 @@ import com.tiange.core.entity.mysql.database.MysqlDatabase;
 
 /**
  */
-public class Trigger {
+public class MysqlTrigger {
     private static final long serialVersionUID = 182067591134835538L;
 
     private String trigger_schema;

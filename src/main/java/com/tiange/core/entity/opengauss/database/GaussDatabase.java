@@ -1,5 +1,6 @@
 package com.tiange.core.entity.opengauss.database;
 
+import com.tiange.core.entity.opengauss.key.GaussKey;
 import com.tiange.core.entity.opengauss.table.GaussTable;
 
 import java.util.List;
@@ -15,6 +16,11 @@ public class GaussDatabase {
      * 包含的tables
      */
     private List<GaussTable> Tables;
+
+    /**
+     * 包含的Keys
+     */
+    private List<GaussKey> keys;
 
 
     /* getter & setter */
@@ -33,5 +39,13 @@ public class GaussDatabase {
 
     public void setTables(List<GaussTable> tables) {
         Tables = tables;
+    }
+
+    public List<GaussKey> getKeys() {
+        return keys;
+    }
+
+    public void setKeys(List<GaussKey> keys) {
+        this.keys = keys;
     }
 }

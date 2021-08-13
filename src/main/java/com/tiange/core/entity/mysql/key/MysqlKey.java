@@ -1,23 +1,33 @@
-package com.tiange.core.entity.mysql;
+package com.tiange.core.entity.mysql.key;
 
 import com.tiange.core.entity.mysql.table.MysqlTable;
-import com.tiange.core.utils.others.StringUtils;
+import com.tiange.core.entity.opengauss.key.GaussKey;
 
 import java.io.Serializable;
 
 /**
  * Key结构定义
  */
-public class Key implements Serializable {
+public class MysqlKey implements Serializable {
     private static final long serialVersionUID = 3145627924529636485L;
 
     public static final String FLAG_PRIMARY = "PRIMARY";
 
     private String constraint_schema;
+
     private String constraint_name;
+
+    /* 数据库表名*/
     private String table_name;
+
+    /* 数据库名*/
+    private String table_schema;
+
+    /* 字段名*/
     private String column_name;
+
     private Long ordinal_position;
+
     private Long position_in_unique_constraint;
     private String referenced_table_schema;
     private String referenced_table_name;
@@ -25,38 +35,30 @@ public class Key implements Serializable {
 
     private MysqlTable mysqlTable;
 
-    public enum KeyType {
-        PRIMARY, FOREIGN, UNIQUE
+
+    /**
+     * 将 mysql 类型的 key 转换为 OpenGauss 类型的 key
+     *
+     * @return GaussKey
+     */
+    public GaussKey toGaussKey() {
+
+        GaussKey gaussKey = new GaussKey();
+        gaussKey.setColumn_name(column_name);
+
+        gaussKey.setTable_name(table_name);
+        gaussKey.setTable_schema(table_schema);
+
+
+        gaussKey.setConstraint_name(constraint_name);
+        gaussKey.setReferenced_column_name(referenced_column_name);
+        gaussKey.setReferenced_table_name(referenced_table_name);
+        gaussKey.setReferenced_table_schema(referenced_table_schema);
+
+        return gaussKey;
     }
 
-    public KeyType getKeyType() {
-        if ("PRIMARY".equals(this.getTable_name())) {
-            return KeyType.PRIMARY;
-        } else if (this.getReferenced_table_schema() != null || this.getReferenced_table_name() != null || this.getReferenced_column_name() != null) {
-            return KeyType.FOREIGN;
-        } else {
-            return KeyType.UNIQUE;
-        }
-    }
 
-
-    public String toCreateTableSql() {
-        //获取key sql
-        StringBuilder sb = new StringBuilder();
-        if (StringUtils.isEmpty(this.referenced_table_schema)
-                && StringUtils.isEmpty(this.referenced_table_name)
-                && StringUtils.isEmpty(this.referenced_column_name)) {
-            // 唯一索引
-            sb.append("CONSTRAINT `").append(this.constraint_name).append("` UNIQUE (`").append(this.column_name).append("`),");
-        } else {
-            // 外键
-            sb.append("CONSTRAINT `").append(this.constraint_name).append("` ")
-                    .append("FOREIGN KEY (`").append(this.column_name).append("`) ")
-                    .append("REFERENCES `").append(this.referenced_table_name).append("` ")
-                    .append("(`").append(this.referenced_column_name).append("`),");
-        }
-        return sb.toString();
-    }
 
 
 
@@ -88,6 +90,14 @@ public class Key implements Serializable {
 
     public void setTable_name(String table_name) {
         this.table_name = table_name;
+    }
+
+    public String getTable_schema() {
+        return table_schema;
+    }
+
+    public void setTable_schema(String table_schema) {
+        this.table_schema = table_schema;
     }
 
     public String getColumn_name() {

@@ -1,0 +1,1 @@
+ALTER TABLE "${databaseName}"."${tableName}" ADD CONSTRAINT "${keyName}" PRIMARY KEY ("${columnName}");

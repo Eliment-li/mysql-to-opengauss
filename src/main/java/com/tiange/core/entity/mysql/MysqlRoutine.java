@@ -3,7 +3,7 @@ package com.tiange.core.entity.mysql;
 
 /**
  */
-public class Routine {
+public class MysqlRoutine {
 
     private String security_type;
     private String definer;

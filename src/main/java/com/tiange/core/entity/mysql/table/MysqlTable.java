@@ -1,9 +1,9 @@
 package com.tiange.core.entity.mysql.table;
 
 
-import com.tiange.core.entity.mysql.Key;
 import com.tiange.core.entity.mysql.MysqlColumn;
 import com.tiange.core.entity.mysql.database.MysqlDatabase;
+import com.tiange.core.entity.mysql.key.MysqlKey;
 import com.tiange.core.entity.opengauss.column.GaussColumn;
 import com.tiange.core.entity.opengauss.table.GaussTable;
 import com.tiange.core.utils.others.ObjectUtils;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.tiange.core.entity.mysql.Key.FLAG_PRIMARY;
+import static com.tiange.core.entity.mysql.key.MysqlKey.FLAG_PRIMARY;
 
 /**
  * 表结构定义
@@ -35,7 +35,7 @@ public class MysqlTable implements Serializable {
     private String table_comment;
 
     private List<MysqlColumn> mysqlColumns;
-    private List<Key> keys;
+    private List<MysqlKey> mysqlKeys;
 
     private MysqlDatabase mysqlDatabase;
 
@@ -93,11 +93,11 @@ public class MysqlTable implements Serializable {
      * @return
      */
     public boolean hasForeignKey() {
-        for (Key key : this.keys) {
-            if (!FLAG_PRIMARY.equals(key.getTable_name())
-                    && !StringUtils.isEmpty(key.getReferenced_column_name())
-                    && !StringUtils.isEmpty(key.getReferenced_table_name())
-                    && !StringUtils.isEmpty(key.getReferenced_table_schema())
+        for (MysqlKey mysqlKey : this.mysqlKeys) {
+            if (!FLAG_PRIMARY.equals(mysqlKey.getTable_name())
+                    && !StringUtils.isEmpty(mysqlKey.getReferenced_column_name())
+                    && !StringUtils.isEmpty(mysqlKey.getReferenced_table_name())
+                    && !StringUtils.isEmpty(mysqlKey.getReferenced_table_schema())
                     ) {
                 return true;
             }
@@ -138,7 +138,7 @@ public class MysqlTable implements Serializable {
 
 
         //获取 unique 索引
-        List<Key> uniqueIndexList = this.keys.stream().filter(
+        List<MysqlKey> uniqueIndexList = this.mysqlKeys.stream().filter(
                 s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
                         StringUtils.isEmpty(s.getReferenced_column_name())
         ).collect(Collectors.toList());
@@ -147,23 +147,23 @@ public class MysqlTable implements Serializable {
 
             //根据getTable_name来去重  <表名：LIST<key>>
 
-            Map<String, List<Key>> tableList = uniqueIndexList.stream().collect(Collectors.groupingBy(Key::getTable_name));
+            Map<String, List<MysqlKey>> tableList = uniqueIndexList.stream().collect(Collectors.groupingBy(MysqlKey::getTable_name));
 
             if (!ObjectUtils.isEmpty(tableList)) {
 
-                for (Map.Entry<String, List<Key>> e : tableList.entrySet()) {
+                for (Map.Entry<String, List<MysqlKey>> e : tableList.entrySet()) {
 
                     //对每个table中的 key 根据Constraint去重
-                    Map<String, List<Key>> listMap = e.getValue().stream().collect(Collectors.groupingBy(Key::getConstraint_name));
+                    Map<String, List<MysqlKey>> listMap = e.getValue().stream().collect(Collectors.groupingBy(MysqlKey::getConstraint_name));
 
                     if (!ObjectUtils.isEmpty(listMap)) {
 
-                        for (Map.Entry<String, List<Key>> j : listMap.entrySet()) {
+                        for (Map.Entry<String, List<MysqlKey>> j : listMap.entrySet()) {
 
                             sb.append("UNIQUE KEY `").append(j.getKey()).append("`(");
 
                             List<String> columnList = j.getValue().stream()
-                                    .map(Key::getColumn_name)
+                                    .map(MysqlKey::getColumn_name)
                                     .collect(Collectors.toList());
 
                             if (!ObjectUtils.isEmpty(columnList)) {
@@ -177,20 +177,21 @@ public class MysqlTable implements Serializable {
                     }
                 }
             }
-            this.keys.removeAll(uniqueIndexList);
+            this.mysqlKeys.removeAll(uniqueIndexList);
         }
         // 获取主键
-        List<Key> primaryKeyList = this.keys.stream().filter(k -> FLAG_PRIMARY.equals(k.getConstraint_name())).collect(Collectors.toList());
-        if (primaryKeyList.size() > 0) {
+        List<MysqlKey> primaryMysqlKeyList = this.mysqlKeys.stream().filter(k -> FLAG_PRIMARY.equals(k.getConstraint_name())).collect(Collectors.toList());
+        if (primaryMysqlKeyList.size() > 0) {
             sb.append("PRIMARY KEY (");
-            primaryKeyList.forEach(k -> sb.append("`").append(k.getColumn_name()).append("`,"));
+            primaryMysqlKeyList.forEach(k -> sb.append("`").append(k.getColumn_name()).append("`,"));
             sb.delete(sb.length() - 1, sb.length());
             sb.append("),");
         }
-        this.keys.removeAll(primaryKeyList);
-        for (Key key : this.keys) {
-            String keySql = key.toCreateTableSql();
-            sb.append(keySql);
+        this.mysqlKeys.removeAll(primaryMysqlKeyList);
+        for (MysqlKey mysqlKey : this.mysqlKeys) {
+            //todo
+            // String keySql = mysqlKey.toCreateTableSql();
+            // sb.append(keySql);
         }
         String columnSql = sb.substring(0, sb.length() - 1);
         sql = sql.replace("${columnSql}", columnSql);
@@ -279,12 +280,12 @@ public class MysqlTable implements Serializable {
         this.mysqlColumns = mysqlColumns;
     }
 
-    public List<Key> getKeys() {
-        return keys;
+    public List<MysqlKey> getMysqlKeys() {
+        return mysqlKeys;
     }
 
-    public void setKeys(List<Key> keys) {
-        this.keys = keys;
+    public void setMysqlKeys(List<MysqlKey> mysqlKeys) {
+        this.mysqlKeys = mysqlKeys;
     }
 
     public MysqlDatabase getMysqlDatabase() {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Procedure结构定义
  */
-public class Procedure implements Serializable {
+public class MysqlProcedure implements Serializable {
     private static final long serialVersionUID = -1316847891519066692L;
 
     private String securityType;
@@ -20,7 +20,7 @@ public class Procedure implements Serializable {
 
     private MysqlDatabase mysqlDatabase;
 
-    private List<Routine> routines = new ArrayList<>();
+    private List<MysqlRoutine> mysqlRoutines = new ArrayList<>();
 
 
     public void readData() {
@@ -84,11 +84,11 @@ public class Procedure implements Serializable {
         this.mysqlDatabase = mysqlDatabase;
     }
 
-    public List<Routine> getRoutines() {
-        return routines;
+    public List<MysqlRoutine> getMysqlRoutines() {
+        return mysqlRoutines;
     }
 
-    public void setRoutines(List<Routine> routines) {
-        this.routines = routines;
+    public void setMysqlRoutines(List<MysqlRoutine> mysqlRoutines) {
+        this.mysqlRoutines = mysqlRoutines;
     }
 }

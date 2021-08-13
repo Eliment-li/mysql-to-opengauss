@@ -18,6 +18,7 @@ public class GaussColumn {
     private Long character_maximum_length;
     private String character_octet_length;
     private String comment;
+    private String column_key;
     private ColumnGroupEnum groupEnum;
 
     //引用数据库
@@ -146,6 +147,21 @@ public class GaussColumn {
 
         sql.append(";");
         sql.append("\n");
+
+
+        return sql;
+    }
+
+    /**
+     * key 包括 主键 和 唯一索引
+     * PRI=主键
+     * UNI=唯一索引
+     *
+     * @return 生成 key  的 sql 语句
+     */
+    public StringBuilder getColumnKeySql() {
+        //todo
+        StringBuilder sql = new StringBuilder(34);
 
 
         return sql;
@@ -451,6 +467,14 @@ public class GaussColumn {
 
     public void setDtd_identifier(String dtd_identifier) {
         this.dtd_identifier = dtd_identifier;
+    }
+
+    public String getColumn_key() {
+        return column_key;
+    }
+
+    public void setColumn_key(String column_key) {
+        this.column_key = column_key;
     }
 
     public GaussTable getGaussTable() {

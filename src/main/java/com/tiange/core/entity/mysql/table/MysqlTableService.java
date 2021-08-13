@@ -1,8 +1,8 @@
 package com.tiange.core.entity.mysql.table;
 
-import com.tiange.core.entity.mysql.Key;
 import com.tiange.core.entity.mysql.MysqlColumn;
 import com.tiange.core.entity.mysql.database.MysqlDatabase;
+import com.tiange.core.entity.mysql.key.MysqlKey;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
 
@@ -12,12 +12,11 @@ import java.util.stream.Collectors;
 
 public class MysqlTableService {
 
+    private static String TABLE_SQL = FileUtils.getStringByClasspath("mysql/table.sql");
+    private static String COlUMN_SQL = FileUtils.getStringByClasspath("mysql/column.sql");
+    private static String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
     MysqlDatabase mysqlDatabase;
-    private String TABLE_SQL = FileUtils.getStringByClasspath("mysql/table.sql");
-    private String COlUMN_SQL = FileUtils.getStringByClasspath("mysql/column.sql");
-    private String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
-
-    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("mysql/create_table.sql");
+    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("opengauss/create_table.sql");
 
 
     public MysqlTableService(String dataBaseName) {
@@ -37,7 +36,7 @@ public class MysqlTableService {
 
     /*获取该数据库下所有的表*/
     public List<MysqlTable> listTables() throws SQLException {
-        String databaseName = this.mysqlDatabase.getName();
+        String databaseName = mysqlDatabase.getName();
 
         TABLE_SQL = TABLE_SQL.replace("?", "'" + databaseName + "'");
         COlUMN_SQL = COlUMN_SQL.replace("?", "'" + databaseName + "'");
@@ -54,9 +53,9 @@ public class MysqlTableService {
                 COlUMN_SQL,
                 MysqlColumn.class);
 
-        List<Key> keyList = (List<Key>) dbUtil.queryForBeans(
+        List<MysqlKey> mysqlKeyList = (List<MysqlKey>) dbUtil.queryForBeans(
                 KEY_SQL,
-                Key.class);
+                MysqlKey.class);
 
 
         //填充tables
@@ -66,7 +65,7 @@ public class MysqlTableService {
             //填充columns
             o.setMysqlColumns(columnList.stream().peek(s -> s.setMysqlTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
             //填充keys
-            o.setKeys(keyList.stream().peek(s -> s.setMysqlTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
+            o.setMysqlKeys(mysqlKeyList.stream().peek(s -> s.setMysqlTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
         }).collect(Collectors.toList());
 
         return tabls;

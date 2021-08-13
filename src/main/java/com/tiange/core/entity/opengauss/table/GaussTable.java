@@ -19,10 +19,10 @@ public class GaussTable {
 
     GaussDatabase gaussDatabase;
 
-    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("mysql/create_table.sql");
+    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("opengauss/create_table.sql");
 
     private List<GaussColumn> gaussColumns;
-//private List<Key> keys;
+//private List<MysqlKey> keys;
 
     public StringBuilder toCreateSql() {
         //将长度设置的大一点，减少 StringBuilder 扩容次数

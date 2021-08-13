@@ -1,9 +1,10 @@
 package com.tiange.core.entity.mysql.database;
 
-import com.tiange.core.entity.mysql.Function;
-import com.tiange.core.entity.mysql.Procedure;
-import com.tiange.core.entity.mysql.Trigger;
-import com.tiange.core.entity.mysql.View;
+import com.tiange.core.entity.mysql.MysqlFunction;
+import com.tiange.core.entity.mysql.MysqlProcedure;
+import com.tiange.core.entity.mysql.MysqlTrigger;
+import com.tiange.core.entity.mysql.MysqlView;
+import com.tiange.core.entity.mysql.key.MysqlKey;
 import com.tiange.core.entity.mysql.table.MysqlTable;
 
 import java.sql.SQLException;
@@ -25,22 +26,28 @@ public class MysqlDatabase {
      * 包含的tables
      */
     private List<MysqlTable> mysqlTables;
+
+    /**
+     * 包含的tables
+     */
+    private List<MysqlKey> mysqlKeys;
+
     /**
      * 包含的views
      */
-    private List<View> views;
+    private List<MysqlView> mysqlViews;
     /**
      * 包含的functions
      */
-    private List<Function> functions;
+    private List<MysqlFunction> mysqlFunctions;
     /**
      * 包含的procedures
      */
-    private List<Procedure> procedures;
+    private List<MysqlProcedure> mysqlProcedures;
     /**
      * 包含的triggers
      */
-    private List<Trigger> triggers;
+    private List<MysqlTrigger> mysqlTriggers;
 
     public MysqlDatabase(String name) {
         this.name = name;
@@ -56,10 +63,10 @@ public class MysqlDatabase {
 /*    private MysqlDatabase configure() throws SQLException {
         MysqlDatabase bean = DbUtil.getBean(this.connection, SQL, MysqlDatabase.class, this.info.getName());
         bean.setMysqlTables(MysqlTable.configure(this.connection, this));
-        bean.setViews(View.configure(this.connection, this));
-        bean.setFunctions(Function.configure(this.connection, this));
-        bean.setProcedures(Procedure.configure(this.connection, this));
-        bean.setTriggers(Trigger.configure(this.connection, this));
+        bean.setMysqlViews(MysqlView.configure(this.connection, this));
+        bean.setMysqlFunctions(MysqlFunction.configure(this.connection, this));
+        bean.setMysqlProcedures(MysqlProcedure.configure(this.connection, this));
+        bean.setMysqlTriggers(MysqlTrigger.configure(this.connection, this));
         bean.setInfo(this.info);
         bean.setConnection(this.connection);
         return bean;
@@ -98,35 +105,43 @@ public class MysqlDatabase {
         this.mysqlTables = mysqlTables;
     }
 
-    public List<View> getViews() {
-        return views;
+    public List<MysqlView> getMysqlViews() {
+        return mysqlViews;
     }
 
-    public void setViews(List<View> views) {
-        this.views = views;
+    public void setMysqlViews(List<MysqlView> mysqlViews) {
+        this.mysqlViews = mysqlViews;
     }
 
-    public List<Function> getFunctions() {
-        return functions;
+    public List<MysqlFunction> getMysqlFunctions() {
+        return mysqlFunctions;
     }
 
-    public void setFunctions(List<Function> functions) {
-        this.functions = functions;
+    public void setMysqlFunctions(List<MysqlFunction> mysqlFunctions) {
+        this.mysqlFunctions = mysqlFunctions;
     }
 
-    public List<Procedure> getProcedures() {
-        return procedures;
+    public List<MysqlProcedure> getMysqlProcedures() {
+        return mysqlProcedures;
     }
 
-    public void setProcedures(List<Procedure> procedures) {
-        this.procedures = procedures;
+    public void setMysqlProcedures(List<MysqlProcedure> mysqlProcedures) {
+        this.mysqlProcedures = mysqlProcedures;
     }
 
-    public List<Trigger> getTriggers() {
-        return triggers;
+    public List<MysqlTrigger> getMysqlTriggers() {
+        return mysqlTriggers;
     }
 
-    public void setTriggers(List<Trigger> triggers) {
-        this.triggers = triggers;
+    public void setMysqlTriggers(List<MysqlTrigger> mysqlTriggers) {
+        this.mysqlTriggers = mysqlTriggers;
+    }
+
+    public List<MysqlKey> getMysqlKeys() {
+        return mysqlKeys;
+    }
+
+    public void setMysqlKeys(List<MysqlKey> mysqlKeys) {
+        this.mysqlKeys = mysqlKeys;
     }
 }

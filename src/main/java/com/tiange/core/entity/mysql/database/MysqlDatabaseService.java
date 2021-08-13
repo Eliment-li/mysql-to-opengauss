@@ -1,8 +1,11 @@
 package com.tiange.core.entity.mysql.database;
 
+import com.tiange.core.entity.mysql.key.MysqlKey;
+import com.tiange.core.entity.mysql.key.MysqlKeyService;
 import com.tiange.core.entity.mysql.table.MysqlTable;
 import com.tiange.core.entity.mysql.table.MysqlTableService;
 import com.tiange.core.entity.opengauss.database.GaussDatabase;
+import com.tiange.core.entity.opengauss.key.GaussKey;
 import com.tiange.core.entity.opengauss.table.GaussTable;
 
 import java.sql.SQLException;
@@ -15,7 +18,7 @@ public class MysqlDatabaseService {
      * 数据库配置
      */
     private DatabaseConfig config;
-    private MysqlDatabase database;
+    private MysqlDatabase mysqlDatabase;
 
     private String SQL = "SELECT CONSTRAINT_CATALOG," +
             "       CONSTRAINT_SCHEMA," +
@@ -38,7 +41,7 @@ public class MysqlDatabaseService {
     }
 
     public MysqlDatabaseService(MysqlDatabase database) {
-        this.database = database;
+        this.mysqlDatabase = database;
         SQL = SQL.replace("?", "'" + database.getName() + "'");
         this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
     }
@@ -52,30 +55,18 @@ public class MysqlDatabaseService {
 
     }
 
-
     /**
-     * 从数据库中读取元数据
+     * 将 mysql 数据库实体类 转换为 OpenGauss 数据库实体类
+     * @param mysqlDatabase
+     * @param gaussDatabase
+     * @return
      */
-    public MysqlDatabase ReadMetaData() throws SQLException {
-
-        //   MySqlDbUtil dbUtil = new MySqlDbUtil(this.config);
-        //Init(this.database.getName());
-        //database.setName("mysqltest");
-        //(MysqlDatabase) dbUtil.queryForObject(SQL, MysqlDatabase.class);
-
-        //读取数据库表
-        database.setMysqlTables(new MysqlTableService(database).listTables());
-
-
-        return database;
-
-    }
-
     public static GaussDatabase Conert2GaussDatabase(MysqlDatabase mysqlDatabase, GaussDatabase gaussDatabase) {
 
 
         List<GaussTable> gaussTables = new ArrayList<>();
 
+        //Tables
         for (MysqlTable mysqlTable : mysqlDatabase.getMysqlTables()) {
 
             GaussTable gaussTable = mysqlTable.toOpenGaussTable();
@@ -86,7 +77,39 @@ public class MysqlDatabaseService {
 
         }
         gaussDatabase.setTables(gaussTables);
+
+        //keys
+        List<GaussKey> gaussKeyList = new ArrayList<>();
+        for (MysqlKey mysqlKey : mysqlDatabase.getMysqlKeys()) {
+
+            GaussKey gaussKey = mysqlKey.toGaussKey();
+
+            gaussKey.setGaussDatabase(gaussDatabase);
+
+            gaussKeyList.add(gaussKey);
+
+        }
+        gaussDatabase.setTables(gaussTables);
+
+        gaussDatabase.setKeys(gaussKeyList);
+
         return gaussDatabase;
+    }
+
+    /**
+     * 从数据库中读取元数据
+     */
+    public MysqlDatabase ReadMetaData() throws SQLException {
+
+
+        //读取数据库表
+        mysqlDatabase.setMysqlTables(new MysqlTableService(mysqlDatabase).listTables());
+
+        mysqlDatabase.setMysqlKeys(new MysqlKeyService().listKeys(mysqlDatabase.getName()));
+
+
+        return mysqlDatabase;
+
     }
 
 
@@ -99,11 +122,11 @@ public class MysqlDatabaseService {
         this.config = config;
     }
 
-    public MysqlDatabase getDatabase() {
-        return database;
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
     }
 
-    public void setDatabase(MysqlDatabase database) {
-        this.database = database;
+    public void setMysqlDatabase(MysqlDatabase mysqlDatabase) {
+        this.mysqlDatabase = mysqlDatabase;
     }
 }

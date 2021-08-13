@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * View结构定义
  */
-public class View implements Serializable {
+public class MysqlView implements Serializable {
     private static final long serialVersionUID = 2957489532511114320L;
 
     private String schema;

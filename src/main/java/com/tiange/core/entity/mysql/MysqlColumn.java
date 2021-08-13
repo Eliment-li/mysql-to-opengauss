@@ -112,6 +112,9 @@ public class MysqlColumn {
         gaussColumn.setIs_nullable(this.is_nullable);
         //最大长度
         gaussColumn.setCharacter_maximum_length(this.character_maximum_length);
+        //colunn_key
+        gaussColumn.setColumn_key(this.column_key);
+
 
         //类型组
         gaussColumn.setGroupEnum(getColunGroupEnum());

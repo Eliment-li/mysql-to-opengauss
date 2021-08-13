@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Function结构定义
  */
-public class Function implements Serializable {
+public class MysqlFunction implements Serializable {
     private static final long serialVersionUID = -2051134976379808323L;
 
     private String securityType;
@@ -25,28 +25,28 @@ public class Function implements Serializable {
 
     private MysqlDatabase mysqlDatabase;
 
-    private List<Routine> routines = new ArrayList<>();
+    private List<MysqlRoutine> mysqlRoutines = new ArrayList<>();
 
 
-    public List<Function> readData() throws SQLException {
+    public List<MysqlFunction> readData() throws SQLException {
 
         MySqlDbUtil dbUtil = new MySqlDbUtil();
 
-        List<Routine> beanList = (List<Routine>) dbUtil.queryForBeans(FileUtils.getStringByClasspath("sql/detail/function.sql"), Routine.class);
-        Map<String, Function> functions = new HashMap<>(0);
-        for (Routine routine : beanList) {
-            Function function = functions.get(routine.getSpecific_name());
-            if (function == null) {
-                function = new Function();
+        List<MysqlRoutine> beanList = (List<MysqlRoutine>) dbUtil.queryForBeans(FileUtils.getStringByClasspath("sql/detail/function.sql"), MysqlRoutine.class);
+        Map<String, MysqlFunction> functions = new HashMap<>(0);
+        for (MysqlRoutine mysqlRoutine : beanList) {
+            MysqlFunction mysqlFunction = functions.get(mysqlRoutine.getSpecific_name());
+            if (mysqlFunction == null) {
+                mysqlFunction = new MysqlFunction();
             }
-            function.setMysqlDatabase(mysqlDatabase);
-            function.getRoutines().add(routine);
-            function.setDefiner(routine.getDefiner());
-            function.setSecurityType(routine.getSecurity_type());
-            function.setSchema(routine.getRoutine_schema());
-            function.setName(routine.getSpecific_name());
-            function.setSource(routine.getRoutine_definition());
-            functions.put(routine.getSpecific_name(), function);
+            mysqlFunction.setMysqlDatabase(mysqlDatabase);
+            mysqlFunction.getMysqlRoutines().add(mysqlRoutine);
+            mysqlFunction.setDefiner(mysqlRoutine.getDefiner());
+            mysqlFunction.setSecurityType(mysqlRoutine.getSecurity_type());
+            mysqlFunction.setSchema(mysqlRoutine.getRoutine_schema());
+            mysqlFunction.setName(mysqlRoutine.getSpecific_name());
+            mysqlFunction.setSource(mysqlRoutine.getRoutine_definition());
+            functions.put(mysqlRoutine.getSpecific_name(), mysqlFunction);
         }
         return new ArrayList<>(functions.values());
     }
@@ -110,11 +110,11 @@ public class Function implements Serializable {
         this.mysqlDatabase = mysqlDatabase;
     }
 
-    public List<Routine> getRoutines() {
-        return routines;
+    public List<MysqlRoutine> getMysqlRoutines() {
+        return mysqlRoutines;
     }
 
-    public void setRoutines(List<Routine> routines) {
-        this.routines = routines;
+    public void setMysqlRoutines(List<MysqlRoutine> mysqlRoutines) {
+        this.mysqlRoutines = mysqlRoutines;
     }
 }
