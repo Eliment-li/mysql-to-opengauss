@@ -6,6 +6,7 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -112,8 +113,54 @@ public class MySqlDbUtil implements Manager {
                 System.out.println();
         }
 
+
+        DbUtils.close(conn);
         return list;
     }
+
+    /**
+     * 按页查询
+     *
+     * @param sql
+     * @return
+     */
+    public Page queryForMapListByPage(String sql, int pageSize, int pageNumber) {
+
+        Page page = new Page(pageSize, pageNumber);
+
+        QueryRunner qr = new QueryRunner();
+        Connection conn = getConnection();
+
+        try {
+            List<Map<String, Object>> list = qr.query(conn, sql, new MapListHandler());
+
+            page.setPageContent(list);
+
+            DbUtils.close(conn);
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            System.out.println("第" + pageSize + "页 " + "传输失败");
+
+        }
+        return page;
+    }
+
+    /**
+     * @param sql
+     * @return 查询单个标量
+     * @throws SQLException
+     */
+    public Long QueryForScalar(String sql) throws SQLException {
+        Connection conn = getConnection();
+        QueryRunner qr = new QueryRunner();
+
+        long count = qr.query(conn, sql, new ScalarHandler<Long>());
+
+        return count;
+    }
+
+
 
     @Override
     public int execute(String sql) {
