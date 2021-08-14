@@ -19,7 +19,7 @@ public class GaussTable {
 
     GaussDatabase gaussDatabase;
 
-    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("opengauss/create_table.sql");
+    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("opengauss/metadata/create_table.sql");
 
     private List<GaussColumn> gaussColumns;
 //private List<MysqlKey> keys;

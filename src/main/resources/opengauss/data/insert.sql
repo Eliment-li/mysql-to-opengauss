@@ -1,0 +1,1 @@
+INSERT INTO "${databaseName}"."${tableName}" VALUES (${VALUE});

@@ -15,14 +15,11 @@ import java.util.Map;
 
 public class MySqlDbUtil implements Manager {
 
-   /* static String DATABASE_URL = "jdbc:mysql://" + "localhost" + ":" + "3333" + "/" + "mysqltest" + "?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8";
-    static String DATABASE_USERNAME = "root";
-    static String DATABASE_PASSWORD = "root123..0";*/
 
     DatabaseConfig config;
 
     public MySqlDbUtil() {
-        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "information_schema");
+        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "mysqltest");
     }
     public MySqlDbUtil(DatabaseConfig config) {
         this.config = config;
@@ -98,7 +95,7 @@ public class MySqlDbUtil implements Manager {
 163  *  MapListHandler
 164  *  将结果集每一行存储到Map集合,键:列名,值:数据
 166  */
-    public   List<Map<String,Object>> queryForMapuuuuuuuuList(String sql)throws SQLException{
+    public List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
 
         QueryRunner qr = new QueryRunner();
 
@@ -110,7 +107,7 @@ public class MySqlDbUtil implements Manager {
         //遍历集合list
         for( Map<String,Object> map : list ){
             for(String key : map.keySet()){
-                System.out.print(key+"..."+map.get(key)+", ");
+                // System.out.print(key+"..."+map.get(key)+", ");
             }
                 System.out.println();
         }

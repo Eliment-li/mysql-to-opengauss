@@ -6,8 +6,8 @@ import com.tiange.core.utils.others.StringUtils;
 
 public class GaussKey {
 
-    static String CREATE_KEY_SQL = FileUtils.getStringByClasspath("opengauss/create_key.sql");
-    static String CREATE_PRIMARY_KEY_SQL = FileUtils.getStringByClasspath("opengauss/create_primary_key.sql");
+    static String CREATE_KEY_SQL = FileUtils.getStringByClasspath("opengauss/metadata/create_key.sql");
+    static String CREATE_PRIMARY_KEY_SQL = FileUtils.getStringByClasspath("opengauss/metadata/create_primary_key.sql");
     /* 数据库表名*/
     String table_name;
     /* 数据库名*/

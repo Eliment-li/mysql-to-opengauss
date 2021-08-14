@@ -16,7 +16,7 @@ public class MysqlTableService {
     private static String COlUMN_SQL = FileUtils.getStringByClasspath("mysql/column.sql");
     private static String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
     MysqlDatabase mysqlDatabase;
-    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("opengauss/create_table.sql");
+    private String CREATE_TABLE_SQL = FileUtils.getStringByClasspath("opengauss/metadata/create_table.sql");
 
 
     public MysqlTableService(String dataBaseName) {

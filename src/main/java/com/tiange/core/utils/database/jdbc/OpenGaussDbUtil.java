@@ -91,7 +91,7 @@ public class OpenGaussDbUtil {
             for (int i = 0; i < 3; i++) {
                 //添加参数。
                 pst.setInt(1, i);
-                pst.setString(2, "data " + i);
+                pst.setString(2, "opengauss/data " + i);
                 pst.addBatch();
             }
 //执行批处理。
