@@ -56,7 +56,9 @@ public class AppTest
         /*jack=OpenGauss数据库名字*/
         GaussDatabase gaussDatabase = MysqlDatabaseService.Conert2GaussDatabase(mysqlDatabase, new GaussDatabase("jack"));
         for (GaussKey gaussKey : gaussDatabase.getKeys()) {
+            OpenGaussDbUtil.execute(gaussKey.toCreateTableSql().toString());
             System.out.println(gaussKey.toCreateTableSql());
+
         }
     }
 
@@ -70,10 +72,15 @@ public class AppTest
         MySqlDbUtil util = new MySqlDbUtil();
 
         List<Map<String, Object>> Data = util.queryForMapList("select * from " + gaussTable.getTable_name() + ";");
+
         List<String> sqlList = DataMigrateService.convertDataToInsertSql(Data, gaussTable);
+
         for (String sql : sqlList) {
+
             System.out.println(sql);
+
             OpenGaussDbUtil.execute(sql);
+
         }
     }
 
