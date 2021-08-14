@@ -7,6 +7,7 @@ import com.tiange.core.opengauss.database.GaussDatabase;
 import com.tiange.core.opengauss.key.GaussKey;
 import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
+import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,11 @@ public class AppTest
                 GaussDatabase gaussDatabase = MysqlDatabaseService.Conert2GaussDatabase(mysqlDatabase, new GaussDatabase("jack"));
 
                 for (GaussTable gaussTable : gaussDatabase.getTables()) {
-                    DataMigrateTest(gaussTable);
-                    //打印 sql 语句
-                    // System.out.println(gaussTable.toCreateSql());
+
 
                     //执行 sql 语句
-                    //OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+                    OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+                    DataMigrateTest(gaussTable);
                 }
 
 
@@ -69,9 +69,12 @@ public class AppTest
 
         MySqlDbUtil util = new MySqlDbUtil();
 
-        List<Map<String, Object>> Data = util.queryForMapList("select * from string;");
+        List<Map<String, Object>> Data = util.queryForMapList("select * from " + gaussTable.getTable_name() + ";");
         List<String> sqlList = DataMigrateService.convertDataToInsertSql(Data, gaussTable);
-        sqlList.forEach(e -> System.out.println(e));
+        for (String sql : sqlList) {
+            System.out.println(sql);
+            OpenGaussDbUtil.execute(sql);
+        }
     }
 
 
