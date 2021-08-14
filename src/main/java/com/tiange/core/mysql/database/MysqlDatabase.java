@@ -1,11 +1,11 @@
-package com.tiange.core.entity.mysql.database;
+package com.tiange.core.mysql.database;
 
-import com.tiange.core.entity.mysql.MysqlFunction;
-import com.tiange.core.entity.mysql.MysqlProcedure;
-import com.tiange.core.entity.mysql.MysqlTrigger;
-import com.tiange.core.entity.mysql.MysqlView;
-import com.tiange.core.entity.mysql.key.MysqlKey;
-import com.tiange.core.entity.mysql.table.MysqlTable;
+import com.tiange.core.mysql.MysqlFunction;
+import com.tiange.core.mysql.MysqlProcedure;
+import com.tiange.core.mysql.MysqlTrigger;
+import com.tiange.core.mysql.MysqlView;
+import com.tiange.core.mysql.key.MysqlKey;
+import com.tiange.core.mysql.table.MysqlTable;
 
 import java.sql.SQLException;
 import java.util.List;

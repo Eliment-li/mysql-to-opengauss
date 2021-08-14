@@ -1,10 +1,10 @@
-package com.tiange.core.entity.mysql;
+package com.tiange.core.mysql;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.tiange.core.entity.mysql.table.MysqlTable;
-import com.tiange.core.entity.opengauss.column.ColumnGroupEnum;
-import com.tiange.core.entity.opengauss.column.GaussColumn;
+import com.tiange.core.mysql.table.MysqlTable;
+import com.tiange.core.opengauss.column.ColumnGroupEnum;
+import com.tiange.core.opengauss.column.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
 
 /**

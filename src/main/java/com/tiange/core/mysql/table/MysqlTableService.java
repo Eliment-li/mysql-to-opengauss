@@ -1,8 +1,8 @@
-package com.tiange.core.entity.mysql.table;
+package com.tiange.core.mysql.table;
 
-import com.tiange.core.entity.mysql.MysqlColumn;
-import com.tiange.core.entity.mysql.database.MysqlDatabase;
-import com.tiange.core.entity.mysql.key.MysqlKey;
+import com.tiange.core.mysql.MysqlColumn;
+import com.tiange.core.mysql.database.MysqlDatabase;
+import com.tiange.core.mysql.key.MysqlKey;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
 

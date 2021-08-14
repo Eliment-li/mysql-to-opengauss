@@ -1,4 +1,4 @@
-package com.tiange.core.entity.mysql.key;
+package com.tiange.core.mysql.key;
 
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;

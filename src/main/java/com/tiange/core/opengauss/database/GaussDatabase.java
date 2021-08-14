@@ -1,7 +1,7 @@
-package com.tiange.core.entity.opengauss.database;
+package com.tiange.core.opengauss.database;
 
-import com.tiange.core.entity.opengauss.key.GaussKey;
-import com.tiange.core.entity.opengauss.table.GaussTable;
+import com.tiange.core.opengauss.key.GaussKey;
+import com.tiange.core.opengauss.table.GaussTable;
 
 import java.util.List;
 

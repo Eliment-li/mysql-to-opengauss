@@ -1,7 +1,7 @@
-package com.tiange.core.entity.mysql;
+package com.tiange.core.mysql;
 
 
-import com.tiange.core.entity.mysql.database.MysqlDatabase;
+import com.tiange.core.mysql.database.MysqlDatabase;
 
 import java.io.Serializable;
 

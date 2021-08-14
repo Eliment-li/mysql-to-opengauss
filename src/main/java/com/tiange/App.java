@@ -1,9 +1,9 @@
 package com.tiange;
 
-import com.tiange.core.entity.mysql.database.MysqlDatabase;
-import com.tiange.core.entity.mysql.database.MysqlDatabaseService;
-import com.tiange.core.entity.opengauss.database.GaussDatabase;
-import com.tiange.core.entity.opengauss.table.GaussTable;
+import com.tiange.core.mysql.database.MysqlDatabase;
+import com.tiange.core.mysql.database.MysqlDatabaseService;
+import com.tiange.core.opengauss.database.GaussDatabase;
+import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 
 public class App

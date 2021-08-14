@@ -1,12 +1,12 @@
-package com.tiange.core.entity.mysql.database;
+package com.tiange.core.mysql.database;
 
-import com.tiange.core.entity.mysql.key.MysqlKey;
-import com.tiange.core.entity.mysql.key.MysqlKeyService;
-import com.tiange.core.entity.mysql.table.MysqlTable;
-import com.tiange.core.entity.mysql.table.MysqlTableService;
-import com.tiange.core.entity.opengauss.database.GaussDatabase;
-import com.tiange.core.entity.opengauss.key.GaussKey;
-import com.tiange.core.entity.opengauss.table.GaussTable;
+import com.tiange.core.mysql.key.MysqlKey;
+import com.tiange.core.mysql.key.MysqlKeyService;
+import com.tiange.core.mysql.table.MysqlTable;
+import com.tiange.core.mysql.table.MysqlTableService;
+import com.tiange.core.opengauss.database.GaussDatabase;
+import com.tiange.core.opengauss.key.GaussKey;
+import com.tiange.core.opengauss.table.GaussTable;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

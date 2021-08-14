@@ -1,6 +1,6 @@
-package com.tiange.core.entity.opengauss.key;
+package com.tiange.core.opengauss.key;
 
-import com.tiange.core.entity.opengauss.database.GaussDatabase;
+import com.tiange.core.opengauss.database.GaussDatabase;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
@@ -55,10 +55,8 @@ public class GaussKey {
 
 
         } else {
-
-
-
-           /* // 外键
+            //todo  处理外键，联合主键等类型的索引
+           /*
             sb.append("CONSTRAINT `").append(this.constraint_name).append("` ")
                     .append("FOREIGN KEY (`").append(this.column_name).append("`) ")
                     .append("REFERENCES `").append(this.referenced_table_name).append("` ")

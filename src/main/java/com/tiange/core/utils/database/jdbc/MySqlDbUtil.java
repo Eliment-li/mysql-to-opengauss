@@ -1,15 +1,17 @@
 package com.tiange.core.utils.database.jdbc;
 
-import com.tiange.core.entity.mysql.database.DatabaseConfig;
+import com.tiange.core.mysql.database.DatabaseConfig;
 import com.tiange.core.utils.database.manager.Manager;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class MySqlDbUtil implements Manager {
 
@@ -92,6 +94,30 @@ public class MySqlDbUtil implements Manager {
         return obj;
     }
 
+    /*
+163  *  MapListHandler
+164  *  将结果集每一行存储到Map集合,键:列名,值:数据
+166  */
+    public   List<Map<String,Object>> queryForMapuuuuuuuuList(String sql)throws SQLException{
+
+        QueryRunner qr = new QueryRunner();
+
+
+        Connection conn = getConnection();
+
+        List<Map<String,Object>> list = qr.query(conn, sql, new MapListHandler());
+
+        //遍历集合list
+        for( Map<String,Object> map : list ){
+            for(String key : map.keySet()){
+                System.out.print(key+"..."+map.get(key)+", ");
+            }
+                System.out.println();
+        }
+
+        return list;
+    }
+
     @Override
     public int execute(String sql) {
 
@@ -126,7 +152,7 @@ public class MySqlDbUtil implements Manager {
      * @return Connection
      */
 
-    public Connection getConnection() {
+    public  Connection getConnection() {
 
         String url = this.config.getUrl();
         String username = this.config.getUsername();

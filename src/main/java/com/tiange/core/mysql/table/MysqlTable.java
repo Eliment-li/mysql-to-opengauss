@@ -1,11 +1,11 @@
-package com.tiange.core.entity.mysql.table;
+package com.tiange.core.mysql.table;
 
 
-import com.tiange.core.entity.mysql.MysqlColumn;
-import com.tiange.core.entity.mysql.database.MysqlDatabase;
-import com.tiange.core.entity.mysql.key.MysqlKey;
-import com.tiange.core.entity.opengauss.column.GaussColumn;
-import com.tiange.core.entity.opengauss.table.GaussTable;
+import com.tiange.core.mysql.MysqlColumn;
+import com.tiange.core.mysql.database.MysqlDatabase;
+import com.tiange.core.mysql.key.MysqlKey;
+import com.tiange.core.opengauss.column.GaussColumn;
+import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.others.ObjectUtils;
 import com.tiange.core.utils.others.StringUtils;
 
@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.tiange.core.entity.mysql.key.MysqlKey.FLAG_PRIMARY;
 
 /**
  * 表结构定义
@@ -94,7 +92,7 @@ public class MysqlTable implements Serializable {
      */
     public boolean hasForeignKey() {
         for (MysqlKey mysqlKey : this.mysqlKeys) {
-            if (!FLAG_PRIMARY.equals(mysqlKey.getTable_name())
+            if (!MysqlKey.FLAG_PRIMARY.equals(mysqlKey.getTable_name())
                     && !StringUtils.isEmpty(mysqlKey.getReferenced_column_name())
                     && !StringUtils.isEmpty(mysqlKey.getReferenced_table_name())
                     && !StringUtils.isEmpty(mysqlKey.getReferenced_table_schema())
@@ -139,7 +137,7 @@ public class MysqlTable implements Serializable {
 
         //获取 unique 索引
         List<MysqlKey> uniqueIndexList = this.mysqlKeys.stream().filter(
-                s -> !FLAG_PRIMARY.equals(s.getConstraint_name()) &&
+                s -> !MysqlKey.FLAG_PRIMARY.equals(s.getConstraint_name()) &&
                         StringUtils.isEmpty(s.getReferenced_column_name())
         ).collect(Collectors.toList());
 
@@ -180,7 +178,7 @@ public class MysqlTable implements Serializable {
             this.mysqlKeys.removeAll(uniqueIndexList);
         }
         // 获取主键
-        List<MysqlKey> primaryMysqlKeyList = this.mysqlKeys.stream().filter(k -> FLAG_PRIMARY.equals(k.getConstraint_name())).collect(Collectors.toList());
+        List<MysqlKey> primaryMysqlKeyList = this.mysqlKeys.stream().filter(k -> MysqlKey.FLAG_PRIMARY.equals(k.getConstraint_name())).collect(Collectors.toList());
         if (primaryMysqlKeyList.size() > 0) {
             sb.append("PRIMARY KEY (");
             primaryMysqlKeyList.forEach(k -> sb.append("`").append(k.getColumn_name()).append("`,"));

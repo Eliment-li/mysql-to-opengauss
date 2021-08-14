@@ -1,7 +1,7 @@
-package com.tiange.core.entity.mysql.key;
+package com.tiange.core.mysql.key;
 
-import com.tiange.core.entity.mysql.table.MysqlTable;
-import com.tiange.core.entity.opengauss.key.GaussKey;
+import com.tiange.core.mysql.table.MysqlTable;
+import com.tiange.core.opengauss.key.GaussKey;
 
 import java.io.Serializable;
 

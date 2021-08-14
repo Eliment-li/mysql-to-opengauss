@@ -1,6 +1,6 @@
-package com.tiange.core.entity.opengauss.column;
+package com.tiange.core.opengauss.column;
 
-import com.tiange.core.entity.opengauss.table.GaussTable;
+import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.others.StringUtils;
 
 /**

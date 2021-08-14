@@ -1,7 +1,7 @@
-package com.tiange.core.entity.opengauss.table;
+package com.tiange.core.opengauss.table;
 
-import com.tiange.core.entity.opengauss.column.GaussColumn;
-import com.tiange.core.entity.opengauss.database.GaussDatabase;
+import com.tiange.core.opengauss.column.GaussColumn;
+import com.tiange.core.opengauss.database.GaussDatabase;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
