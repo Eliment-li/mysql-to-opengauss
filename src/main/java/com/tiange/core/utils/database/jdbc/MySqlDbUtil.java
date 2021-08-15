@@ -50,6 +50,7 @@ public class MySqlDbUtil implements Manager {
 
         Connection conn = getConnection();
 
+
         BeanListHandler<?> beanListHandler = new BeanListHandler(clazz);
 
         try {
@@ -110,7 +111,6 @@ public class MySqlDbUtil implements Manager {
             for(String key : map.keySet()){
                 // System.out.print(key+"..."+map.get(key)+", ");
             }
-                System.out.println();
         }
 
 
@@ -119,31 +119,43 @@ public class MySqlDbUtil implements Manager {
     }
 
     /**
-     * 按页查询
-     *
+     * 按页查询 Page 中的内容格式为 List<Map<String, Object>>
      * @param sql
-     * @return
+     * @return Page
      */
-    public Page queryForMapListByPage(String sql, int pageSize, int pageNumber) {
-
-        Page page = new Page(pageSize, pageNumber);
-
-        QueryRunner qr = new QueryRunner();
-        Connection conn = getConnection();
+    public Page queryForPage(String sql, Page page) {
 
         try {
-            List<Map<String, Object>> list = qr.query(conn, sql, new MapListHandler());
-
+            System.out.println("第" + page.getPageNum() + "页 ");
+            List<Map<String, Object>> list = queryForMapList(getLimitSqlString(sql, page));
+            list.forEach(e -> System.out.println(e));
             page.setPageContent(list);
 
-            DbUtils.close(conn);
         } catch (SQLException e) {
 
             e.printStackTrace();
-            System.out.println("第" + pageSize + "页 " + "传输失败");
+            System.out.println("第" + page.getPageNum() + "页 " + "查询失败");
 
         }
         return page;
+    }
+
+    /**
+     * 将sql变成分页sql语句
+     *
+     * @return
+     */
+    private String getLimitSqlString(String sql, Page page) {
+
+        if (page.getPageNum() <= 1)
+            sql = sql.concat(" limit " + (page.getPageSize()));
+        else {
+            long offset = (page.getPageNum() - 1) * page.getPageSize();
+            sql = sql.concat(" limit " + offset + "," + (page.getPageSize()));
+
+        }
+        System.out.println(sql);
+        return sql;
     }
 
     /**
@@ -178,8 +190,8 @@ public class MySqlDbUtil implements Manager {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return 0;
     }
 
     @Override

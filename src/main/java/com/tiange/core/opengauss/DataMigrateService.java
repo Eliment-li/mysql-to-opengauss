@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class DataMigrateService {
 
@@ -78,17 +79,46 @@ public class DataMigrateService {
         return sqlList;
     }
 
-    public void MigrateByPage(GaussTable gaussTable) {
+    /**
+     * 将表中的数据以分页的方式迁移
+     *
+     * @param gaussTable
+     */
+    public static void MigrateTableDataByPage(GaussTable gaussTable) throws Exception {
         String tableName = gaussTable.getTable_name();
 
-        Page page = new Page();
+        MySqlDbUtil utils = new MySqlDbUtil();
         try {
             //获取总记录
             long rowCount = getTableRowCount(tableName);
 
-            page.setTotalCount(rowCount);
-            int pageCount = (int) rowCount / page.getPageSize();
+            int pageSize = 5;
 
+            //pageCount=要分多少页
+            int pageCount = (int) (rowCount / pageSize) + 1;
+
+            String sql = "select * from " + tableName + " ";
+
+
+            for (int i = 1; i <= pageCount; i++) {
+
+                Page page = new Page();
+
+                page.setPageNum(i);
+                page.setPageSize(pageSize);
+
+                utils.queryForPage(sql, page);
+
+                //System.out.println("=====第 "+i+" 页=====");
+                List<String> sqlList = convertDataToInsertSql(page.getPageContent(), gaussTable);
+
+
+                TimeUnit.SECONDS.sleep(1);
+
+            }
+
+
+            //
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,7 +135,7 @@ public class DataMigrateService {
      *
      * @param tableName
      */
-    private long getTableRowCount(String tableName) throws SQLException {
+    private static long getTableRowCount(String tableName) throws SQLException {
         MySqlDbUtil util = new MySqlDbUtil();
 
         Long count = util.QueryForScalar("select count(*) as count from " + tableName + ";");

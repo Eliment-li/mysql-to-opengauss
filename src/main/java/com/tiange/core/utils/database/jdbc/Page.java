@@ -13,8 +13,10 @@ public class Page {
 
     // 每页的记录数
     private int pageSize;
-    // 获取的所有的记录数
+    // 总记录数
     private long totalCount;
+    //总页数
+    private long pageCount;
     // 当前的页数，第几页
     private int pageNum;
 
@@ -24,8 +26,21 @@ public class Page {
 
     }
 
-    public Page(int pageSize, int pageNum) {
-        this.pageSize = pageSize;
+    /**
+     * @param pageSize 页的容量
+     * @param pageNum  页的编号
+     */
+    public Page(Integer pageSize, Integer pageNum) {
+
+        if (pageSize == null)
+            this.pageSize = Default_PageSize;
+        else
+            this.pageSize = pageSize;
+
+
+        if (pageNum == null)
+            this.pageNum = Default_Pagenum;
+        else
         this.pageNum = pageNum;
     }
 
@@ -61,5 +76,13 @@ public class Page {
 
     public void setPageContent(List<Map<String, Object>> pageContent) {
         this.pageContent = pageContent;
+    }
+
+    public long getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(long pageCount) {
+        this.pageCount = pageCount;
     }
 }

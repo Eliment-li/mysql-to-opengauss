@@ -31,6 +31,12 @@ public class OpenGaussDbUtil {
 
     ;
 
+    /**
+     * 执行单个增删查改语句
+     *
+     * @param sql
+     * @return
+     */
     public static int execute(String sql) {
         {
             Statement stmt = null;
@@ -38,8 +44,7 @@ public class OpenGaussDbUtil {
                 stmt = GetConnection("jack", "root123..0").createStatement();
 
                 //执行普通SQL语句。
-                int rc = stmt
-                        .executeUpdate(sql);
+                int rc = stmt.executeUpdate(sql);
 
                 stmt.close();
                 return rc;
@@ -86,7 +91,7 @@ public class OpenGaussDbUtil {
         PreparedStatement pst = null;
 
         try {
-//生成预处理语句。
+            //生成预处理语句。
             pst = conn.prepareStatement("INSERT INTO test1 VALUES (?,?)");
             for (int i = 0; i < 3; i++) {
                 //添加参数。
@@ -94,7 +99,7 @@ public class OpenGaussDbUtil {
                 pst.setString(2, "opengauss/data " + i);
                 pst.addBatch();
             }
-//执行批处理。
+            //执行批处理。
             pst.executeBatch();
             pst.close();
         } catch (SQLException e) {

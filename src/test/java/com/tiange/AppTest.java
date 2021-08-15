@@ -32,8 +32,9 @@ public class AppTest
 
 
                     //执行 sql 语句
-                    OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
-                    DataMigrateTest(gaussTable);
+                    //OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+                    // DataMigrateTest(gaussTable);
+                    DataMigrateService.MigrateTableDataByPage(gaussTable);
                 }
 
 
@@ -87,7 +88,7 @@ public class AppTest
 
     public static void main(String[] args) throws Exception {
         TableTest();
-        keyTest();
+        // keyTest();
 
     }
 }
