@@ -58,7 +58,19 @@ public class MysqlColumn {
      A UNIQUE index may be displayed as PRI if it cannot contain NULL values and there is no PRIMARY KEY in the mysqlTable. A UNIQUE index may display as MUL if several columns form a composite UNIQUE index; although the combination of the columns is unique, each column can still hold multiple occurrences of a given value
    * */
     private String column_key;
+
+    /* Any additional information that is available about a given column. The value is nonempty in these cases:
+
+        auto_increment for columns that have the AUTO_INCREMENT attribute.
+
+        on update CURRENT_TIMESTAMP for TIMESTAMP or DATETIME columns that have the ON UPDATE CURRENT_TIMESTAMP attribute.
+
+        STORED GENERATED or VIRTUAL GENERATED for generated columns.
+
+        DEFAULT_GENERATED for columns that have an expression default value.
+    * */
     private String extra;
+
     private String column_comment;
     private String generation_expression;
 
@@ -79,6 +91,7 @@ public class MysqlColumn {
         return (String) map.get(mysqlDataType);
 
     }
+
     /**
      * @return return example: " 'id' varchar, "
      * @description 用于创建表
@@ -115,6 +128,8 @@ public class MysqlColumn {
         //colunn_key
         gaussColumn.setColumn_key(this.column_key);
 
+        gaussColumn.setExtra(extra);
+
 
         //类型组
         gaussColumn.setGroupEnum(getColunGroupEnum());
@@ -122,7 +137,6 @@ public class MysqlColumn {
         //column key
         return gaussColumn;
     }
-
 
 
     /**

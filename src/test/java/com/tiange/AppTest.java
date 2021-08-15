@@ -30,11 +30,13 @@ public class AppTest
 
                 for (GaussTable gaussTable : gaussDatabase.getTables()) {
 
+                    System.out.println(gaussTable.toCreateSql().toString());
 
-                    //执行 sql 语句
-                    OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+                    //OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
                     // DataMigrateTest(gaussTable);
-                    DataMigrateService.MigrateTableDataByPage(gaussTable);
+
+                    //数据迁移
+                    //  DataMigrateService.MigrateTableDataByPage(gaussTable);
                 }
 
 

@@ -3,12 +3,16 @@ package com.tiange.core.mysql.table;
 import com.tiange.core.mysql.MysqlColumn;
 import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.mysql.key.MysqlKey;
+import com.tiange.core.opengauss.column.GaussColumn;
+import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.others.FileUtils;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.tiange.core.utils.others.MessageDigestUtil.getSHA256Digest;
 
 public class MysqlTableService {
 
@@ -70,4 +74,27 @@ public class MysqlTableService {
 
         return tabls;
     }
+
+    /**
+     * @param gaussTable
+     * @return 表信息的摘要
+     */
+    public static String getTableDigest(GaussTable gaussTable) {
+
+        StringBuilder content = new StringBuilder(290);
+        content.append(gaussTable.getTable_name());
+        for (GaussColumn column : gaussTable.getGaussColumns()) {
+            content.append(column.getColumn_name());
+            content.append(column.getDatetype());
+            content.append(column.getComment());
+            content.append(column.getIs_nullable());
+            content.append(column.getNumeric_precision());
+            content.append(column.getColumn_default());
+        }
+
+        String digest = getSHA256Digest(content.toString());
+
+        return digest;
+    }
+
 }

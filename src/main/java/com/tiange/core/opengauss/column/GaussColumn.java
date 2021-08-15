@@ -19,6 +19,7 @@ public class GaussColumn {
     private String character_octet_length;
     private String comment;
     private String column_key;
+    private String extra;
     private ColumnGroupEnum groupEnum;
 
     //引用数据库
@@ -130,7 +131,6 @@ public class GaussColumn {
     }
 
 
-
     /**
      * @return 生成注释的 sql 语句
      */
@@ -174,14 +174,22 @@ public class GaussColumn {
      * @see ColumnGroupEnum
      */
     public StringBuilder toIntTypeSql() {
+        // 自增
+
 
         StringBuilder sql = new StringBuilder(16);
         sql.append(QUOTE + this.column_name + QUOTE);
         sql.append(" ");
-        sql.append(this.datetype);
 
-        sql.append(" DEFAULT ");
-        sql.append(this.column_default + " ");
+        if (this.extra.equals("auto_increment")) {
+            //用序列实现自增
+            sql.append(" SERIAL ");
+        } else {
+
+            sql.append(this.datetype);
+            sql.append(" DEFAULT ");
+            sql.append(this.column_default + " ");
+        }
 
         return sql;
     }
@@ -483,5 +491,13 @@ public class GaussColumn {
 
     public void setGaussTable(GaussTable gaussTable) {
         this.gaussTable = gaussTable;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 }
