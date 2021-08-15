@@ -4,6 +4,7 @@ import com.tiange.core.opengauss.column.ColumnGroupEnum;
 import com.tiange.core.opengauss.column.GaussColumn;
 import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
+import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
@@ -112,13 +113,11 @@ public class DataMigrateService {
                 //System.out.println("=====第 "+i+" 页=====");
                 List<String> sqlList = convertDataToInsertSql(page.getPageContent(), gaussTable);
 
+                OpenGaussDbUtil.executeSqlListAtomicity(sqlList);
 
                 TimeUnit.SECONDS.sleep(1);
 
             }
-
-
-            //
 
         } catch (SQLException e) {
             e.printStackTrace();

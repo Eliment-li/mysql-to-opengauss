@@ -32,7 +32,7 @@ public class AppTest
 
 
                     //执行 sql 语句
-                    //OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+                    OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
                     // DataMigrateTest(gaussTable);
                     DataMigrateService.MigrateTableDataByPage(gaussTable);
                 }

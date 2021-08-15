@@ -1,6 +1,7 @@
 package com.tiange.core.utils.database.jdbc;
 
 import java.sql.*;
+import java.util.List;
 
 public class OpenGaussDbUtil {
 
@@ -86,8 +87,45 @@ public class OpenGaussDbUtil {
         }
     }
 
+    /**
+     * 将一个数组中的 sql 语句当做一个整体（事务）执行
+     * 若执行失败则回滚
+     */
+    public static boolean executeSqlListAtomicity(List<String> sqlList) {
+        Statement stmt = null;
+        Connection conn = null;
+        try {
+
+            conn = GetConnection("jack", "root123..0");
+            conn.setAutoCommit(false);
+
+            stmt = conn.createStatement();
+
+            for (String sql : sqlList) {
+                stmt.execute(sql);
+            }
+
+            conn.commit();
+            conn.close();
+
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //事务回滚
+            if (conn != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        }
+    }
     //执行预处理语句，批量插入数据。
-    public static void BatchInsertData(Connection conn) {
+    public static void BatchInsertData(Connection conn, List<String> sqlList) {
         PreparedStatement pst = null;
 
         try {
@@ -146,7 +184,7 @@ public class OpenGaussDbUtil {
         Connection conn = GetConnection("jack", "root123..0");
         CreateTable(conn);//创建表。
         //批插数据。
-        BatchInsertData(conn);
+        //BatchInsertData(conn);
         //执行预编译语句，更新数据。
         ExecPreparedSQL(conn);
 
