@@ -9,8 +9,7 @@
   <version>0.11</version>
 
   <name>mysql2opengauss</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+    <url>https://github.com/Eliment-li/mysql-to-opengauss</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
