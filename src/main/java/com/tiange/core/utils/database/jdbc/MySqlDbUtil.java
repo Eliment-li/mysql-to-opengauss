@@ -128,7 +128,6 @@ public class MySqlDbUtil implements Manager {
         try {
             System.out.println("第" + page.getPageNum() + "页 ");
             List<Map<String, Object>> list = queryForMapList(getLimitSqlString(sql, page));
-            list.forEach(e -> System.out.println(e));
             page.setPageContent(list);
 
         } catch (SQLException e) {
@@ -154,7 +153,7 @@ public class MySqlDbUtil implements Manager {
             sql = sql.concat(" limit " + offset + "," + (page.getPageSize()));
 
         }
-        System.out.println(sql);
+        //System.out.println(sql);
         return sql;
     }
 

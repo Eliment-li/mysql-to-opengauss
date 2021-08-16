@@ -33,17 +33,20 @@ public class AppTest
 
                     //System.out.println(gaussTable.toCreateSql().toString());
 
-                    System.out.print("传输表" + gaussTable.getTable_name() + " ");
+                    System.out.print("\n==============" + gaussTable.getTable_name() + "开始迁移输表结构=================");
                     OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
 
-                    System.out.print("\n 验证表" + gaussTable.getTable_name() + " ");
+                    System.out.print("\n 验证表  " + gaussTable.getTable_name() + " ");
                     boolean CheckResult = GaussTableService.migrateCheck(gaussTable);
-                    System.out.println(CheckResult);
-
+                    System.out.println("验证结果: " + CheckResult);
+                    System.out.println("==============" + gaussTable.getTable_name() + "表结构迁移完毕=================");
                     // DataMigrateTest(gaussTable);
 
                     //数据迁移
-                    //  DataMigrateService.MigrateTableDataByPage(gaussTable);
+                    System.out.println("\n\n\n==============" + gaussTable.getTable_name() + "开始迁移表数据=================");
+                    DataMigrateService.MigrateTableDataByPage(gaussTable);
+                    System.out.println("==============" + gaussTable.getTable_name() + "表数据迁移完毕=================");
+
                 }
 
 
@@ -66,8 +69,11 @@ public class AppTest
         /*jack=OpenGauss数据库名字*/
         GaussDatabase gaussDatabase = MysqlDatabaseService.Conert2GaussDatabase(mysqlDatabase, new GaussDatabase("jack"));
         for (GaussKey gaussKey : gaussDatabase.getKeys()) {
+
             OpenGaussDbUtil.execute(gaussKey.toCreateTableSql().toString());
+
             System.out.println(gaussKey.toCreateTableSql());
+
 
         }
     }
@@ -95,9 +101,22 @@ public class AppTest
     }
 
 
+    /**
+     * 功能测试主程序
+     */
     public static void main(String[] args) throws Exception {
-        TableTest();
-        // keyTest();
 
+        /*
+         *  数据库表结构迁移 & 数据迁移
+         */
+        TableTest();
+
+
+        /*
+         *  数据库表索引迁移
+         */
+        keyTest();
     }
+
+
 }

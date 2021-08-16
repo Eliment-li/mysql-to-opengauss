@@ -93,7 +93,7 @@ public class DataMigrateService {
             //获取总记录
             long rowCount = getTableRowCount(tableName);
 
-            int pageSize = 5;
+            int pageSize = 25;
 
             //pageCount=要分多少页
             int pageCount = (int) (rowCount / pageSize) + 1;
@@ -115,7 +115,7 @@ public class DataMigrateService {
 
                 OpenGaussDbUtil.executeSqlListAtomicity(sqlList);
 
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MICROSECONDS.sleep(100);
 
             }
 

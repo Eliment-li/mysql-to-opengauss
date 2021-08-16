@@ -25,7 +25,6 @@ public class OpenGaussDbUtil {
         try {
             //创建数据库连接。
             conn = DriverManager.getConnection(sourceURL, username, passwd);
-            System.out.println("Connection succeed!");
         } catch (Exception e) {
             e.printStackTrace();
             return null;
