@@ -6,6 +6,7 @@ import com.tiange.core.opengauss.DataMigrateService;
 import com.tiange.core.opengauss.database.GaussDatabase;
 import com.tiange.core.opengauss.key.GaussKey;
 import com.tiange.core.opengauss.table.GaussTable;
+import com.tiange.core.opengauss.table.GaussTableService;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 
@@ -30,9 +31,15 @@ public class AppTest
 
                 for (GaussTable gaussTable : gaussDatabase.getTables()) {
 
-                    System.out.println(gaussTable.toCreateSql().toString());
+                    //System.out.println(gaussTable.toCreateSql().toString());
 
-                    //OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+                    System.out.print("传输表" + gaussTable.getTable_name() + " ");
+                    OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
+
+                    System.out.print("\n 验证表" + gaussTable.getTable_name() + " ");
+                    boolean CheckResult = GaussTableService.migrateCheck(gaussTable);
+                    System.out.println(CheckResult);
+
                     // DataMigrateTest(gaussTable);
 
                     //数据迁移

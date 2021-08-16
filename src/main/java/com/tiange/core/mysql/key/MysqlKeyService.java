@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MysqlKeyService {
 
-    static String KEY_SQL = FileUtils.getStringByClasspath("mysql/key.sql");
+    static String KEY_SQL = FileUtils.getStringByClasspath("mysql/sql/key.sql");
     MySqlDbUtil dbUtil = new MySqlDbUtil();
 
     /**

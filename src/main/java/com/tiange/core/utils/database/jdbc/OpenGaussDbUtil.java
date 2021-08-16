@@ -1,6 +1,10 @@
 package com.tiange.core.utils.database.jdbc;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OpenGaussDbUtil {
@@ -171,6 +175,42 @@ public class OpenGaussDbUtil {
             }
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 使用DButils 实现
+     *
+     * @param sql
+     * @param clazz
+     * @return
+     */
+    public static List<?> queryForObjectList(String sql, Class clazz) {
+
+        String driver = "org.postgresql.Driver";
+        String sourceURL = "jdbc:postgresql://aa71e16381066044.natapp.cc:12321/postgres";
+        String url = sourceURL;
+        String username = "jack";
+        String password = "root123..0";
+
+        Connection connection = null;
+
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+
+            QueryRunner queryRunner = new QueryRunner();
+
+            BeanListHandler<?> beanListHandler = new BeanListHandler(clazz);
+
+
+            List<?> objectList = queryRunner.query(connection, sql, beanListHandler);
+
+            return objectList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>(0);
+        }
+
     }
 
 
