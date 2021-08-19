@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OpenGaussDbUtil {
-
+    //todo  全部方法改为使用dbutils ，不再使用原生的jdbc
     //创建数据库连接。
     public static Connection GetConnection(String username, String passwd) {
         String driver = "org.postgresql.Driver";

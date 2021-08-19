@@ -3,13 +3,10 @@ package com.tiange.core.mysql;
 
 import com.tiange.core.mysql.database.MysqlDatabase;
 
-import java.io.Serializable;
-
 /**
  * View结构定义
  */
-public class MysqlView implements Serializable {
-    private static final long serialVersionUID = 2957489532511114320L;
+public class MysqlView {
 
     private String schema;
     private String name;

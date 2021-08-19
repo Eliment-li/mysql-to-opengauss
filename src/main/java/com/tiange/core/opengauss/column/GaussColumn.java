@@ -1,6 +1,7 @@
 package com.tiange.core.opengauss.column;
 
 import com.tiange.core.opengauss.table.GaussTable;
+import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
 /**
@@ -83,7 +84,8 @@ public class GaussColumn {
     private static String SINGLE_QUOTE = "'";
     private static String YES = "YES";
     private static String NO = "NO";
-    private static String COLUMN_COMMENT_TEMPLATE = "COMMENT ON COLUMN \"${databaseName}\".\"${tableName}\".\"${columnName}\" IS '${comment}' ";
+    //注释模板
+    private static String COLUMN_COMMENT_TEMPLATE = FileUtils.getStringByClasspath("opengauss/metadata/create_comment.sql");
 
     /**
      * @return 建表语句片段
