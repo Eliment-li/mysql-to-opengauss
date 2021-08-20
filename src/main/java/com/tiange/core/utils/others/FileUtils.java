@@ -21,6 +21,12 @@ public class FileUtils {
         return toString(is);
     }
 
+    public static InputStream getInputStreamByClasspath(String filePath) {
+        ClassLoader classLoader = getDefaultClassLoader();
+        InputStream is = classLoader.getResourceAsStream(filePath);
+        return is;
+    }
+
     public static ClassLoader getDefaultClassLoader() {
         ClassLoader cl = null;
         try {

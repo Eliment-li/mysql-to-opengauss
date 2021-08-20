@@ -33,8 +33,15 @@
       <version>1.7</version>
     </dependency>
 
+      <!-- https://mvnrepository.com/artifact/com.alibaba/druid 数据库连接 -->
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>druid</artifactId>
+          <version>1.1.22</version>
+      </dependency>
 
-    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java   JDBC-->
+
+      <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java   JDBC-->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
