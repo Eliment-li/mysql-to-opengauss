@@ -19,6 +19,7 @@ import java.util.Properties;
 public class DruidUtil {
     private static DataSource ds;
 
+    //初始化连接池
     static {
 
         try {

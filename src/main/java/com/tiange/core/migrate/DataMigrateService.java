@@ -1,4 +1,4 @@
-package com.tiange.core.opengauss;
+package com.tiange.core.migrate;
 
 import com.tiange.core.opengauss.column.ColumnGroupEnum;
 import com.tiange.core.opengauss.column.GaussColumn;
@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DataMigrateService {
 
+    //插入语句模板
     static String INSERT_SQL = FileUtils.getStringByClasspath("opengauss/data/insert.sql");
 
     /**
@@ -90,9 +91,10 @@ public class DataMigrateService {
 
         MySqlDbUtil utils = new MySqlDbUtil();
         try {
-            //获取总记录
+            //总记录数量
             long rowCount = getTableRowCount(tableName);
 
+            //每个页的大小
             int pageSize = 25;
 
             //pageCount=要分多少页

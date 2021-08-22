@@ -1,8 +1,8 @@
 package com.tiange;
 
+import com.tiange.core.migrate.DataMigrateService;
 import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.mysql.database.MysqlDatabaseService;
-import com.tiange.core.opengauss.DataMigrateService;
 import com.tiange.core.opengauss.database.GaussDatabase;
 import com.tiange.core.opengauss.key.GaussKey;
 import com.tiange.core.opengauss.table.GaussTable;
