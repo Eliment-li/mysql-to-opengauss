@@ -8,7 +8,6 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import javax.sql.DataSource;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,27 +16,38 @@ import java.util.List;
 import java.util.Properties;
 
 public class DruidUtil {
-    private static DataSource ds;
+    private static DataSource mysqlDataSource;
+    private static DataSource GaussDataSource;
 
     //初始化连接池
     static {
 
         try {
-            Properties pro = new Properties();
-            InputStream is = FileUtils.getInputStreamByClasspath("druid/druid.properties");
-            pro.load(is);
-            ds = DruidDataSourceFactory.createDataSource(pro);
+            //初始化MySQL数据源
+            Properties mysqlProperties = new Properties();
+            mysqlProperties.load(FileUtils.getInputStreamByClasspath("config/druid_mysql.properties"));
+            mysqlDataSource = DruidDataSourceFactory.createDataSource(mysqlProperties);
+
+            //初始化Opengauss 数据源
+            Properties gaussProperties = new Properties();
+            gaussProperties.load(FileUtils.getInputStreamByClasspath("config/druid_opengauss.properties"));
+            GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static Connection getConnection() throws Exception {
-
-
-        Connection conn = ds.getConnection();
+    public static Connection getMysqlConnection() throws Exception {
+        Connection conn = mysqlDataSource.getConnection();
         return conn;
     }
+
+    public static Connection getGaussConnection() throws Exception {
+        Connection conn = GaussDataSource.getConnection();
+        return conn;
+    }
+
 
     public static void closeResource(Connection connection, Statement pre) {
         try {
@@ -91,8 +101,10 @@ public class DruidUtil {
                 "ORDER BY\n" +
                 "\tordinal_position;";
 
-        List<?> empList = queryRunner.query(DruidUtil.getConnection(), sql, beanListHandler);
+        Connection connection = DruidUtil.getMysqlConnection();
 
+        List<?> empList = queryRunner.query(connection, sql, beanListHandler);
+        connection.close();
         empList.forEach(e -> System.out.println(e));
     }
 

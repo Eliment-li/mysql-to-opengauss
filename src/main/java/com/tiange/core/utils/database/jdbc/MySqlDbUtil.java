@@ -1,6 +1,7 @@
 package com.tiange.core.utils.database.jdbc;
 
 import com.tiange.core.mysql.database.DatabaseConfig;
+import com.tiange.core.utils.database.druid.DruidUtil;
 import com.tiange.core.utils.database.manager.Manager;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
@@ -9,7 +10,6 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -209,15 +209,16 @@ public class MySqlDbUtil implements Manager {
 
     public  Connection getConnection() {
 
-        String url = this.config.getUrl();
+      /*  String url = this.config.getUrl();
         String username = this.config.getUsername();
-        String password = this.config.getPassword();
+        String password = this.config.getPassword();*/
 
         Connection connection = null;
 
 
         try {
-            connection = DriverManager.getConnection(url, username, password);
+            connection = DruidUtil.getMysqlConnection();
+            // DriverManager.getConnection(url, username, password);
 
         } catch (Exception e) {
             e.printStackTrace();

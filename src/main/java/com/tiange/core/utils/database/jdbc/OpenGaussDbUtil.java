@@ -1,35 +1,27 @@
 package com.tiange.core.utils.database.jdbc;
 
+import com.tiange.core.utils.database.druid.DruidUtil;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenGaussDbUtil {
-    //todo  全部方法改为使用dbutils ，不再使用原生的jdbc
     //创建数据库连接。
-    public static Connection GetConnection(String username, String passwd) {
-        String driver = "org.postgresql.Driver";
-        String sourceURL = "jdbc:postgresql://aa71e16381066044.natapp.cc:12321/postgres";
+    public static Connection GetConnection() {
+
         Connection conn = null;
         try {
-            //加载数据库驱动。
-            Class.forName(driver).newInstance();
+            conn = DruidUtil.getGaussConnection();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
-        try {
-            //创建数据库连接。
-            conn = DriverManager.getConnection(sourceURL, username, passwd);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
         return conn;
     }
 
@@ -45,7 +37,7 @@ public class OpenGaussDbUtil {
         {
             Statement stmt = null;
             try {
-                stmt = GetConnection("jack", "root123..0").createStatement();
+                stmt = GetConnection().createStatement();
 
                 //执行普通SQL语句。
                 int rc = stmt.executeUpdate(sql);
@@ -99,7 +91,7 @@ public class OpenGaussDbUtil {
         Connection conn = null;
         try {
 
-            conn = GetConnection("jack", "root123..0");
+            conn = GetConnection();
             conn.setAutoCommit(false);
 
             stmt = conn.createStatement();
@@ -143,6 +135,7 @@ public class OpenGaussDbUtil {
             //执行批处理。
             pst.executeBatch();
             pst.close();
+            conn.close();
         } catch (SQLException e) {
             if (pst != null) {
                 try {
@@ -185,17 +178,9 @@ public class OpenGaussDbUtil {
      */
     public static List<?> queryForObjectList(String sql, Class clazz) {
 
-        String driver = "org.postgresql.Driver";
-        String sourceURL = "jdbc:postgresql://aa71e16381066044.natapp.cc:12321/postgres";
-        String url = sourceURL;
-        String username = "jack";
-        String password = "root123..0";
-
         Connection connection = null;
-
-
         try {
-            connection = DriverManager.getConnection(url, username, password);
+            connection = GetConnection();
 
             QueryRunner queryRunner = new QueryRunner();
 
@@ -220,15 +205,14 @@ public class OpenGaussDbUtil {
      */
     public static void main(String[] args) {
 //创建数据库连接。
-        Connection conn = GetConnection("jack", "root123..0");
+        Connection conn = GetConnection();
         CreateTable(conn);//创建表。
         //批插数据。
         //BatchInsertData(conn);
         //执行预编译语句，更新数据。
-        ExecPreparedSQL(conn);
+        //ExecPreparedSQL(conn);
 
-
-//关闭数据库连接。
+        //关闭数据库连接。
         try {
             conn.close();
         } catch (SQLException e) {

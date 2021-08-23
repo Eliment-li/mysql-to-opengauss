@@ -1,0 +1,5 @@
+{
+  "_comment_": "数据传输配置文件",
+  "page_size": "20",
+  "bucket_sise": "2000"
+}
