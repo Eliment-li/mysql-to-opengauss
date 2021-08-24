@@ -20,7 +20,7 @@ public class MySqlDbUtil implements Manager {
     DatabaseConfig config;
 
     public MySqlDbUtil() {
-        this.config = new DatabaseConfig("localhost", 3333, "root", "root123..0", "mysqltest");
+
     }
     public MySqlDbUtil(DatabaseConfig config) {
         this.config = config;
@@ -36,6 +36,7 @@ public class MySqlDbUtil implements Manager {
         try {
             List<?> empList = queryRunner.query(conn, sql, beanListHandler);
 
+            DbUtils.close(conn);
             return empList;
 
         } catch (Exception e) {
@@ -107,12 +108,11 @@ public class MySqlDbUtil implements Manager {
         List<Map<String,Object>> list = qr.query(conn, sql, new MapListHandler());
 
         //遍历集合list
-        for( Map<String,Object> map : list ){
+      /*  for( Map<String,Object> map : list ){
             for(String key : map.keySet()){
-                // System.out.print(key+"..."+map.get(key)+", ");
+                 System.out.print(key+"..."+map.get(key)+", ");
             }
-        }
-
+        }*/
 
         DbUtils.close(conn);
         return list;
@@ -163,11 +163,14 @@ public class MySqlDbUtil implements Manager {
      * @throws SQLException
      */
     public Long QueryForScalar(String sql) throws SQLException {
+
         Connection conn = getConnection();
+
         QueryRunner qr = new QueryRunner();
 
         long count = qr.query(conn, sql, new ScalarHandler<Long>());
 
+        DbUtils.close(conn);
         return count;
     }
 
@@ -209,16 +212,10 @@ public class MySqlDbUtil implements Manager {
 
     public  Connection getConnection() {
 
-      /*  String url = this.config.getUrl();
-        String username = this.config.getUsername();
-        String password = this.config.getPassword();*/
-
         Connection connection = null;
-
 
         try {
             connection = DruidUtil.getMysqlConnection();
-            // DriverManager.getConnection(url, username, password);
 
         } catch (Exception e) {
             e.printStackTrace();

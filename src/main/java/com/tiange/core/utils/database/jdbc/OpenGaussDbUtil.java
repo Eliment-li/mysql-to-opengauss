@@ -1,6 +1,7 @@
 package com.tiange.core.utils.database.jdbc;
 
 import com.tiange.core.utils.database.druid.DruidUtil;
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
@@ -17,6 +18,7 @@ public class OpenGaussDbUtil {
 
         Connection conn = null;
         try {
+            //从线程池获取连接
             conn = DruidUtil.getGaussConnection();
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +103,7 @@ public class OpenGaussDbUtil {
             }
 
             conn.commit();
-            conn.close();
+            DbUtils.close(conn);
 
             return true;
 

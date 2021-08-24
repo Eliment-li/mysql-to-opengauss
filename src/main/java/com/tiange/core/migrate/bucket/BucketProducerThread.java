@@ -22,7 +22,6 @@ public class BucketProducerThread extends Thread {
         try {
             //获取bucket
             bucket = getNextBucket();
-
             //交换缓冲区
             bucket = exchanger.exchange(bucket);
 
