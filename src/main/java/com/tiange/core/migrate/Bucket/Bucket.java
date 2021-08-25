@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.bucket;
+package com.tiange.core.migrate.Bucket;
 
 public class Bucket {
     String TableName;

@@ -1,14 +1,14 @@
-package com.tiange.core.migrate;
+package com.tiange.core.migrate.insert;
 
 /**
  * 工人线程
  * 生产者-消费者模式中的 消费者角色
  */
-public class PageWorker extends Thread {
+public class InsertHub extends Thread {
 
-    private final PageChannel channel;
+    private final InsertChannel channel;
 
-    public PageWorker(String name, PageChannel channel) {
+    public InsertHub(String name, InsertChannel channel) {
         super(name);
         this.channel = channel;
     }
@@ -16,8 +16,8 @@ public class PageWorker extends Thread {
     public void run() {
         try {
             while (true) {
-                Request request = channel.take();
-                request.execute();
+                InsertRequest insertRequest = channel.take();
+                insertRequest.execute();
             }
         } catch (Exception e) {//interrupted exception
             e.printStackTrace();

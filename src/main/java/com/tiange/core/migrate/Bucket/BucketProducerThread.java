@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.bucket;
+package com.tiange.core.migrate.Bucket;
 
 import com.tiange.core.mysql.database.MysqlDatabase;
 
@@ -11,6 +11,7 @@ public class BucketProducerThread extends Thread {
     private final Exchanger<Bucket> exchanger;
     private Bucket bucket = null;
     private MysqlDatabase mysqlDatabase;
+
 
     public BucketProducerThread(Exchanger<Bucket> exchanger, MysqlDatabase mysqlDatabase) {
         super("BucketProducerThread");
