@@ -1,5 +1,9 @@
 package com.tiange.core.migrate;
 
+import com.tiange.core.migrate.Bucket.Bucket;
+import com.tiange.core.migrate.Bucket.BucketConsumerThread;
+import com.tiange.core.migrate.Bucket.BucketProducerThread;
+import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.opengauss.column.ColumnGroupEnum;
 import com.tiange.core.opengauss.column.GaussColumn;
 import com.tiange.core.opengauss.table.GaussTable;
@@ -13,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Exchanger;
 import java.util.concurrent.TimeUnit;
 
 public class DataMigrateService {
@@ -147,4 +152,11 @@ public class DataMigrateService {
     }
 
     /* 多线程迁移数据模块 开始 */
+    public static void doMigrate(MysqlDatabase mysqlDatabase) {
+        Exchanger<Bucket> exchanger = new Exchanger<Bucket>();
+        Bucket bucket1 = new Bucket();
+        Bucket bucket2 = new Bucket();
+        new BucketProducerThread(exchanger, bucket1, mysqlDatabase).start();
+        new BucketConsumerThread(exchanger, bucket2).start();
+    }
 }

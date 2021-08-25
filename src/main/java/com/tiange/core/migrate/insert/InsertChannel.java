@@ -11,14 +11,11 @@ public class InsertChannel extends ArrayBlockingQueue<InsertRequest> {
 
     private static final int MAX_REQUEST = 100;
 
-    /*请求队列*/
-    private final InsertRequest[] insertRequestQueue = new InsertRequest[MAX_REQUEST];
-
     private final InsertHub[] threadPool;
 
     public InsertChannel(int threads) {
 
-        super(threads);
+        super(100);
 
         threadPool = new InsertHub[threads];
 

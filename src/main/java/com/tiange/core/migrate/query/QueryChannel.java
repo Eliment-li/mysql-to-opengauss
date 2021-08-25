@@ -1,19 +1,22 @@
 package com.tiange.core.migrate.query;
 
+import com.tiange.core.migrate.insert.InsertChannel;
+
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class QueryChannel extends ArrayBlockingQueue<QueryRequest> {
 
     private final QueryHub[] queryHubThreadPool;
 
-    public QueryChannel(int count, int threads) {
-        super(count);
+    public QueryChannel(int threads) {
+        //缓冲区容量
+        super(1000);
         queryHubThreadPool = new QueryHub[threads];
 
-       /* InsertChannel insertChannel = new InsertChannel(3);
+        InsertChannel insertChannel = new InsertChannel(3);
         for (int i = 0; i < threads; i++) {
-            queryHubThreadPool[i] = new QueryHub("pageClient" + i, insertChannel);
-        }*/
+            queryHubThreadPool[i] = new QueryHub("pageClient" + i, this);
+        }
     }
 
     //启动工作线程

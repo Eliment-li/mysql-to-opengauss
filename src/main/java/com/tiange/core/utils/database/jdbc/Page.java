@@ -18,7 +18,7 @@ public class Page {
     //总页数
     private long pageCount;
     // 当前的页数，第几页
-    private int pageNum;
+    private long pageNum;
 
     private List<Map<String, Object>> pageContent;
 
@@ -62,11 +62,11 @@ public class Page {
         this.totalCount = totalCount;
     }
 
-    public int getPageNum() {
+    public long getPageNum() {
         return pageNum;
     }
 
-    public void setPageNum(int pageNum) {
+    public void setPageNum(long pageNum) {
         this.pageNum = pageNum;
     }
 

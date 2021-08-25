@@ -98,23 +98,17 @@ public class MySqlDbUtil implements Manager {
 163  *  MapListHandler
 164  *  将结果集每一行存储到Map集合,键:列名,值:数据
 166  */
-    public List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
+    public static List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
 
         QueryRunner qr = new QueryRunner();
-
 
         Connection conn = getConnection();
 
         List<Map<String,Object>> list = qr.query(conn, sql, new MapListHandler());
 
-        //遍历集合list
-      /*  for( Map<String,Object> map : list ){
-            for(String key : map.keySet()){
-                 System.out.print(key+"..."+map.get(key)+", ");
-            }
-        }*/
 
         DbUtils.close(conn);
+
         return list;
     }
 
@@ -123,7 +117,7 @@ public class MySqlDbUtil implements Manager {
      * @param sql
      * @return Page
      */
-    public Page queryForPage(String sql, Page page) {
+    public static Page queryForPage(String sql, Page page) {
 
         try {
             System.out.println("第" + page.getPageNum() + "页 ");
@@ -144,7 +138,7 @@ public class MySqlDbUtil implements Manager {
      *
      * @return
      */
-    private String getLimitSqlString(String sql, Page page) {
+    private static String getLimitSqlString(String sql, Page page) {
 
         if (page.getPageNum() <= 1)
             sql = sql.concat(" limit " + (page.getPageSize()));
@@ -210,7 +204,7 @@ public class MySqlDbUtil implements Manager {
      * @return Connection
      */
 
-    public  Connection getConnection() {
+    public static Connection getConnection() {
 
         Connection connection = null;
 
