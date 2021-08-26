@@ -115,7 +115,6 @@ public class AppTest
          */
         TableTest();
 
-
         /*
          *  数据库表索引迁移
          */

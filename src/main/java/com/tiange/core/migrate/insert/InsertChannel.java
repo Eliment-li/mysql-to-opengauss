@@ -9,14 +9,15 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class InsertChannel extends ArrayBlockingQueue<InsertRequest> {
 
-    private static final int MAX_REQUEST = 100;
 
     private final InsertHub[] threadPool;
 
     public InsertChannel(int threads) {
 
+        //缓冲区容量
         super(100);
 
+        //线程池大小
         threadPool = new InsertHub[threads];
 
         for (int i = 0; i < threadPool.length; i++) {
@@ -34,12 +35,12 @@ public class InsertChannel extends ArrayBlockingQueue<InsertRequest> {
 
     }
 
-    public synchronized void put(InsertRequest insertRequest) throws InterruptedException {
-        super.put(insertRequest);
+    public void putRequest(InsertRequest request) throws InterruptedException {
+        super.put(request);
     }
 
-    public synchronized InsertRequest take() throws InterruptedException {
-        InsertRequest insertRequest = super.take();
-        return insertRequest;
+    public InsertRequest takeRequest() throws InterruptedException {
+        InsertRequest request = super.take();
+        return request;
     }
 }

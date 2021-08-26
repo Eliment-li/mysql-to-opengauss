@@ -37,7 +37,7 @@ public class BucketProducerThread extends Thread {
 
                 while (true) {
                     //查询
-                    this.bucket = new Bucket(table.getTable_name(), 1000);
+                    this.bucket = new Bucket(table, 1000);
                     this.bucket.setNumber(bucketNumber);
 
                     //判断
@@ -76,7 +76,7 @@ public class BucketProducerThread extends Thread {
             long bucketNumber = 0;
             while (true) {
                 //查询
-                Bucket bucket = new Bucket(table.getTable_name(), 1000);
+                Bucket bucket = new Bucket(table, 1000);
                 bucket.setNumber(bucketNumber);
                 //判断
                 if (hasBucket(bucket)) {
@@ -94,7 +94,7 @@ public class BucketProducerThread extends Thread {
 
     private boolean hasBucket(Bucket bucket) throws SQLException {
 
-        String tableName = bucket.getTableName();
+        String tableName = bucket.mysqlTable.getTable_name();
         long bucketSize = bucket.getSize();
         StringBuilder sql = new StringBuilder("select * from " + tableName + "  ");
 

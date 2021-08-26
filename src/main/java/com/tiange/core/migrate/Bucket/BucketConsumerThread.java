@@ -29,14 +29,14 @@ public class BucketConsumerThread extends Thread {
         this.bucket = bucket;
 
         queryChannel = new QueryChannel(1);
-        insertChannel = new InsertChannel(1);
+        insertChannel = new InsertChannel(2);
 
     }
 
 
     public void run() {
         //启动工人线程
-        queryChannel.startWorkes();
+        queryChannel.startWorkers();
         insertChannel.startWorkers();
         //verifyChannel.startWorkers();
         boolean test = true;
@@ -50,7 +50,7 @@ public class BucketConsumerThread extends Thread {
                     //bucket读取完毕
                     break;
                 }
-                logger.info("获取bucket{}", bucket.getNumber());
+                //logger.info("获取bucket{}", bucket.getNumber());
                 if (test) {
                     //  continue;
                 }
@@ -68,15 +68,21 @@ public class BucketConsumerThread extends Thread {
                     Page page = new Page();
                     page.setPageSize(pageSize);
                     page.setPageNum(numberOffset + i);
+                    page.setMysqlTable(bucket.getMysqlTable());
 
-                    //todo page.setTableName
+                    //将bucket信息复制一份传递过去
+                    // Bucket newBucket=new Bucket(bucket) ;
+                    QueryRequest queryRequest = new QueryRequest(page, insertChannel);
 
-                    //todo 不直接传递bucket，因为可能造成脏读
-                    QueryRequest queryRequest = new QueryRequest(bucket, page, insertChannel);
+                    logger.info("put");
+                    try {
+                        queryChannel.put(queryRequest);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                    queryChannel.put(queryRequest);
 
-                    logger.info("查询请求：{}  {}:{}", bucket.getTableName(), bucket.getNumber(), page.getPageNum());
+                    logger.info("查询请求：{}  {}:{}", page.getMysqlTable().getTable_name(), bucket.getNumber(), page.getPageNum());
                 }
 
             }

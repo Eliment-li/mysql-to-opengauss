@@ -1,6 +1,5 @@
 package com.tiange.core.migrate.query;
 
-import com.tiange.core.migrate.Bucket.Bucket;
 import com.tiange.core.migrate.insert.InsertChannel;
 import com.tiange.core.migrate.insert.InsertRequest;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
@@ -13,7 +12,6 @@ import java.util.Map;
 
 public class QueryRequest {
 
-    Bucket bucket;
     Page page;
 
     //数据插入工作请求缓存
@@ -22,8 +20,8 @@ public class QueryRequest {
     //日志工具
     private Logger logger = LoggerFactory.getLogger(QueryRequest.class);
 
-    public QueryRequest(Bucket bucket, Page page, InsertChannel insertChannel) {
-        this.bucket = bucket;
+    public QueryRequest(Page page, InsertChannel insertChannel) {
+
         this.page = page;
         this.insertChannel = insertChannel;
     }
@@ -32,16 +30,20 @@ public class QueryRequest {
         logger.info("执行查询工作");
 
         //查询配置数据，放入 pageContent 中
-        MySqlDbUtil.queryForPage("select * from " + bucket.getTableName(), this.page);
+        MySqlDbUtil.queryForPage("select * from " + page.getMysqlTable().getTable_name(), this.page);
 
         List<Map<String, Object>> content = page.getPageContent();
-        logger.info("page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
-        Thread.sleep(10000);
-        //todo 将page 赋给 InsertRequest
 
-        InsertRequest insertRequest = new InsertRequest();
+        logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
 
-        // insertChannel.put(insertRequest);
+        Thread.sleep(1000);
+
+
+        InsertRequest insertRequest = new InsertRequest(page);
+        logger.info(" 插入请求 开始");
+        logger.info(insertChannel.remainingCapacity() + "");
+        insertChannel.putRequest(insertRequest);
+        logger.info(" 插入请求 结束");
 
 
     }

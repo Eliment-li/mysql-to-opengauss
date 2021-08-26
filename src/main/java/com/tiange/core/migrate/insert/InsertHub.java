@@ -6,17 +6,17 @@ package com.tiange.core.migrate.insert;
  */
 public class InsertHub extends Thread {
 
-    private final InsertChannel channel;
+    private final InsertChannel insertChannel;
 
-    public InsertHub(String name, InsertChannel channel) {
+    public InsertHub(String name, InsertChannel insertChannel) {
         super(name);
-        this.channel = channel;
+        this.insertChannel = insertChannel;
     }
 
     public void run() {
         try {
             while (true) {
-                InsertRequest insertRequest = channel.take();
+                InsertRequest insertRequest = insertChannel.takeRequest();
                 insertRequest.execute();
             }
         } catch (Exception e) {//interrupted exception

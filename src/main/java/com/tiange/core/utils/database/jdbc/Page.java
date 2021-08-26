@@ -1,5 +1,7 @@
 package com.tiange.core.utils.database.jdbc;
 
+import com.tiange.core.mysql.table.MysqlTable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,8 @@ public class Page {
 
     private static int Default_Pagenum = 1;
     private static int Default_PageSize = 20;
+
+    private MysqlTable mysqlTable;
 
     // 每页的记录数
     private int pageSize;
@@ -84,5 +88,13 @@ public class Page {
 
     public void setPageCount(long pageCount) {
         this.pageCount = pageCount;
+    }
+
+    public MysqlTable getMysqlTable() {
+        return mysqlTable;
+    }
+
+    public void setMysqlTable(MysqlTable mysqlTable) {
+        this.mysqlTable = mysqlTable;
     }
 }

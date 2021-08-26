@@ -1,5 +1,5 @@
 {
-  "_comment_": "数据传输配置文件",
+  "_comment_": "数据传输配置文件 bucket_sise 应该是 page_size 的整数倍",
   "page_size": "200",
   "bucket_sise": "10000"
 }

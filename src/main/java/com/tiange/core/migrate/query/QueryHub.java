@@ -20,6 +20,7 @@ public class QueryHub extends Thread {
             while (true) {
 
                 QueryRequest queryRequest = queryChannel.take();
+                Thread.sleep(1000);
                 queryRequest.execute();
             }
 

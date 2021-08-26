@@ -1,7 +1,9 @@
 package com.tiange.core.migrate.Bucket;
 
+import com.tiange.core.mysql.table.MysqlTable;
+
 public class Bucket {
-    String TableName;
+    MysqlTable mysqlTable;
     long start;
     long end;
     long number;//编号
@@ -10,20 +12,20 @@ public class Bucket {
     public Bucket() {
     }
 
-    public Bucket(String tableName, long size) {
-        TableName = tableName;
+    public Bucket(Bucket bucket) {
+        this.mysqlTable = bucket.getMysqlTable();
+        this.number = bucket.getNumber();
+        this.size = bucket.getSize();
+    }
+
+
+    public Bucket(MysqlTable mysqlTable, long size) {
+        this.mysqlTable = mysqlTable;
         this.size = size;
     }
 
     /* getter & setter */
 
-    public String getTableName() {
-        return TableName;
-    }
-
-    public void setTableName(String tableName) {
-        TableName = tableName;
-    }
 
     public long getStart() {
         return start;
@@ -55,5 +57,13 @@ public class Bucket {
 
     public void setNumber(long number) {
         this.number = number;
+    }
+
+    public MysqlTable getMysqlTable() {
+        return mysqlTable;
+    }
+
+    public void setMysqlTable(MysqlTable mysqlTable) {
+        this.mysqlTable = mysqlTable;
     }
 }
