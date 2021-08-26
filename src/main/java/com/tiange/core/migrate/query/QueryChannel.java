@@ -12,7 +12,7 @@ public class QueryChannel extends ArrayBlockingQueue<QueryRequest> {
     private Logger logger = LoggerFactory.getLogger(QueryChannel.class);
     public QueryChannel(int threads) {
         //缓冲区容量
-        super(10);
+        super(100);
         //线程池大小
         threadPool = new QueryHub[threads];
 
@@ -31,9 +31,7 @@ public class QueryChannel extends ArrayBlockingQueue<QueryRequest> {
     }
 
     public void putRequest(QueryRequest request) throws InterruptedException {
-        logger.info("before put");
         super.put(request);
-        logger.info("after put");
     }
 
     public QueryRequest takeRequest() throws InterruptedException {

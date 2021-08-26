@@ -19,9 +19,10 @@ public class QueryHub extends Thread {
         try {
             while (true) {
 
-                QueryRequest queryRequest = queryChannel.take();
-                Thread.sleep(1000);
+                QueryRequest queryRequest = queryChannel.takeRequest();
+
                 queryRequest.execute();
+                //Thread.sleep(10000);
             }
 
         } catch (Exception e) {//interruptedexception

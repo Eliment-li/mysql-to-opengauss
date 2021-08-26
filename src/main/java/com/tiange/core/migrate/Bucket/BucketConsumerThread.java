@@ -28,13 +28,14 @@ public class BucketConsumerThread extends Thread {
         this.exchanger = exchanger;
         this.bucket = bucket;
 
-        queryChannel = new QueryChannel(1);
-        insertChannel = new InsertChannel(2);
+        queryChannel = new QueryChannel(5);
+        insertChannel = new InsertChannel(5);
 
     }
 
 
     public void run() {
+        //todo  刚开始总是会卡顿一会儿
         //启动工人线程
         queryChannel.startWorkers();
         insertChannel.startWorkers();
@@ -55,7 +56,7 @@ public class BucketConsumerThread extends Thread {
                     //  continue;
                 }
                 //将bucket分成若干个page 放入channel
-                int pageSize = 200;
+                int pageSize = 500;
 
                 //bucket 含 count 个 page
                 long count = bucket.getSize() / pageSize;
@@ -74,9 +75,8 @@ public class BucketConsumerThread extends Thread {
                     // Bucket newBucket=new Bucket(bucket) ;
                     QueryRequest queryRequest = new QueryRequest(page, insertChannel);
 
-                    logger.info("put");
                     try {
-                        queryChannel.put(queryRequest);
+                        queryChannel.putRequest(queryRequest);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

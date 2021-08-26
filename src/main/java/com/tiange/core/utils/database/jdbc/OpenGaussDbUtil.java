@@ -9,8 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class OpenGaussDbUtil {
     //创建数据库连接。
@@ -122,26 +121,73 @@ public class OpenGaussDbUtil {
         }
     }
     //执行预处理语句，批量插入数据。
-    public static void BatchInsertData(Connection conn, List<String> sqlList) {
-        PreparedStatement pst = null;
+    public static void InsertAll(String tableName, List<Map<String, Object>> dataList) {
+        Connection conn = GetConnection();
+        PreparedStatement preparedStatement = null;
 
         try {
-            //生成预处理语句。
-            pst = conn.prepareStatement("INSERT INTO test1 VALUES (?,?)");
-            for (int i = 0; i < 3; i++) {
-                //添加参数。
-                pst.setInt(1, i);
-                pst.setString(2, "opengauss/data " + i);
-                pst.addBatch();
+            if (dataList.size() == 0) return;
+
+            Map<String, Object> valueMap = dataList.get(0);
+            Set<String> keySet = valueMap.keySet();
+            Iterator<String> iterator = keySet.iterator();
+
+            //字段名
+            StringBuilder columnNameSql = new StringBuilder();
+            //占位符
+            StringBuilder MarkSql = new StringBuilder();
+
+            Object[] keys = new Object[valueMap.size()];
+
+            int i = 0;
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                keys[i] = key;
+                columnNameSql.append(i == 0 ? "" : ",");
+                columnNameSql.append(key);
+
+                MarkSql.append(i == 0 ? "" : ",");
+                MarkSql.append("?");
+                i++;
             }
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("INSERT INTO ");
+            sql.append(tableName);
+            sql.append(" (");
+            sql.append(columnNameSql);
+            sql.append(" )  VALUES (");
+            sql.append(MarkSql);
+            sql.append(" )");
+
+
+            //生成预处理语句。
+            preparedStatement = conn.prepareStatement(sql.toString());
+
+            conn.setAutoCommit(false);
+
+            for (int j = 0; j < dataList.size(); j++) {
+                for (int k = 0; k < keys.length; k++) {
+                    preparedStatement.setObject(k + 1, dataList.get(j).get(keys[k]));
+                }
+                preparedStatement.addBatch();
+            }
+
+            int[] arr = preparedStatement.executeBatch();
+            conn.commit();
+            int affectRowCount = arr.length;
+            System.out.println("成功了插入了" + affectRowCount + "行");
+
+
             //执行批处理。
-            pst.executeBatch();
-            pst.close();
-            conn.close();
+            preparedStatement.executeBatch();
+            preparedStatement.close();
+
+            DbUtils.close(conn);
         } catch (SQLException e) {
-            if (pst != null) {
+            if (preparedStatement != null) {
                 try {
-                    pst.close();
+                    preparedStatement.close();
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }

@@ -34,16 +34,14 @@ public class QueryRequest {
 
         List<Map<String, Object>> content = page.getPageContent();
 
-        logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
-
-        Thread.sleep(1000);
-
+        if (content.size() == 0) {
+            logger.info("传输完毕");
+        } else {
+            logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
+        }
 
         InsertRequest insertRequest = new InsertRequest(page);
-        logger.info(" 插入请求 开始");
-        logger.info(insertChannel.remainingCapacity() + "");
         insertChannel.putRequest(insertRequest);
-        logger.info(" 插入请求 结束");
 
 
     }

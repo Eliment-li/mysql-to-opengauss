@@ -7,7 +7,7 @@ public class Bucket {
     long start;
     long end;
     long number;//编号
-    long size = 1000;
+    long size = 3000;
 
     public Bucket() {
     }

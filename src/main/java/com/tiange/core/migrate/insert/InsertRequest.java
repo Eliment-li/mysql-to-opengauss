@@ -1,5 +1,6 @@
 package com.tiange.core.migrate.insert;
 
+import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,6 @@ public class InsertRequest {
             insert2OpenGauss();
 
             //将数据放入校验队列中
-            Thread.sleep(2000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,8 +32,11 @@ public class InsertRequest {
 
     //将数据插入到OpenGauss数据库中，
     private void insert2OpenGauss() {
+        //todo 处理page为空的情况
         //要插入的数据
         List<Map<String, Object>> Data = page.getPageContent();
+
+        OpenGaussDbUtil.InsertAll(page.getMysqlTable().getTable_name(), Data);
         logger.info("插入数据{}-{}", Data.get(0).get("id"), Data.get(Data.size() - 1).get("id"));
 
     }
