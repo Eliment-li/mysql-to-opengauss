@@ -4,6 +4,8 @@ import com.tiange.core.migrate.insert.InsertChannel;
 import com.tiange.core.migrate.query.QueryChannel;
 import com.tiange.core.migrate.query.QueryRequest;
 import com.tiange.core.utils.database.jdbc.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Exchanger;
 
@@ -15,10 +17,14 @@ public class BucketConsumerThread extends Thread {
     //插入请求的缓存
     final private InsertChannel insertChannel;
 
+    //日志工具
+    private final Logger logger = LoggerFactory.getLogger(BucketConsumerThread.class);
+
     private Bucket bucket;
 
     public BucketConsumerThread(Exchanger<Bucket> exchanger, Bucket bucket) {
 
+        super("BucketConsumer");
         this.exchanger = exchanger;
         this.bucket = bucket;
 
@@ -37,12 +43,14 @@ public class BucketConsumerThread extends Thread {
         try {
             while (true) {
 
+                //交换缓冲区
                 bucket = exchanger.exchange(bucket);
+
                 if (bucket == null) {
                     //bucket读取完毕
                     break;
                 }
-                System.out.println("获取bucket" + bucket.getNumber());
+                logger.info("获取bucket{}", bucket.getNumber());
                 if (test) {
                     //  continue;
                 }
@@ -55,7 +63,7 @@ public class BucketConsumerThread extends Thread {
                 //pageNumber 的偏移量
                 long numberOffset = bucket.getNumber() * count;
 
-                for (int i = 0; i < count; i++) {
+                for (int i = 1; i <= count; i++) {
 
                     Page page = new Page();
                     page.setPageSize(pageSize);
@@ -68,7 +76,7 @@ public class BucketConsumerThread extends Thread {
 
                     queryChannel.put(queryRequest);
 
-                    System.out.println("查询请求：" + bucket.getTableName() + " " + bucket.getNumber() + ":" + page.getPageNum());
+                    logger.info("查询请求：{}  {}:{}", bucket.getTableName(), bucket.getNumber(), page.getPageNum());
                 }
 
             }

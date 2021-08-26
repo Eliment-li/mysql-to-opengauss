@@ -19,7 +19,7 @@ public class BucketProducerThread extends Thread {
 
 
     public BucketProducerThread(Exchanger<Bucket> exchanger, Bucket bucket, MysqlDatabase mysqlDatabase) {
-        super("BucketProducerThread");
+        super("BucketProducer");
         this.exchanger = exchanger;
         this.bucket = bucket;
         this.mysqlDatabase = mysqlDatabase;
@@ -47,12 +47,13 @@ public class BucketProducerThread extends Thread {
                         bucketNumber++;
 
                     } else {
-                        bucket = exchanger.exchange(null);
                         break;
+                        // bucket = exchanger.exchange(null);
                     }
                 }//end while
             }
 
+            exchanger.exchange(null);
         } catch (Exception e) {
             e.printStackTrace();
         }

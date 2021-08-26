@@ -1,9 +1,14 @@
 package com.tiange.core.migrate.query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class QueryHub extends Thread {
     //查询请求缓冲区
     private final QueryChannel queryChannel;//final
 
+    //日志工具
+    private final Logger logger = LoggerFactory.getLogger(QueryHub.class);
 
     public QueryHub(String name, QueryChannel queryChannel) {
         super(name);
@@ -12,8 +17,11 @@ public class QueryHub extends Thread {
 
     public void run() {
         try {
-            QueryRequest queryRequest = queryChannel.take();
-            queryRequest.execute();
+            while (true) {
+
+                QueryRequest queryRequest = queryChannel.take();
+                queryRequest.execute();
+            }
 
         } catch (Exception e) {//interruptedexception
             e.printStackTrace();

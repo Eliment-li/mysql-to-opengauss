@@ -10,10 +10,10 @@ public class QueryChannel extends ArrayBlockingQueue<QueryRequest> {
 
     public QueryChannel(int threads) {
         //缓冲区容量
-        super(1000);
+        super(1);
         queryHubThreadPool = new QueryHub[threads];
 
-        InsertChannel insertChannel = new InsertChannel(3);
+        InsertChannel insertChannel = new InsertChannel(1);
         for (int i = 0; i < threads; i++) {
             queryHubThreadPool[i] = new QueryHub("pageClient" + i, this);
         }

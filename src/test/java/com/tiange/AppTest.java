@@ -1,5 +1,6 @@
 package com.tiange;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import com.tiange.core.migrate.DataMigrateService;
 import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.mysql.database.MysqlDatabaseService;
@@ -107,7 +108,8 @@ public class AppTest
      * 功能测试主程序
      */
     public static void main(String[] args) throws Exception {
-
+        //加载配置文件
+        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
         /*
          *  数据库表结构迁移 & 数据迁移
          */
@@ -120,7 +122,7 @@ public class AppTest
         // keyTest();
     }
 
-    public void logbackTest() {
+    public static void logbackTest() {
 
 
         Logger logger = LoggerFactory.getLogger(App.class);
