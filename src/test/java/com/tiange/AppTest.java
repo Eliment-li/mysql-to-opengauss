@@ -8,6 +8,8 @@ import com.tiange.core.opengauss.key.GaussKey;
 import com.tiange.core.opengauss.table.GaussTable;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,13 @@ public class AppTest
          *  数据库表索引迁移
          */
         // keyTest();
+    }
+
+    public void logbackTest() {
+
+
+        Logger logger = LoggerFactory.getLogger(App.class);
+        logger.info("test");
     }
 
 
