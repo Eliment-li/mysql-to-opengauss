@@ -45,7 +45,7 @@ public class Page {
         if (pageNum == null)
             this.pageNum = Default_Pagenum;
         else
-        this.pageNum = pageNum;
+            this.pageNum = pageNum;
     }
 
     /* getter & setter */

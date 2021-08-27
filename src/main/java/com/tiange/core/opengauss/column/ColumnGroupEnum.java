@@ -47,27 +47,11 @@ public enum ColumnGroupEnum {
      */
     TEXT("text");
 
-    private String msg;
-
     /**
      * 数据类型与组名的映射关系
      * <columnType，groupName>
      */
     public static final Map<String, ColumnGroupEnum> map = new HashMap<String, ColumnGroupEnum>();
-
-    // 构造方法
-    private ColumnGroupEnum(String msg) {
-        this.msg = msg;
-    }
-
-    public static ColumnGroupEnum findByName(String Name) {
-        for (ColumnGroupEnum v : values()) {
-            if (v.msg.equals(Name)) {
-                return v;
-            }
-        }
-        return null;
-    }
 
     //初始化映射关系
     static {
@@ -81,6 +65,22 @@ public enum ColumnGroupEnum {
             map.put(columnType, ColumnGroupEnum.findByName(groupName));
         }
 
+    }
+
+    private String msg;
+
+    // 构造方法
+    private ColumnGroupEnum(String msg) {
+        this.msg = msg;
+    }
+
+    public static ColumnGroupEnum findByName(String Name) {
+        for (ColumnGroupEnum v : values()) {
+            if (v.msg.equals(Name)) {
+                return v;
+            }
+        }
+        return null;
     }
 
 }

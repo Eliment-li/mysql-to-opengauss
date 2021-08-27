@@ -13,7 +13,7 @@ import static com.tiange.core.utils.others.MessageDigestUtil.getSHA256Digest;
 public class GaussTableService {
 
     /**
-     * 获取表信息的摘要
+     * 获取表结构信息的摘要
      *
      * @param gaussTable
      * @return
@@ -39,7 +39,7 @@ public class GaussTableService {
     }
 
     /**
-     * 比较两个表的信息是否相等
+     * 比较两个表的结构是否相等
      *
      * @param table_1
      * @param table_2

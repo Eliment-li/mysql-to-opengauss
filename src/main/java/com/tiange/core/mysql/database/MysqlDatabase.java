@@ -71,8 +71,6 @@ public class MysqlDatabase {
         bean.setConnection(this.connection);
         return bean;
     }*/
-
-
     public String getName() {
         return name;
     }

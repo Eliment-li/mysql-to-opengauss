@@ -9,6 +9,12 @@ import com.tiange.core.utils.others.StringUtils;
  */
 public class GaussColumn {
 
+    private static String QUOTE = "\"";
+    private static String SINGLE_QUOTE = "'";
+    private static String YES = "YES";
+    private static String NO = "NO";
+    //注释模板
+    private static String COLUMN_COMMENT_TEMPLATE = FileUtils.getStringByClasspath("opengauss/metadata/create_comment.sql");
     private String table_schema;
     private String table_name;
     private String column_name;
@@ -22,10 +28,8 @@ public class GaussColumn {
     private String column_key;
     private String extra;
     private ColumnGroupEnum groupEnum;
-
     //引用数据库
     private GaussTable gaussTable;
-
     /*
     If data_type identifies a numeric type, this column contains the (declared or implicit) precision of the type for this column.
     The precision indicates the number of significant digits. It can be expressed in decimal (base 10) or binary (base 2) terms,
@@ -33,13 +37,11 @@ public class GaussColumn {
      在opengauss中，该字段的值是固定的 例如 int4 的 numeric_precision 固定为 32 ( base 2)
      */
     private Long numeric_precision;
-
     /*
     if data_type identifies a numeric type, this column indicates in which base the values in the columns numeric_precision
     and numeric_scale are expressed. The value is either 2 or 10. For all other data types, this column is null.
     */
     private int numeric_precision_radix;
-
     /*
      If data_type identifies an exact numeric type, this column contains the (declared or implicit) scale of the type
      for this column. The scale indicates the number of significant digits to the right of the decimal point. It can
@@ -48,7 +50,6 @@ public class GaussColumn {
      For all other data types, this column is null.
      */
     private Long numeric_scale;
-
     /*
      If data_type identifies a date, time, timestamp, or interval type, this column contains the (declared or implicit)
      fractional seconds precision of the type for this column, that is, the number of decimal digits maintained following
@@ -57,35 +58,23 @@ public class GaussColumn {
      For all other data types, this column is null.
      */
     private Long datetime_precision;
-
     /*
     Name of the database that the column data type (the underlying type of the domain, if applicable) is defined
     in (always the current database)
     */
     private String udt_catalog;
-
     /*
     Name of the schema that the column data type (the underlying type of the domain, if applicable) is defined in
     */
     private String udt_schema;
-
     /*Name of the column data type (the underlying type of the domain, if applicable)*/
     private String udt_name;
-
     /*
     An identifier of the data type descriptor of the column, unique among the data type descriptors pertaining to the
     table. This is mainly useful for joining with other instances of such identifiers. (The specific format of the
     identifier is not defined and not guaranteed to remain the same in future versions.)
     */
     private String dtd_identifier;
-
-
-    private static String QUOTE = "\"";
-    private static String SINGLE_QUOTE = "'";
-    private static String YES = "YES";
-    private static String NO = "NO";
-    //注释模板
-    private static String COLUMN_COMMENT_TEMPLATE = FileUtils.getStringByClasspath("opengauss/metadata/create_comment.sql");
 
     /**
      * @return 建表语句片段
@@ -198,6 +187,7 @@ public class GaussColumn {
 
     /**
      * 适用于 固定长度的小数类型
+     *
      * @return 建表语句
      * @see ColumnGroupEnum
      */
@@ -219,6 +209,7 @@ public class GaussColumn {
 
     /**
      * 适用于 非固定长度的小数类型
+     *
      * @return 建表语句
      * @see ColumnGroupEnum
      */

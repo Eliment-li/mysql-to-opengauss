@@ -6,6 +6,8 @@ import com.tiange.core.opengauss.column.GaussColumn;
 import com.tiange.core.utils.others.FileUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,14 +17,20 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * 数据库连接池
+ */
 public class DruidUtil {
     private static DataSource mysqlDataSource;
     private static DataSource GaussDataSource;
 
-    //初始化连接池
-    static {
+    //日志工具
+    private final Logger logger = LoggerFactory.getLogger(DruidUtil.class);
 
+    //初始化连接池
+    public static boolean init() {
         try {
+            System.out.println("初始化连接池 开始");
             //初始化MySQL数据源
             Properties mysqlProperties = new Properties();
             mysqlProperties.load(FileUtils.getInputStreamByClasspath("config/druid_mysql.properties"));
@@ -32,10 +40,12 @@ public class DruidUtil {
             Properties gaussProperties = new Properties();
             gaussProperties.load(FileUtils.getInputStreamByClasspath("config/druid_opengauss.properties"));
             GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
-
+            System.out.println("初始化连接池 结束");
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public static Connection getMysqlConnection() throws Exception {

@@ -58,9 +58,6 @@ public class MysqlFunction implements Serializable {
     }
 
 
-
-
-
     //getter&setter
     public String getSecurityType() {
         return securityType;

@@ -153,10 +153,14 @@ public class DataMigrateService {
 
     /* 多线程迁移数据模块 开始 */
     public static void doMigrate(MysqlDatabase mysqlDatabase) {
+
         Exchanger<Bucket> exchanger = new Exchanger<Bucket>();
         Bucket bucket1 = new Bucket();
         Bucket bucket2 = new Bucket();
+
+        ChannelManager channelManager = new ChannelManager();
+
         new BucketProducerThread(exchanger, bucket1, mysqlDatabase).start();
-        new BucketConsumerThread(exchanger, bucket2).start();
+        new BucketConsumerThread(exchanger, bucket2, channelManager).start();
     }
 }

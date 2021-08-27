@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class VerifyHub extends Thread {
     //查询请求缓冲区
-    private final VerifyChannel verifyChannel;//final
+    private final VerifyChannel verifyChannel;
 
     //日志工具
     private final Logger logger = LoggerFactory.getLogger(VerifyHub.class);
@@ -20,6 +20,7 @@ public class VerifyHub extends Thread {
             while (true) {
 
                 VerifyRequest verifyRequest = verifyChannel.takeRequest();
+
                 verifyRequest.execute();
             }
 

@@ -19,12 +19,12 @@ public class BucketConsumerThread extends Thread {
 
     private Bucket bucket;
 
-    public BucketConsumerThread(Exchanger<Bucket> exchanger, Bucket bucket) {
+    public BucketConsumerThread(Exchanger<Bucket> exchanger, Bucket bucket, ChannelManager channelManager) {
 
         super("BucketConsumer");
         this.exchanger = exchanger;
         this.bucket = bucket;
-        channelManager = new ChannelManager(10, 10, 1);
+        this.channelManager = channelManager;
 
     }
 
@@ -69,7 +69,7 @@ public class BucketConsumerThread extends Thread {
                     QueryChannel queryChannel = channelManager.getQueryChannel();
                     queryChannel.putRequest(queryRequest);
 
-                    logger.info("查询请求：{}  {}:{}", page.getMysqlTable().getTable_name(), bucket.getNumber(), page.getPageNum());
+                    logger.info("查询请求：{}  {}:page{}", page.getMysqlTable().getTable_name(), bucket.getNumber(), page.getPageNum());
                 }
 
             }

@@ -7,6 +7,7 @@ import com.tiange.core.mysql.database.MysqlDatabaseService;
 import com.tiange.core.opengauss.database.GaussDatabase;
 import com.tiange.core.opengauss.key.GaussKey;
 import com.tiange.core.opengauss.table.GaussTable;
+import com.tiange.core.utils.database.druid.DruidUtil;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import org.slf4j.Logger;
@@ -15,8 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class AppTest
-{
+public class AppTest {
 
     public static void TableTest() {
         {
@@ -28,7 +28,6 @@ public class AppTest
                 //读取MySQL元数据
                 new MysqlDatabaseService(mysqlDatabase).ReadMetaData();
 
-
                 DataMigrateService.doMigrate(mysqlDatabase);
 
                 /*jack=OpenGauss数据库名字*/
@@ -36,22 +35,21 @@ public class AppTest
 
                 for (GaussTable gaussTable : gaussDatabase.getTables()) {
 
-                  /*  System.out.print("\n==============" + gaussTable.getTable_name() + "开始迁移输表结构=================");
+                 /*   System.out.print("\n==============" + gaussTable.getTable_name() + "开始迁移输表结构=================");
                     OpenGaussDbUtil.execute(gaussTable.toCreateSql().toString());
 
                     System.out.print("\n 验证表  " + gaussTable.getTable_name() + " ");
                     boolean CheckResult = GaussTableService.migrateCheck(gaussTable);
                     System.out.println("验证结果: " + CheckResult);
-                    System.out.println("==============" + gaussTable.getTable_name() + "表结构迁移完毕=================");
+                    System.out.println("==============" + gaussTable.getTable_name() + "表结构迁移完毕=================");*/
                     // DataMigrateTest(gaussTable);
 
                     //数据迁移
-                    System.out.println("\n\n\n==============" + gaussTable.getTable_name() + "开始迁移表数据=================");
-                    DataMigrateService.MigrateTableDataByPage(gaussTable);
-                    System.out.println("==============" + gaussTable.getTable_name() + "表数据迁移完毕=================");*/
+                    //System.out.println("\n\n\n==============" + gaussTable.getTable_name() + "开始迁移表数据=================");
+                    //DataMigrateService.MigrateTableDataByPage(gaussTable);
+                    //System.out.println("==============" + gaussTable.getTable_name() + "表数据迁移完毕=================");
 
                 }
-
 
 
             } catch (Exception e) {
@@ -110,6 +108,8 @@ public class AppTest
     public static void main(String[] args) throws Exception {
         //加载配置文件
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
+        //
+        DruidUtil.init();
         /*
          *  数据库表结构迁移 & 数据迁移
          */

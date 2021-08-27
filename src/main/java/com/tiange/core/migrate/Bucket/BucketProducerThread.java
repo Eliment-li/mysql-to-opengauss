@@ -37,7 +37,7 @@ public class BucketProducerThread extends Thread {
 
                 while (true) {
                     //查询
-                    this.bucket = new Bucket(table, 1000);
+                    this.bucket = new Bucket(table);
                     this.bucket.setNumber(bucketNumber);
 
                     //判断
@@ -76,7 +76,7 @@ public class BucketProducerThread extends Thread {
             long bucketNumber = 0;
             while (true) {
                 //查询
-                Bucket bucket = new Bucket(table, 1000);
+                Bucket bucket = new Bucket(table);
                 bucket.setNumber(bucketNumber);
                 //判断
                 if (hasBucket(bucket)) {

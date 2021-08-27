@@ -13,12 +13,9 @@ import java.util.Map;
 
 public class QueryRequest {
 
-    Page page;
-
     private final InsertChannel insertChannel;
     private final ChannelManager channelManager;
-
-
+    Page page;
     //日志工具
     private Logger logger = LoggerFactory.getLogger(QueryRequest.class);
 
@@ -30,17 +27,16 @@ public class QueryRequest {
     }
 
     public void execute() throws InterruptedException {
-        logger.info("执行查询工作");
 
         //查询配置数据，放入 pageContent 中
-        MySqlDbUtil.queryForPage("select * from " + page.getMysqlTable().getTable_name(), this.page);
+        MySqlDbUtil.queryForPage("select * from " + page.getMysqlTable().getTable_name() + " order by " + page.getMysqlTable().getIndexColumn() + " asc ", this.page);
 
         List<Map<String, Object>> content = page.getPageContent();
 
         if (content.size() == 0) {
-            logger.info("传输完毕");
+            logger.info("查询完毕");
         } else {
-            logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
+            // logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
         }
 
         InsertRequest insertRequest = new InsertRequest(page, channelManager);

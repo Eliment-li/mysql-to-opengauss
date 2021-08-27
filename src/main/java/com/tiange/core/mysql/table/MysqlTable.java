@@ -86,6 +86,23 @@ public class MysqlTable implements Serializable {
     }
 
     /**
+     * 获取一个带索引的字段，用于查询时排序
+     *
+     * @return
+     */
+    public String getIndexColumn() {
+
+        //todo 完善该方法，对其他索引做筛选
+
+        for (MysqlColumn column : this.mysqlColumns) {
+            if (column.getColumn_key().equals("PRI"))
+                return column.getColumn_name();
+        }
+
+        return "";
+    }
+
+    /**
      * 是否含有外键
      *
      * @return
@@ -104,35 +121,12 @@ public class MysqlTable implements Serializable {
     }
 
 
-    /**
-     * @return 创建数据库表的Sql语句
-     */
-    public String toCreateSql() {
+    public String getmetainfo() {
 
         String sql = "";
 
-        // openGauss 的表名前要加上模式名  例如 "jack"."test";
-        String tableName = "\"public\"." + "\"" + this.table_name + "\"";
-        sql = sql.replace("${tableName}", tableName);
-
-        //engine
-
-
-        //charset
-
-
-        //comment
-        String comment = toOpenGausscomment(this.table_comment);
-
-        sql = sql.replace("${comment}", comment);
-
         //建表语句
         StringBuilder sb = new StringBuilder();
-
-        //去除最后一个逗号
-        sb.deleteCharAt(sb.length() - 1);
-
-        //todo 优化groupingBy方式，直接根据tableName去查询
 
 
         //获取 unique 索引
@@ -187,7 +181,6 @@ public class MysqlTable implements Serializable {
         }
         this.mysqlKeys.removeAll(primaryMysqlKeyList);
         for (MysqlKey mysqlKey : this.mysqlKeys) {
-            //todo
             // String keySql = mysqlKey.toCreateTableSql();
             // sb.append(keySql);
         }

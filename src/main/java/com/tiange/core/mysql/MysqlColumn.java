@@ -151,10 +151,6 @@ public class MysqlColumn {
     }
 
 
-
-
-
-
     /*转换器 结束  */
     /* getter & setter */
 

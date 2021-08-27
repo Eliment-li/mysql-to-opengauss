@@ -8,7 +8,6 @@
   "float": "float",
   "double": "float",
   "decimal": "numeric",
-
   "time": "date_and_time",
   "date": "date_and_time",
   "timestamp": "date_and_time",

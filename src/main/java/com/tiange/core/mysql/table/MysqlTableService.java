@@ -44,7 +44,6 @@ public class MysqlTableService {
 
         MySqlDbUtil dbUtil = new MySqlDbUtil();
 
-        //todo 把参数加进去
         List<MysqlTable> tableList = (List<MysqlTable>) dbUtil.queryForBeans(
                 TABLE_SQL,
                 MysqlTable.class);
@@ -59,18 +58,17 @@ public class MysqlTableService {
 
 
         //填充tables
-        List<MysqlTable> tabls = tableList.stream().peek(o -> {
+        List<MysqlTable> tabls = tableList.stream().peek(table -> {
             //填充数据库
-            o.setMysqlDatabase(mysqlDatabase);
+            table.setMysqlDatabase(mysqlDatabase);
             //填充columns
-            o.setMysqlColumns(columnList.stream().peek(s -> s.setMysqlTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
+            table.setMysqlColumns(columnList.stream().peek(s -> s.setMysqlTable(table)).filter(s -> table.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
             //填充keys
-            o.setMysqlKeys(mysqlKeyList.stream().peek(s -> s.setMysqlTable(o)).filter(s -> o.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
+            table.setMysqlKeys(mysqlKeyList.stream().peek(s -> s.setMysqlTable(table)).filter(s -> table.getTable_name().equals(s.getTable_name())).collect(Collectors.toList()));
         }).collect(Collectors.toList());
 
         return tabls;
     }
-
 
 
 }

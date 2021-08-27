@@ -10,6 +10,7 @@ public class QueryChannel extends ArrayBlockingQueue<QueryRequest> {
     private final QueryHub[] threadPool;
     //日志工具
     private Logger logger = LoggerFactory.getLogger(QueryChannel.class);
+
     public QueryChannel(int threads) {
         //缓冲区容量
         super(100);

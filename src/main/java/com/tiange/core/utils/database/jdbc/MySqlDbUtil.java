@@ -22,8 +22,90 @@ public class MySqlDbUtil implements Manager {
     public MySqlDbUtil() {
 
     }
+
     public MySqlDbUtil(DatabaseConfig config) {
         this.config = config;
+    }
+
+    /*
+163  *  MapListHandler
+164  *  将结果集每一行存储到Map集合,键:列名,值:数据
+166  */
+    public static List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
+
+        QueryRunner qr = new QueryRunner();
+
+        Connection conn = getConnection();
+
+        List<Map<String, Object>> list = qr.query(conn, sql, new MapListHandler());
+
+
+        DbUtils.close(conn);
+
+        return list;
+    }
+
+    /**
+     * 按页查询 Page 中的内容格式为 List<Map<String, Object>>
+     *
+     * @param sql
+     * @return Page
+     */
+    public static Page queryForPage(String sql, Page page) {
+
+        try {
+            System.out.println("第" + page.getPageNum() + "页 ");
+            List<Map<String, Object>> list = queryForMapList(getLimitSqlString(sql, page));
+            page.setPageContent(list);
+
+            System.out.println();
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            System.out.println("第" + page.getPageNum() + "页 " + "查询失败");
+
+        }
+        return page;
+    }
+
+    /**
+     * 将sql变成分页sql语句
+     *
+     * @return
+     */
+    private static String getLimitSqlString(String sql, Page page) {
+
+        if (page.getPageNum() <= 1)
+            sql = sql.concat(" limit " + (page.getPageSize()));
+        else {
+            long offset = (page.getPageNum() - 1) * page.getPageSize();
+            sql = sql.concat(" limit " + offset + "," + (page.getPageSize()));
+
+        }
+        System.out.println(sql);
+        return sql;
+    }
+
+    /**
+     * 获取数据库连接
+     * url 数据库地址
+     * username 账号
+     * password 密码
+     *
+     * @return Connection
+     */
+
+    public static Connection getConnection() {
+
+        Connection connection = null;
+
+        try {
+            connection = DruidUtil.getMysqlConnection();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return connection;
     }
 
     public List<?> queryForBeans(String sql, Class clazz) {
@@ -94,63 +176,6 @@ public class MySqlDbUtil implements Manager {
         return obj;
     }
 
-    /*
-163  *  MapListHandler
-164  *  将结果集每一行存储到Map集合,键:列名,值:数据
-166  */
-    public static List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
-
-        QueryRunner qr = new QueryRunner();
-
-        Connection conn = getConnection();
-
-        List<Map<String,Object>> list = qr.query(conn, sql, new MapListHandler());
-
-
-        DbUtils.close(conn);
-
-        return list;
-    }
-
-    /**
-     * 按页查询 Page 中的内容格式为 List<Map<String, Object>>
-     * @param sql
-     * @return Page
-     */
-    public static Page queryForPage(String sql, Page page) {
-
-        try {
-            System.out.println("第" + page.getPageNum() + "页 ");
-            List<Map<String, Object>> list = queryForMapList(getLimitSqlString(sql, page));
-            page.setPageContent(list);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            System.out.println("第" + page.getPageNum() + "页 " + "查询失败");
-
-        }
-        return page;
-    }
-
-    /**
-     * 将sql变成分页sql语句
-     *
-     * @return
-     */
-    private static String getLimitSqlString(String sql, Page page) {
-
-        if (page.getPageNum() <= 1)
-            sql = sql.concat(" limit " + (page.getPageSize()));
-        else {
-            long offset = (page.getPageNum() - 1) * page.getPageSize();
-            sql = sql.concat(" limit " + offset + "," + (page.getPageSize()));
-
-        }
-        //System.out.println(sql);
-        return sql;
-    }
-
     /**
      * @param sql
      * @return 查询单个标量
@@ -167,8 +192,6 @@ public class MySqlDbUtil implements Manager {
         DbUtils.close(conn);
         return count;
     }
-
-
 
     @Override
     public int execute(String sql) {
@@ -193,28 +216,6 @@ public class MySqlDbUtil implements Manager {
     @Override
     public int execute(String sql, Object[] args) {
         return 0;
-    }
-
-
-    /**
-     * 获取数据库连接
-     *  url 数据库地址
-     *  username 账号
-     *  password 密码
-     * @return Connection
-     */
-
-    public static Connection getConnection() {
-
-        Connection connection = null;
-
-        try {
-            connection = DruidUtil.getMysqlConnection();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return connection;
     }
 
 

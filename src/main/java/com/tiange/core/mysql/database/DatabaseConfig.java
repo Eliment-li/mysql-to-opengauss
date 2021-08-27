@@ -76,6 +76,10 @@ public class DatabaseConfig {
 
     /* getter & setter */
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public String getHost() {
         return host;
     }
@@ -114,10 +118,6 @@ public class DatabaseConfig {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public Boolean getIgnoreCharacterCompare() {

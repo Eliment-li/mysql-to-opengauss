@@ -7,9 +7,10 @@ public class Bucket {
     long start;
     long end;
     long number;//编号
-    long size = 3000;
+    long size;
 
     public Bucket() {
+        size = 2000;
     }
 
     public Bucket(Bucket bucket) {
@@ -19,9 +20,9 @@ public class Bucket {
     }
 
 
-    public Bucket(MysqlTable mysqlTable, long size) {
+    public Bucket(MysqlTable mysqlTable) {
         this.mysqlTable = mysqlTable;
-        this.size = size;
+        size = 2000;
     }
 
     /* getter & setter */

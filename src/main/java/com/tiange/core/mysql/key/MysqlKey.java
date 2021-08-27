@@ -9,10 +9,8 @@ import java.io.Serializable;
  * Key结构定义
  */
 public class MysqlKey implements Serializable {
-    private static final long serialVersionUID = 3145627924529636485L;
-
     public static final String FLAG_PRIMARY = "PRIMARY";
-
+    private static final long serialVersionUID = 3145627924529636485L;
     private String constraint_schema;
 
     private String constraint_name;
@@ -35,6 +33,12 @@ public class MysqlKey implements Serializable {
 
     private MysqlTable mysqlTable;
 
+    public static String getFlagPrimary() {
+        return FLAG_PRIMARY;
+    }
+
+
+    //getter&setter
 
     /**
      * 将 mysql 类型的 key 转换为 OpenGauss 类型的 key
@@ -56,16 +60,6 @@ public class MysqlKey implements Serializable {
         gaussKey.setReferenced_table_schema(referenced_table_schema);
 
         return gaussKey;
-    }
-
-
-
-
-
-    //getter&setter
-
-    public static String getFlagPrimary() {
-        return FLAG_PRIMARY;
     }
 
     public String getConstraint_schema() {

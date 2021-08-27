@@ -21,6 +21,7 @@ public class QueryHub extends Thread {
 
                 QueryRequest queryRequest = queryChannel.takeRequest();
                 queryRequest.execute();
+                //Thread.sleep(3000);
             }
 
         } catch (Exception e) {//interruptedexception

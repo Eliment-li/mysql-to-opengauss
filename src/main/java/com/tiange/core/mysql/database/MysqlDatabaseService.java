@@ -47,16 +47,8 @@ public class MysqlDatabaseService {
     }
 
     /**
-     * 初始化
-     */
-
-    public void Init(String databaseMame) {
-        // String databaseMame = "mysqltest";
-
-    }
-
-    /**
      * 将 mysql 数据库实体类 转换为 OpenGauss 数据库实体类
+     *
      * @param mysqlDatabase
      * @param gaussDatabase
      * @return
@@ -97,6 +89,15 @@ public class MysqlDatabaseService {
     }
 
     /**
+     * 初始化
+     */
+
+    public void Init(String databaseMame) {
+        // String databaseMame = "mysqltest";
+
+    }
+
+    /**
      * 从数据库中读取元数据
      */
     public MysqlDatabase ReadMetaData() throws SQLException {
@@ -111,7 +112,6 @@ public class MysqlDatabaseService {
         return mysqlDatabase;
 
     }
-
 
 
     public DatabaseConfig getConfig() {
