@@ -1,6 +1,6 @@
 package com.tiange.core.migrate.Bucket;
 
-import com.tiange.core.migrate.insert.InsertChannel;
+import com.tiange.core.migrate.ChannelManager;
 import com.tiange.core.migrate.query.QueryChannel;
 import com.tiange.core.migrate.query.QueryRequest;
 import com.tiange.core.utils.database.jdbc.Page;
@@ -12,10 +12,7 @@ import java.util.concurrent.Exchanger;
 public class BucketConsumerThread extends Thread {
     private final Exchanger<Bucket> exchanger;
 
-    //查询请求的缓存
-    final private QueryChannel queryChannel;
-    //插入请求的缓存
-    final private InsertChannel insertChannel;
+    private final ChannelManager channelManager;
 
     //日志工具
     private final Logger logger = LoggerFactory.getLogger(BucketConsumerThread.class);
@@ -27,19 +24,15 @@ public class BucketConsumerThread extends Thread {
         super("BucketConsumer");
         this.exchanger = exchanger;
         this.bucket = bucket;
-
-        queryChannel = new QueryChannel(5);
-        insertChannel = new InsertChannel(5);
+        channelManager = new ChannelManager(10, 10, 1);
 
     }
 
 
     public void run() {
         //todo  刚开始总是会卡顿一会儿
-        //启动工人线程
-        queryChannel.startWorkers();
-        insertChannel.startWorkers();
-        //verifyChannel.startWorkers();
+
+        channelManager.startWorkers();
         boolean test = true;
         try {
             while (true) {
@@ -71,16 +64,10 @@ public class BucketConsumerThread extends Thread {
                     page.setPageNum(numberOffset + i);
                     page.setMysqlTable(bucket.getMysqlTable());
 
-                    //将bucket信息复制一份传递过去
-                    // Bucket newBucket=new Bucket(bucket) ;
-                    QueryRequest queryRequest = new QueryRequest(page, insertChannel);
+                    QueryRequest queryRequest = new QueryRequest(page, channelManager);
 
-                    try {
-                        queryChannel.putRequest(queryRequest);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                    QueryChannel queryChannel = channelManager.getQueryChannel();
+                    queryChannel.putRequest(queryRequest);
 
                     logger.info("查询请求：{}  {}:{}", page.getMysqlTable().getTable_name(), bucket.getNumber(), page.getPageNum());
                 }

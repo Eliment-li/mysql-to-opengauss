@@ -1,5 +1,6 @@
 package com.tiange.core.migrate.query;
 
+import com.tiange.core.migrate.ChannelManager;
 import com.tiange.core.migrate.insert.InsertChannel;
 import com.tiange.core.migrate.insert.InsertRequest;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
@@ -14,16 +15,18 @@ public class QueryRequest {
 
     Page page;
 
-    //数据插入工作请求缓存
     private final InsertChannel insertChannel;
+    private final ChannelManager channelManager;
+
 
     //日志工具
     private Logger logger = LoggerFactory.getLogger(QueryRequest.class);
 
-    public QueryRequest(Page page, InsertChannel insertChannel) {
+    public QueryRequest(Page page, ChannelManager channelManager) {
 
         this.page = page;
-        this.insertChannel = insertChannel;
+        this.insertChannel = channelManager.getInsertChannel();
+        this.channelManager = channelManager;
     }
 
     public void execute() throws InterruptedException {
@@ -40,7 +43,7 @@ public class QueryRequest {
             logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
         }
 
-        InsertRequest insertRequest = new InsertRequest(page);
+        InsertRequest insertRequest = new InsertRequest(page, channelManager);
         insertChannel.putRequest(insertRequest);
 
 

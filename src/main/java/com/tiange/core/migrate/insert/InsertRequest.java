@@ -1,5 +1,7 @@
 package com.tiange.core.migrate.insert;
 
+import com.tiange.core.migrate.ChannelManager;
+import com.tiange.core.migrate.verify.VerifyChannel;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import org.slf4j.Logger;
@@ -11,11 +13,15 @@ import java.util.Map;
 public class InsertRequest {
 
     private final Page page;
+    private final ChannelManager channelManager;
+    private final VerifyChannel verifyChannel;
     //日志工具
     private Logger logger = LoggerFactory.getLogger(InsertRequest.class);
 
-    public InsertRequest(Page page) {
+    public InsertRequest(Page page, ChannelManager channelManager) {
         this.page = page;
+        this.verifyChannel = channelManager.getVerifyChannel();
+        this.channelManager = channelManager;
     }
 
     public void execute() {
@@ -24,6 +30,9 @@ public class InsertRequest {
             insert2OpenGauss();
 
             //将数据放入校验队列中
+            // VerifyRequest verifyRequest=new VerifyRequest(page);
+            // verifyChannel.putRequest(verifyRequest);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
