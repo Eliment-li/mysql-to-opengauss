@@ -1,6 +1,7 @@
 package com.tiange.core.migrate.Bucket;
 
 import com.tiange.core.mysql.table.MysqlTable;
+import com.tiange.core.utils.others.SystemProperties;
 
 public class Bucket {
     MysqlTable mysqlTable;
@@ -10,7 +11,7 @@ public class Bucket {
     long size;
 
     public Bucket() {
-        size = 2000;
+        size = Integer.parseInt(SystemProperties.dataMigrate("bucketSize"));
     }
 
     public Bucket(Bucket bucket) {
@@ -22,7 +23,7 @@ public class Bucket {
 
     public Bucket(MysqlTable mysqlTable) {
         this.mysqlTable = mysqlTable;
-        size = 2000;
+        size = Integer.parseInt(SystemProperties.dataMigrate("bucketSize"));
     }
 
     /* getter & setter */

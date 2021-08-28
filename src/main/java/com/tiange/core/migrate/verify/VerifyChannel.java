@@ -1,6 +1,7 @@
 package com.tiange.core.migrate.verify;
 
 import com.tiange.core.migrate.query.QueryChannel;
+import com.tiange.core.utils.others.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ public class VerifyChannel extends ArrayBlockingQueue<VerifyRequest> {
 
     public VerifyChannel(int threads) {
         //缓冲区容量
-        super(100);
+        super(Integer.parseInt(SystemProperties.dataMigrate("verifyChannelCapacity")));
         //线程池大小
         threadPool = new VerifyHub[threads];
 

@@ -1,5 +1,7 @@
 package com.tiange.core.migrate.insert;
 
+import com.tiange.core.utils.others.SystemProperties;
+
 import java.util.concurrent.ArrayBlockingQueue;
 
 
@@ -15,7 +17,7 @@ public class InsertChannel extends ArrayBlockingQueue<InsertRequest> {
     public InsertChannel(int threads) {
 
         //缓冲区容量
-        super(100);
+        super(Integer.parseInt(SystemProperties.dataMigrate("insertChannelCapacity")));
 
         //线程池大小
         threadPool = new InsertHub[threads];

@@ -4,6 +4,7 @@ import com.tiange.core.migrate.ChannelManager;
 import com.tiange.core.migrate.query.QueryChannel;
 import com.tiange.core.migrate.query.QueryRequest;
 import com.tiange.core.utils.database.jdbc.Page;
+import com.tiange.core.utils.others.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class BucketConsumerThread extends Thread {
                     //  continue;
                 }
                 //将bucket分成若干个page 放入channel
-                int pageSize = 500;
+                int pageSize = Integer.parseInt(SystemProperties.dataMigrate("pageSize"));
 
                 //bucket 含 count 个 page
                 long count = bucket.getSize() / pageSize;

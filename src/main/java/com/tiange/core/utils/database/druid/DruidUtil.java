@@ -3,7 +3,7 @@ package com.tiange.core.utils.database.druid;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.tiange.core.opengauss.column.GaussColumn;
-import com.tiange.core.utils.others.FileUtils;
+import com.tiange.core.utils.others.SystemProperties;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;
@@ -32,13 +32,11 @@ public class DruidUtil {
         try {
             System.out.println("初始化连接池 开始");
             //初始化MySQL数据源
-            Properties mysqlProperties = new Properties();
-            mysqlProperties.load(FileUtils.getInputStreamByClasspath("config/druid_mysql.properties"));
+            Properties mysqlProperties = SystemProperties.getDruidMysqlProperties();
             mysqlDataSource = DruidDataSourceFactory.createDataSource(mysqlProperties);
 
             //初始化Opengauss 数据源
-            Properties gaussProperties = new Properties();
-            gaussProperties.load(FileUtils.getInputStreamByClasspath("config/druid_opengauss.properties"));
+            Properties gaussProperties = SystemProperties.getDruidOpengausProperties();
             GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
             System.out.println("初始化连接池 结束");
         } catch (Exception e) {

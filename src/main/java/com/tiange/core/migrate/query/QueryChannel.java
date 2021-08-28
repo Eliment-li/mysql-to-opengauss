@@ -1,5 +1,6 @@
 package com.tiange.core.migrate.query;
 
+import com.tiange.core.utils.others.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class QueryChannel extends ArrayBlockingQueue<QueryRequest> {
 
     public QueryChannel(int threads) {
         //缓冲区容量
-        super(100);
+        super(Integer.parseInt(SystemProperties.dataMigrate("queryChannelCapacity")));
         //线程池大小
         threadPool = new QueryHub[threads];
 
