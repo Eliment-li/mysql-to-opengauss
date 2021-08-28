@@ -12,9 +12,11 @@ public class SystemProperties {
     private static Properties druidOpengauss;
 
     static {
+
         dataMigrate = new Properties();
         druidMysql = new Properties();
         druidOpengauss = new Properties();
+
         try {
             dataMigrate.load(FileUtils.getInputStreamByClasspath("config/dataMigrate.properties"));
             druidMysql.load(FileUtils.getInputStreamByClasspath("config/druidMysql.properties"));
@@ -25,7 +27,6 @@ public class SystemProperties {
 
     }
 
-
     /**
      * 获取数据迁移配置
      *
@@ -35,7 +36,6 @@ public class SystemProperties {
     public static String dataMigrate(String key) {
         return dataMigrate.getProperty(key);
     }
-
 
     /**
      * 获取 mysql 数据库连接池配置

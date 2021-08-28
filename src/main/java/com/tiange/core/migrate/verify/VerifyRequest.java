@@ -1,6 +1,9 @@
 package com.tiange.core.migrate.verify;
 
 import com.tiange.core.migrate.query.QueryRequest;
+import com.tiange.core.migrate.verify.strategy.DataCompareContext;
+import com.tiange.core.migrate.verify.strategy.DataCompareStrategy;
+import com.tiange.core.migrate.verify.strategy.DefaultDataCompareStrategy;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import org.slf4j.Logger;
@@ -44,8 +47,13 @@ public class VerifyRequest {
         List<Map<String, Object>> gaussData = newPage.getPageContent();
         logger.info("验证page{}", page.getPageNum());
 
+        //使用策略模式选择比较数据的算法
+        DataCompareContext compareContext = new DataCompareContext();
+        DataCompareStrategy strategy = new DefaultDataCompareStrategy();
+        compareContext.setStrategy(strategy);
+
         //比较
-        if (!verifyPageData(mysqlData, gaussData)) {
+        if (!compareContext.areEqual(mysqlData, gaussData)) {
             logger.error("数据传输有误：table：{}-page{}", page.getMysqlTable().getTable_name(), page.getPageNum());
         }
 
@@ -58,7 +66,7 @@ public class VerifyRequest {
      * @param gaussData
      * @return
      */
-    private boolean verifyPageData(List<Map<String, Object>> mysqlData, List<Map<String, Object>> gaussData) {
+    private boolean areEqual(List<Map<String, Object>> mysqlData, List<Map<String, Object>> gaussData) {
 
         if (mysqlData.size() != gaussData.size()) return false;
 
