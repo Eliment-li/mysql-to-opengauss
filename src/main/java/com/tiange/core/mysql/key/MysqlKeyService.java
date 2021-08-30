@@ -17,7 +17,7 @@ public class MysqlKeyService {
 
         KEY_SQL = KEY_SQL.replace("?", "'" + databseName + "'");
 
-        List<MysqlKey> keyList = (List<MysqlKey>) dbUtil.queryForBeans(
+        List<MysqlKey> keyList = (List<MysqlKey>) dbUtil.queryForObjectList(
                 KEY_SQL,
                 MysqlKey.class);
 

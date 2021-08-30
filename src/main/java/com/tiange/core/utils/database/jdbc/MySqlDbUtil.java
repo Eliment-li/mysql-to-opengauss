@@ -2,7 +2,6 @@ package com.tiange.core.utils.database.jdbc;
 
 import com.tiange.core.mysql.database.DatabaseConfig;
 import com.tiange.core.utils.database.druid.DruidUtil;
-import com.tiange.core.utils.database.manager.Manager;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class MySqlDbUtil implements Manager {
+public class MySqlDbUtil {
 
 
     DatabaseConfig config;
@@ -27,10 +26,31 @@ public class MySqlDbUtil implements Manager {
         this.config = config;
     }
 
-    /*
-163  *  MapListHandler
-164  *  将结果集每一行存储到Map集合,键:列名,值:数据
-166  */
+    /**
+     * 获取数据库连接
+     *
+     * @return Connection 数据库连接
+     */
+    public static Connection getConnection() {
+
+        Connection connection = null;
+
+        try {
+            connection = DruidUtil.getMysqlConnection();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
+
+    /**
+     * 查询数据库，将查询到的每一行放入一个Map中
+     *
+     * @param sql 查询语句
+     * @return 结果集
+     * 166
+     */
     public static List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
 
         QueryRunner qr = new QueryRunner();
@@ -46,9 +66,7 @@ public class MySqlDbUtil implements Manager {
     }
 
     /**
-     * 按页查询 Page 中的内容格式为 List<Map<String, Object>>
-     *
-     * @param sql
+     * 按页查询 ， Page 中的内容格式为 List<Map<String, Object>>
      * @return Page
      */
     public static Page queryForPage(String sql, Page page) {
@@ -69,9 +87,10 @@ public class MySqlDbUtil implements Manager {
     }
 
     /**
-     * 将sql变成分页sql语句
-     *
-     * @return
+     * 为 sql添加 LIMIT 语句
+     * @param sql 查询语句
+     * @param page 分页信息
+     * @return 带 LIMIT 的查询语句
      */
     private static String getLimitSqlString(String sql, Page page) {
 
@@ -82,33 +101,42 @@ public class MySqlDbUtil implements Manager {
             sql = sql.concat(" limit " + offset + "," + (page.getPageSize()));
 
         }
-        System.out.println(sql);
         return sql;
     }
 
     /**
-     * 获取数据库连接
-     * url 数据库地址
-     * username 账号
-     * password 密码
+     * 执行单个增删查改语句
      *
-     * @return Connection
+     * @param sql
+     * @return effect rows
      */
+    public int execute(String sql) {
 
-    public static Connection getConnection() {
+        Connection conn = getConnection();
 
-        Connection connection = null;
-
+        QueryRunner runner = new QueryRunner();
         try {
-            connection = DruidUtil.getMysqlConnection();
 
-        } catch (Exception e) {
+            int effectRows = runner.update(conn, sql);
+
+            DbUtils.close(conn);
+
+            return effectRows;
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return connection;
     }
 
-    public List<?> queryForBeans(String sql, Class clazz) {
+    /**
+     * 查询数据库，并按照字段名封装到对象中
+     * 只要查询的数据库表字段和对象的属性同名就可以封装成所需对象
+     * @param sql 查询语句
+     * @param clazz 封装目标类的 class 对象
+     * @return 对象List
+     */
+    public List<?> queryForObjectList(String sql, Class clazz) {
 
         Connection conn = getConnection();
 
@@ -121,36 +149,20 @@ public class MySqlDbUtil implements Manager {
             DbUtils.close(conn);
             return empList;
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
 
     }
 
-    @Override
-    public List<?> queryForObjectList(String sql, Class clazz) {
-
-        Connection conn = getConnection();
-
-
-        BeanListHandler<?> beanListHandler = new BeanListHandler(clazz);
-
-        try {
-
-            QueryRunner queryRunner = new QueryRunner();
-
-            DbUtils.close(conn);
-
-            return queryRunner.query(conn, sql, beanListHandler);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
+    /**
+     * 查询数据库，并按照字段名封装到对象中
+     * 只要查询的数据库表字段和对象的属性同名就可以封装成所需对象
+     * @param sql 查询语句
+     * @param clazz 封装目标类的 class 对象
+     * @return 单个对象
+     */
     public Object queryForObject(String sql, Class clazz) {
         Object obj = null;
 
@@ -168,8 +180,7 @@ public class MySqlDbUtil implements Manager {
                 obj = empList.get(0);
 
             DbUtils.close(conn);
-        } catch (Exception e) {
-
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -193,30 +204,6 @@ public class MySqlDbUtil implements Manager {
         return count;
     }
 
-    @Override
-    public int execute(String sql) {
-
-        Connection conn = getConnection();
-
-        QueryRunner runner = new QueryRunner();
-        try {
-
-            int effectRows = runner.update(conn, sql);
-
-            DbUtils.close(conn);
-
-            return effectRows;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    @Override
-    public int execute(String sql, Object[] args) {
-        return 0;
-    }
 
 
 }

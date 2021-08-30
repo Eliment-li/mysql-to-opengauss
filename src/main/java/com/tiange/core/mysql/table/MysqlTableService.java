@@ -44,15 +44,15 @@ public class MysqlTableService {
 
         MySqlDbUtil dbUtil = new MySqlDbUtil();
 
-        List<MysqlTable> tableList = (List<MysqlTable>) dbUtil.queryForBeans(
+        List<MysqlTable> tableList = (List<MysqlTable>) dbUtil.queryForObjectList(
                 TABLE_SQL,
                 MysqlTable.class);
 
-        List<MysqlColumn> columnList = (List<MysqlColumn>) dbUtil.queryForBeans(
+        List<MysqlColumn> columnList = (List<MysqlColumn>) dbUtil.queryForObjectList(
                 COlUMN_SQL,
                 MysqlColumn.class);
 
-        List<MysqlKey> mysqlKeyList = (List<MysqlKey>) dbUtil.queryForBeans(
+        List<MysqlKey> mysqlKeyList = (List<MysqlKey>) dbUtil.queryForObjectList(
                 KEY_SQL,
                 MysqlKey.class);
 

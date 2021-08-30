@@ -7,7 +7,6 @@ public interface Manager {
      * @param sql
      * @return
      */
-    //List<Map<String, Object>> executeQuery(StringBuilder sql);
 
     /**
      * 查询数据库，并按照字段名封装到对象中
@@ -46,6 +45,5 @@ public interface Manager {
      */
     int execute(String sql, Object[] args);
 
-    //TODO 执行单个事务接口
 
 }

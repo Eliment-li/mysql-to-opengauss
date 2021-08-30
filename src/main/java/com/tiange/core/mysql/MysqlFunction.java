@@ -32,7 +32,7 @@ public class MysqlFunction implements Serializable {
 
         MySqlDbUtil dbUtil = new MySqlDbUtil();
 
-        List<MysqlRoutine> beanList = (List<MysqlRoutine>) dbUtil.queryForBeans(FileUtils.getStringByClasspath("sql/detail/function.sql"), MysqlRoutine.class);
+        List<MysqlRoutine> beanList = (List<MysqlRoutine>) dbUtil.queryForObjectList(FileUtils.getStringByClasspath("sql/detail/function.sql"), MysqlRoutine.class);
         Map<String, MysqlFunction> functions = new HashMap<>(0);
         for (MysqlRoutine mysqlRoutine : beanList) {
             MysqlFunction mysqlFunction = functions.get(mysqlRoutine.getSpecific_name());

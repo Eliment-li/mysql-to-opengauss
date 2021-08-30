@@ -13,8 +13,14 @@ import java.sql.Statement;
 import java.util.*;
 
 public class OpenGaussDbUtil {
-    //创建数据库连接。
-    public static Connection GetConnection() {
+
+
+    /**
+     * 获取数据库连接
+     *
+     * @return Connection 数据库连接
+     */
+    public static Connection getConnection() {
 
         Connection conn = null;
         try {
@@ -31,15 +37,14 @@ public class OpenGaussDbUtil {
 
     /**
      * 执行单个增删查改语句
-     *
      * @param sql
-     * @return
+     * @return effect rows
      */
     public static int execute(String sql) {
         {
             Statement stmt = null;
             try {
-                stmt = GetConnection().createStatement();
+                stmt = getConnection().createStatement();
 
                 //执行普通SQL语句。
                 int rc = stmt.executeUpdate(sql);
@@ -66,12 +71,13 @@ public class OpenGaussDbUtil {
      * 将一个数组中的 sql 语句当做一个整体（事务）执行
      * 若执行失败则回滚
      */
+    @Deprecated
     public static boolean executeSqlListAtomicity(List<String> sqlList) {
         Statement stmt = null;
         Connection conn = null;
         try {
 
-            conn = GetConnection();
+            conn = getConnection();
             conn.setAutoCommit(false);
 
             stmt = conn.createStatement();
@@ -99,9 +105,13 @@ public class OpenGaussDbUtil {
         }
     }
 
-    //执行预处理语句，批量插入数据。
+    /**
+     * 批量插入数据
+     * @param tableName
+     * @param dataList
+     */
     public static void InsertAll(String tableName, List<Map<String, Object>> dataList) {
-        Connection conn = GetConnection();
+        Connection conn = getConnection();
         PreparedStatement preparedStatement = null;
 
         try {
@@ -140,7 +150,7 @@ public class OpenGaussDbUtil {
             sql.append(" )");
 
 
-            //生成预处理语句。
+            //预处理语句。
             preparedStatement = conn.prepareStatement(sql.toString());
 
             conn.setAutoCommit(false);
@@ -176,17 +186,17 @@ public class OpenGaussDbUtil {
 
 
     /**
-     * 使用DButils 实现
-     *
-     * @param sql
-     * @param clazz
-     * @return
+     * 查询数据库，并按照字段名封装到对象中
+     * 只要查询的数据库表字段和对象的属性同名就可以封装成所需对象
+     * @param sql 查询语句
+     * @param clazz 封装目标类的 class 对象
+     * @return 对象List
      */
     public static List<?> queryForObjectList(String sql, Class clazz) {
 
         Connection connection = null;
         try {
-            connection = GetConnection();
+            connection = getConnection();
 
             QueryRunner queryRunner = new QueryRunner();
 
@@ -200,15 +210,16 @@ public class OpenGaussDbUtil {
         }
     }
 
-    /*
-163  *  MapListHandler
-164  *  将结果集每一行存储到Map集合,键:列名,值:数据
+    /**
+     * 查询数据库，将查询到的每一行放入一个Map中
+     * @param sql 查询语句
+     * @return  结果集
 166  */
     public static List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
 
         QueryRunner qr = new QueryRunner();
 
-        Connection conn = GetConnection();
+        Connection conn = getConnection();
 
         List<Map<String, Object>> list = qr.query(conn, sql, new MapListHandler());
 
@@ -218,8 +229,7 @@ public class OpenGaussDbUtil {
     }
 
     /**
-     * 按页查询 Page 中的内容格式为 List<Map<String, Object>>
-     *
+     * 按页查询 ， Page 中的内容格式为 List<Map<String, Object>>
      * @return Page
      */
     public static Page queryForPage(Page page) {
@@ -241,9 +251,10 @@ public class OpenGaussDbUtil {
     }
 
     /**
-     * 将sql变成分页sql语句
-     *
-     * @return
+     * 为 sql添加 LIMIT 语句
+     * @param sql 查询语句
+     * @param page 分页信息
+     * @return 带 LIMIT 的查询语句
      */
     private static String getLimitSqlString(String sql, Page page) {
 
@@ -260,12 +271,11 @@ public class OpenGaussDbUtil {
 
     /**
      * 主程序，逐步调用各静态方法。
-     *
      * @param args
      */
     public static void main(String[] args) {
-//创建数据库连接。
-        Connection conn = GetConnection();
+        //创建数据库连接。
+        Connection conn = getConnection();
         //批插数据。
         //BatchInsertData(conn);
         //执行预编译语句，更新数据。
