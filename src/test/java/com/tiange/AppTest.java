@@ -101,22 +101,32 @@ public class AppTest {
 
 
     /**
-     * 功能测试主程序
+     *
      */
-    public static void main(String[] args) throws Exception {
+    public static void init() {
         //加载配置文件
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
         //
         DruidUtil.init();
+    }
+
+    /**
+     * 功能测试主程序
+     */
+    public static void main(String[] args) throws Exception {
+        //  init();
         /*
          *  数据库表结构迁移 & 数据迁移
          */
-        TableTest();
+        //    TableTest();
 
         /*
          *  数据库表索引迁移
          */
         // keyTest();
+
+        double d = 5d;
+        byte b = 3 + 4;
     }
 
 

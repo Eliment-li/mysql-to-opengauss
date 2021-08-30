@@ -1,29 +1,52 @@
 
-开发环境：
- Maven 3.3.9 
- <br><br>
-Jdk1.8  
-<br><br>
- IntelliJ IDEA 2017
- 
-测试类入口
-test.java.AppTest
 
-测试文件：
-mysqltest.sql
+#### 功能介绍：
 
-测试源数据库名：
-mysqltest
-
-OpenGauss：
-模式名=postgres
-数据库名=jack
+一款高性能数据库迁移工具，支持数据库表，字段，索引，注释的迁移，支持数据库表中数据的迁移。在迁移完成后，支持对迁移内容的校验，包裹数据库元数据信息和数据库表中的数据。
 
 
-git地址：
-https://github.com/Eliment-li/mysql-to-opengauss.git
 
-GitHub CLI:
+### 如何使用：
 
-gh repo clone Eliment-li/mysql-to-opengauss
+1. 将 mysqltest.sql 数据导入
+
+#### 测试
+
+- 测试类入口：test.java.AppTest
+
+
+
+- 测试数据：mysqltest.sql
+
+
+
+- MySQL配置文件： /resources/config/druidMysql.properties
+
+
+
+- Opengauss配置文件：/resources/config/druidOpengauss.properties
+
+
+
+- 多线程相关配置文件：/resources/config/dataMigrate.properties
+
+
+
+### 开发环境
+
+
+
+- Maven 3.3.9 
+
+- Jdk1.8 
+
+
+
+#### 其他
+
+- Github 地址：https://github.com/Eliment-li/mysql-to-opengauss.git
+
+  目前为私有仓库，比赛结束后公开
+
+- 联系方式：felix.litian@foxmail.com
 
