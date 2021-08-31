@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.query;
+package com.tiange.core.data.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

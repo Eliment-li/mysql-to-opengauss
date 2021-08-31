@@ -1,8 +1,8 @@
-package com.tiange.core.migrate.insert;
+package com.tiange.core.data.insert;
 
-import com.tiange.core.migrate.ChannelManager;
-import com.tiange.core.migrate.verify.VerifyChannel;
-import com.tiange.core.migrate.verify.VerifyRequest;
+import com.tiange.core.data.cache.ChannelManager;
+import com.tiange.core.data.verify.VerifyChannel;
+import com.tiange.core.data.verify.VerifyRequest;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import org.slf4j.Logger;

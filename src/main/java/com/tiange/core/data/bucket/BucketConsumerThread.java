@@ -1,8 +1,8 @@
-package com.tiange.core.migrate.Bucket;
+package com.tiange.core.data.bucket;
 
-import com.tiange.core.migrate.ChannelManager;
-import com.tiange.core.migrate.query.QueryChannel;
-import com.tiange.core.migrate.query.QueryRequest;
+import com.tiange.core.data.cache.ChannelManager;
+import com.tiange.core.data.query.QueryChannel;
+import com.tiange.core.data.query.QueryRequest;
 import com.tiange.core.utils.database.jdbc.Page;
 import com.tiange.core.utils.others.SystemProperties;
 import org.slf4j.Logger;

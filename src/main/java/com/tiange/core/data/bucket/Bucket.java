@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.Bucket;
+package com.tiange.core.data.bucket;
 
 import com.tiange.core.mysql.table.MysqlTable;
 import com.tiange.core.utils.others.SystemProperties;

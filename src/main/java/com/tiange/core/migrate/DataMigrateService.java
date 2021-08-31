@@ -1,8 +1,9 @@
 package com.tiange.core.migrate;
 
-import com.tiange.core.migrate.Bucket.Bucket;
-import com.tiange.core.migrate.Bucket.BucketConsumerThread;
-import com.tiange.core.migrate.Bucket.BucketProducerThread;
+import com.tiange.core.data.bucket.Bucket;
+import com.tiange.core.data.bucket.BucketConsumerThread;
+import com.tiange.core.data.bucket.BucketProducerThread;
+import com.tiange.core.data.cache.ChannelManager;
 import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.opengauss.column.ColumnGroupEnum;
 import com.tiange.core.opengauss.column.GaussColumn;
@@ -126,7 +127,6 @@ public class DataMigrateService {
 
     /**
      * 获取表中记录总数
-     *
      * @param tableName 表名
      */
     private static long getTableRowCount(String tableName) {
@@ -138,16 +138,24 @@ public class DataMigrateService {
 
     }
 
-    /* 多线程迁移数据模块 开始 */
-    public static void doMigrate(MysqlDatabase mysqlDatabase) {
+
+    /**
+     * 数据迁移
+     * 该方法使用多线程，性能较好，推荐使用
+     *
+     * @param mysqlDatabase 源数据库
+     */
+    public static void migrateData(MysqlDatabase mysqlDatabase) {
+
 
         Exchanger<Bucket> exchanger = new Exchanger<>();
-        Bucket bucket1 = new Bucket();
-        Bucket bucket2 = new Bucket();
+
+        Bucket bucketLeft = new Bucket();
+        Bucket bucketRight = new Bucket();
 
         ChannelManager channelManager = new ChannelManager();
 
-        new BucketProducerThread(exchanger, bucket1, mysqlDatabase).start();
-        new BucketConsumerThread(exchanger, bucket2, channelManager).start();
+        new BucketProducerThread(exchanger, bucketLeft, mysqlDatabase).start();
+        new BucketConsumerThread(exchanger, bucketRight, channelManager).start();
     }
 }

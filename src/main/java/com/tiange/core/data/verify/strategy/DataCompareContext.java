@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.verify.strategy;
+package com.tiange.core.data.verify.strategy;
 
 import java.util.List;
 import java.util.Map;

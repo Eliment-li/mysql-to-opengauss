@@ -141,7 +141,7 @@ public class OpenGaussDbUtil {
                 i++;
             }
 
-            String sql = "INSERT INTO" + tableName + " (" + columnNameSql + " )  VALUES (" + MarkSql + " )";
+            String sql = "INSERT INTO " + tableName + " (" + columnNameSql + " )  VALUES (" + MarkSql + " )";
 
             //预处理语句。
             preparedStatement = conn.prepareStatement(sql);

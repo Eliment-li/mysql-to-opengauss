@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.verify;
+package com.tiange.core.data.verify;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

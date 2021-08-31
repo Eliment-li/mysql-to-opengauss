@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.Bucket;
+package com.tiange.core.data.bucket;
 
 import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.mysql.table.MysqlTable;
@@ -92,7 +92,7 @@ public class BucketProducerThread extends Thread {
         return bucket;
     }
 
-    private boolean hasBucket(Bucket bucket) throws SQLException {
+    private boolean hasBucket(Bucket bucket) {
 
         String tableName = bucket.mysqlTable.getTable_name();
         long bucketSize = bucket.getSize();
@@ -115,9 +115,6 @@ public class BucketProducerThread extends Thread {
         //todo 此处可优化
         List<Map<String, Object>> result = MySqlDbUtil.queryForMapList(sql.toString());
 
-        if (result.size() > 0)
-            return true;
-        else
-            return false;
+        return result.size() > 0;
     }
 }

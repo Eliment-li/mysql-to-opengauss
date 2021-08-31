@@ -1,8 +1,8 @@
-package com.tiange.core.migrate;
+package com.tiange.core.data.cache;
 
-import com.tiange.core.migrate.insert.InsertChannel;
-import com.tiange.core.migrate.query.QueryChannel;
-import com.tiange.core.migrate.verify.VerifyChannel;
+import com.tiange.core.data.insert.InsertChannel;
+import com.tiange.core.data.query.QueryChannel;
+import com.tiange.core.data.verify.VerifyChannel;
 import com.tiange.core.utils.others.SystemProperties;
 
 /**

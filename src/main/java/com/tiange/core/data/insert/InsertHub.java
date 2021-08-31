@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.insert;
+package com.tiange.core.data.insert;
 
 /**
  * 工人线程

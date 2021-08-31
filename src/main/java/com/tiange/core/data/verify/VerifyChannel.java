@@ -1,6 +1,6 @@
-package com.tiange.core.migrate.verify;
+package com.tiange.core.data.verify;
 
-import com.tiange.core.migrate.query.QueryChannel;
+import com.tiange.core.data.query.QueryChannel;
 import com.tiange.core.utils.others.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

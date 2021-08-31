@@ -60,7 +60,7 @@ public class GaussTableService {
      *
      * @return
      */
-    public static boolean migrateCheck(GaussTable source) {
+    public static boolean metadataMigrateCheck(GaussTable source) {
 
 
         GaussTable destination = new GaussTable();

@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.insert;
+package com.tiange.core.data.insert;
 
 import com.tiange.core.utils.others.SystemProperties;
 

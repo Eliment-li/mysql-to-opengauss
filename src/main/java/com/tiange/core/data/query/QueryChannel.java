@@ -1,4 +1,4 @@
-package com.tiange.core.migrate.query;
+package com.tiange.core.data.query;
 
 import com.tiange.core.utils.others.SystemProperties;
 import org.slf4j.Logger;

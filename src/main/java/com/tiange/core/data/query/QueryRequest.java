@@ -1,8 +1,8 @@
-package com.tiange.core.migrate.query;
+package com.tiange.core.data.query;
 
-import com.tiange.core.migrate.ChannelManager;
-import com.tiange.core.migrate.insert.InsertChannel;
-import com.tiange.core.migrate.insert.InsertRequest;
+import com.tiange.core.data.cache.ChannelManager;
+import com.tiange.core.data.insert.InsertChannel;
+import com.tiange.core.data.insert.InsertRequest;
 import com.tiange.core.utils.database.jdbc.MySqlDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import org.slf4j.Logger;

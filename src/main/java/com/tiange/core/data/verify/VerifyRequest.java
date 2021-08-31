@@ -1,9 +1,9 @@
-package com.tiange.core.migrate.verify;
+package com.tiange.core.data.verify;
 
-import com.tiange.core.migrate.query.QueryRequest;
-import com.tiange.core.migrate.verify.strategy.DataCompareContext;
-import com.tiange.core.migrate.verify.strategy.DataCompareStrategy;
-import com.tiange.core.migrate.verify.strategy.DefaultDataCompareStrategy;
+import com.tiange.core.data.query.QueryRequest;
+import com.tiange.core.data.verify.strategy.DataCompareContext;
+import com.tiange.core.data.verify.strategy.DataCompareStrategy;
+import com.tiange.core.data.verify.strategy.DefaultDataCompareStrategy;
 import com.tiange.core.utils.database.jdbc.OpenGaussDbUtil;
 import com.tiange.core.utils.database.jdbc.Page;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class VerifyRequest {
         this.page = page;
     }
 
-    public void execute() throws InterruptedException {
+    public void execute() {
 
         List<Map<String, Object>> mysqlData = page.getPageContent();
 

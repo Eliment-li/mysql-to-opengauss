@@ -19,8 +19,8 @@ public class SystemProperties {
 
         try {
             dataMigrate.load(FileUtils.getInputStreamByClasspath("config/dataMigrate.properties"));
-            druidMysql.load(FileUtils.getInputStreamByClasspath("config/druidMysql.properties"));
-            druidOpengauss.load(FileUtils.getInputStreamByClasspath("config/druidOpengauss.properties"));
+            druidMysql.load(FileUtils.getInputStreamByClasspath("config/mysqlDataBase.properties"));
+            druidOpengauss.load(FileUtils.getInputStreamByClasspath("config/OpengaussDataBase.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
