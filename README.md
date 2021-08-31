@@ -8,8 +8,8 @@
 
 ### 如何使用：
 
-1. 将 mysqltest.sql 数据导入mysql数据库中
-2. 修改MySQL配置文件与Opengauss配置文件
+1. 将 &nbsp;&nbsp;mysqltest.sql &nbsp;&nbsp;数据导入&nbsp;&nbsp;mysql&nbsp;&nbsp;数据库中
+2. 修改MySQL配置文件与&nbsp;&nbsp;Opengauss&nbsp;&nbsp;配置文件
 3. 运行 mian.java.com.tiange.Main 类中的 main方法
 4. 查看结果
 
