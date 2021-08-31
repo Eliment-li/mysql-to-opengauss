@@ -5,6 +5,8 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,30 +16,29 @@ import java.util.*;
 
 public class OpenGaussDbUtil {
 
-
+    //日志工具
+    private static final Logger logger = LoggerFactory.getLogger(OpenGaussDbUtil.class);
     /**
      * 获取数据库连接
      *
      * @return Connection 数据库连接
      */
-    public static Connection getConnection() {
+    private static Connection getConnection() {
 
-        Connection conn = null;
+        Connection connection = null;
         try {
             //从线程池获取连接
-            conn = DruidUtil.getGaussConnection();
+            connection = DruidUtil.getGaussConnection();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            logger.error("获取数据库连接失败");
         }
-        return conn;
+        return connection;
     }
-
-    ;
 
     /**
      * 执行单个增删查改语句
-     * @param sql
+     * @param sql 查询语句
      * @return effect rows
      */
     public static int execute(String sql) {
@@ -60,6 +61,7 @@ public class OpenGaussDbUtil {
                     }
                 }
                 e.printStackTrace();
+                logger.error("{}-执行失败", sql);
                 return 0;
             }
         }
@@ -73,7 +75,7 @@ public class OpenGaussDbUtil {
      */
     @Deprecated
     public static boolean executeSqlListAtomicity(List<String> sqlList) {
-        Statement stmt = null;
+        Statement stmt;
         Connection conn = null;
         try {
 
@@ -92,30 +94,29 @@ public class OpenGaussDbUtil {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            //事务回滚
-            if (conn != null) {
+
                 try {
-                    System.err.print("Transaction is being rolled back");
+                    logger.error("执行失败，事务自动回滚");
                     conn.rollback();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-            }
+
             return false;
         }
     }
 
     /**
      * 批量插入数据
-     * @param tableName
-     * @param dataList
+     * @param tableName 目标数据库表
+     * @param dataList  要插入的数据
      */
-    public static void InsertAll(String tableName, List<Map<String, Object>> dataList) {
+    public static long InsertAll(String tableName, List<Map<String, Object>> dataList) {
         Connection conn = getConnection();
         PreparedStatement preparedStatement = null;
-
+        int affectRowCount = 0;
         try {
-            if (dataList.size() == 0) return;
+            if (dataList.size() == 0) return affectRowCount;
 
             Map<String, Object> valueMap = dataList.get(0);
             Set<String> keySet = valueMap.keySet();
@@ -140,38 +141,36 @@ public class OpenGaussDbUtil {
                 i++;
             }
 
-            StringBuilder sql = new StringBuilder();
-            sql.append("INSERT INTO ");
-            sql.append(tableName);
-            sql.append(" (");
-            sql.append(columnNameSql);
-            sql.append(" )  VALUES (");
-            sql.append(MarkSql);
-            sql.append(" )");
-
+            String sql = "INSERT INTO" + tableName + " (" + columnNameSql + " )  VALUES (" + MarkSql + " )";
 
             //预处理语句。
-            preparedStatement = conn.prepareStatement(sql.toString());
+            preparedStatement = conn.prepareStatement(sql);
 
             conn.setAutoCommit(false);
 
-            for (int j = 0; j < dataList.size(); j++) {
+            for (Map<String, Object> data : dataList) {
+
                 for (int k = 0; k < keys.length; k++) {
-                    preparedStatement.setObject(k + 1, dataList.get(j).get(keys[k]));
+
+                    preparedStatement.setObject(k + 1, data.get(keys[k]));
+
                 }
                 preparedStatement.addBatch();
             }
 
             int[] arr = preparedStatement.executeBatch();
             conn.commit();
-            int affectRowCount = arr.length;
 
+            affectRowCount = arr.length;
 
             //执行批处理。
             preparedStatement.executeBatch();
             preparedStatement.close();
 
             DbUtils.close(conn);
+
+            return affectRowCount;
+
         } catch (SQLException e) {
             if (preparedStatement != null) {
                 try {
@@ -181,6 +180,7 @@ public class OpenGaussDbUtil {
                 }
             }
             e.printStackTrace();
+            return 0;
         }
     }
 
@@ -194,18 +194,21 @@ public class OpenGaussDbUtil {
      */
     public static List<?> queryForObjectList(String sql, Class clazz) {
 
-        Connection connection = null;
+        Connection connection;
         try {
             connection = getConnection();
 
             QueryRunner queryRunner = new QueryRunner();
 
             BeanListHandler<?> beanListHandler = new BeanListHandler(clazz);
+
             List<?> objectList = queryRunner.query(connection, sql, beanListHandler);
 
             return objectList;
+
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("{}-执行失败", sql);
             return new ArrayList<>(0);
         }
     }
@@ -215,17 +218,23 @@ public class OpenGaussDbUtil {
      * @param sql 查询语句
      * @return  结果集
 166  */
-    public static List<Map<String, Object>> queryForMapList(String sql) throws SQLException {
+    public static List<Map<String, Object>> queryForMapList(String sql) {
 
         QueryRunner qr = new QueryRunner();
 
         Connection conn = getConnection();
 
-        List<Map<String, Object>> list = qr.query(conn, sql, new MapListHandler());
+        try {
+            List<Map<String, Object>> list = qr.query(conn, sql, new MapListHandler());
 
-        DbUtils.close(conn);
+            DbUtils.close(conn);
+            return list;
 
-        return list;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            logger.error("{}-执行失败", sql);
+            return null;
+        }
     }
 
     /**
@@ -234,19 +243,15 @@ public class OpenGaussDbUtil {
      */
     public static Page queryForPage(Page page) {
 
-        StringBuilder sql = new StringBuilder("select * from  " + page.getMysqlTable().getTable_name() + " order by " + page.getMysqlTable().getIndexColumn() + "  asc ");
-        try {
-            String querysql = getLimitSqlString(sql.toString(), page);
-            System.out.println(querysql);
-            List<Map<String, Object>> list = queryForMapList(querysql);
+        String sql = "select * from  " + page.getMysqlTable().getTable_name() +
+                " order by " + page.getMysqlTable().getIndexColumn() + "  asc ";
+
+        String querysql = getLimitSqlString(sql, page);
+
+        List<Map<String, Object>> list = queryForMapList(querysql);
 
             page.setPageContent(list);
 
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            System.out.println("第" + page.getPageNum() + "页 " + "查询失败");
-        }
         return page;
     }
 
@@ -268,24 +273,4 @@ public class OpenGaussDbUtil {
         return sql;
     }
 
-
-    /**
-     * 主程序，逐步调用各静态方法。
-     * @param args
-     */
-    public static void main(String[] args) {
-        //创建数据库连接。
-        Connection conn = getConnection();
-        //批插数据。
-        //BatchInsertData(conn);
-        //执行预编译语句，更新数据。
-        //ExecPreparedSQL(conn);
-
-        //关闭数据库连接。
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

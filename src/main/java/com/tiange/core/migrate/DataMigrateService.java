@@ -13,17 +13,15 @@ import com.tiange.core.utils.database.jdbc.Page;
 import com.tiange.core.utils.others.FileUtils;
 import com.tiange.core.utils.others.StringUtils;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Exchanger;
-import java.util.concurrent.TimeUnit;
 
 public class DataMigrateService {
 
     //插入语句模板
-    static String INSERT_SQL = FileUtils.getStringByClasspath("opengauss/data/insert.sql");
+    private static String INSERT_SQL = FileUtils.getStringByClasspath("opengauss/data/insert.sql");
 
     /**
      * 将数据集转换成可以插入数据库的 sql 语句
@@ -88,14 +86,14 @@ public class DataMigrateService {
 
     /**
      * 将表中的数据以分页的方式迁移
-     *
-     * @param gaussTable
+     * 该方法工作方式为单线程
+     * @param gaussTable 目标数据库表
      */
-    public static void MigrateTableDataByPage(GaussTable gaussTable) throws Exception {
+    @Deprecated
+    public static void MigrateTableDataByPage(GaussTable gaussTable) {
         String tableName = gaussTable.getTable_name();
 
         MySqlDbUtil utils = new MySqlDbUtil();
-        try {
             //总记录数量
             long rowCount = getTableRowCount(tableName);
 
@@ -115,34 +113,23 @@ public class DataMigrateService {
                 page.setPageNum(i);
                 page.setPageSize(pageSize);
 
-                utils.queryForPage(sql, page);
+                MySqlDbUtil.queryForPage(sql, page);
 
-                //System.out.println("=====第 "+i+" 页=====");
                 List<String> sqlList = convertDataToInsertSql(page.getPageContent(), gaussTable);
 
                 OpenGaussDbUtil.executeSqlListAtomicity(sqlList);
 
-                TimeUnit.MICROSECONDS.sleep(100);
 
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        //分页传输
-
-
     }
 
 
     /**
      * 获取表中记录总数
      *
-     * @param tableName
+     * @param tableName 表名
      */
-    private static long getTableRowCount(String tableName) throws SQLException {
+    private static long getTableRowCount(String tableName) {
         MySqlDbUtil util = new MySqlDbUtil();
 
         Long count = util.QueryForScalar("select count(*) as count from " + tableName + ";");
@@ -154,7 +141,7 @@ public class DataMigrateService {
     /* 多线程迁移数据模块 开始 */
     public static void doMigrate(MysqlDatabase mysqlDatabase) {
 
-        Exchanger<Bucket> exchanger = new Exchanger<Bucket>();
+        Exchanger<Bucket> exchanger = new Exchanger<>();
         Bucket bucket1 = new Bucket();
         Bucket bucket2 = new Bucket();
 
