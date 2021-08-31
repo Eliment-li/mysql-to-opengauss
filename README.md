@@ -8,15 +8,14 @@
 
 ### 如何使用：
 
-1. 将 mysqltest.sql 数据导入
+1. 将 mysqltest.sql 数据导入mysql数据库中
+2. 修改MySQL配置文件与Opengauss配置文件
+3. 运行 mian.java.com.tiange.Main 类中的 main方法
+4. 查看结果
 
-#### 测试
+#### 文件路径
 
-- 测试类入口：test.java.AppTest
-
-
-
-- 测试数据：mysqltest.sql
+- 测试数据：/test/data/mysqltest.sql
 
 
 
@@ -30,17 +29,17 @@
 
 - 多线程相关配置文件：/resources/config/dataMigrate.properties
 
+  
+
+- 日志工具配置文件 ：/resources/config/logback.xml
+
 
 
 ### 开发环境
 
-
-
 - Maven 3.3.9 
 
 - Jdk1.8 
-
-
 
 #### 其他
 
