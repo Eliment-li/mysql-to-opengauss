@@ -18,6 +18,11 @@ public class Main {
         //初始化数据库连接池
         DruidUtil.init();
     }
+
+
+    /**
+     * 主方法
+     */
     public static void main(String[] args) {
 
         init();
