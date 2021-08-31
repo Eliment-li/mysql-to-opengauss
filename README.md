@@ -33,7 +33,7 @@
 
 - 日志工具配置文件 ：/resources/config/logback.xml
 
-- 系统结构图&UML ：/resources/config/logback.xml
+- 系统结构图&UML ：/resources/wiki/images
 
 
 
