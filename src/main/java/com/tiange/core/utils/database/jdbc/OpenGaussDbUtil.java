@@ -42,30 +42,20 @@ public class OpenGaussDbUtil {
      * @return effect rows
      */
     public static int execute(String sql) {
-        {
-            Statement stmt = null;
-            try {
-                stmt = getConnection().createStatement();
+        Connection conn = getConnection();
+        QueryRunner runner = new QueryRunner();
 
-                //执行普通SQL语句。
-                int rc = stmt.executeUpdate(sql);
+        try {
+            int effectRows = runner.update(conn, sql);
+            DbUtils.close(conn);
 
-                stmt.close();
-                return rc;
-            } catch (SQLException e) {
-                if (stmt != null) {
-                    try {
-                        stmt.close();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-                e.printStackTrace();
-                logger.error("{}-执行失败", sql);
-                return 0;
-            }
+            return effectRows;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            logger.error("{}-执行失败", sql);
+            return 0;
         }
-
     }
 
 

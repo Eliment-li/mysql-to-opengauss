@@ -90,12 +90,15 @@ public class MetaDataMigrateService {
         for (GaussKey gaussKey : gaussDatabase.getKeys()) {
 
             String sql = gaussKey.toCreateTableSql().toString();
+
+            logger.info("创建key-{}", sql);
             //执行创建语句
             OpenGaussDbUtil.execute(sql);
 
-            logger.info("创建key-{}", sql);
+
 
         }
+        logger.info("");
     }
 
 }

@@ -47,7 +47,7 @@ public class InsertRequest {
         List<Map<String, Object>> Data = page.getPageContent();
 
         if (page.getPageContent().size() == 0) {
-            logger.info("结束{}", page.getPageNum());
+            logger.info("结束page{}", page.getPageNum());
             return;
         }
         OpenGaussDbUtil.InsertAll(page.getMysqlTable().getTable_name(), Data);

@@ -28,13 +28,14 @@ public class QueryRequest {
 
     public void execute() throws InterruptedException {
 
+        String tableName = page.getMysqlTable().getTable_name();
         //查询配置数据，放入 pageContent 中
-        MySqlDbUtil.queryForPage("select * from " + page.getMysqlTable().getTable_name() + " order by " + page.getMysqlTable().getIndexColumn() + " asc ", this.page);
+        MySqlDbUtil.queryForPage("select * from " + tableName + " order by " + page.getMysqlTable().getIndexColumn() + " asc ", this.page);
 
         List<Map<String, Object>> content = page.getPageContent();
 
         if (content.size() == 0) {
-            logger.info("查询完毕");
+            //logger.info("{}-传输完毕",tableName);
         } else {
             // logger.info("查询 page{} {}-{}", page.getPageNum(), content.get(0).get("id"), content.get(content.size() - 1).get("id"));
         }
