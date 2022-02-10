@@ -49,10 +49,10 @@ public class BucketConsumerThread extends Thread {
                 if (test) {
                     //  continue;
                 }
-                //将bucket分成若干个page 放入channel
+                //将 bucket 分成若干个 page 放入 channel
                 int pageSize = Integer.parseInt(SystemProperties.dataMigrate("pageSize"));
 
-                //bucket 含 count 个 page
+                //一个 bucket 含 count 个 page
                 long count = bucket.getSize() / pageSize;
 
                 //pageNumber 的偏移量
