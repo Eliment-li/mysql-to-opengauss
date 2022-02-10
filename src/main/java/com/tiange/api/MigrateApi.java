@@ -1,30 +1,22 @@
 package com.tiange.api;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tiange.Main;
 import com.tiange.core.migrate.DataMigrateService;
 import com.tiange.core.migrate.MetaDataMigrateService;
 import com.tiange.core.mysql.database.MysqlDatabase;
+import com.tiange.core.utils.database.druid.DruidUtil;
+
+import java.util.HashMap;
+import java.util.Properties;
 
 import static spark.Spark.*;
 
 public class MigrateApi {
 
-    public static void main(String[] args) {
 
-/*        enableCORS("*","POST","*");
-
-        post("/doMigrate", (request, response) -> {
-            System.out.println(request.params());
-            return "ok";
-        });
-
-        get("/doMigrate", (request, response) -> {
-            System.out.println(request.params());
-            return "ok";
-        });*/
-
-    }
 
 
     /**
@@ -32,12 +24,28 @@ public class MigrateApi {
      */
     public static void  initHttpServer(){
 
-        Main.initMigrateTool();
+
+
+
+        //加载日志配置文件
+        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
+
 
         enableCORS("*","POST","*");
 
         post("/doMigrate", (request, response) -> {
-            System.out.println(request.params());
+
+
+            JSONObject result=new JSONObject();
+
+            //设置配置文件
+            boolean isDatabaseOK=initDatabase((HashMap<String, String>) request.params());
+
+            if (!isDatabaseOK){
+                result.put("success",false);
+                result.put("msg","数据库连接失败");
+                return result.toJSONString();
+            }
 
 
             //迁移元数据
@@ -47,13 +55,47 @@ public class MigrateApi {
             //迁移数据
             DataMigrateService.migrateData(mysqlDatabase);
 
-            return "ok";
+            //todo 销毁资源
+
+            result.put("success",true);
+            result.put("msg","迁移成功！");
+            return result.toJSONString();
         });
 
-        get("/doMigrate", (request, response) -> {
-            System.out.println(request.params());
-            return "ok";
-        });
+    }
+
+    private static boolean initDatabase(HashMap<String,String> parameters){
+        Properties mysqlProperties=new Properties();
+
+        //mysql config
+        String mysqlUrl="jdbc:mysql://"+parameters.get("from_host")
+                +":"+parameters.get("from_port")
+                +"/"+parameters.get("database_name")+""
+                +"?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8";
+
+        mysqlProperties.setProperty("url",mysqlUrl);
+        mysqlProperties.setProperty("username",parameters.get("from_username"));
+        mysqlProperties.setProperty("password",parameters.get("from_password"));
+        mysqlProperties.setProperty("initialSize","100");
+        mysqlProperties.setProperty("maxActive","100");
+
+
+        //openGauss config
+
+        String gaussUrl="jdbc:postgresql://"+parameters.get("to_host")
+                +":"+parameters.get("to_port")
+                +"/"+parameters.get("to_database_name");
+
+        Properties gaussProperties=new Properties();
+
+        gaussProperties.setProperty("url",mysqlUrl);
+        gaussProperties.setProperty("username",parameters.get("from_username"));
+        gaussProperties.setProperty("password",parameters.get("from_password"));
+        gaussProperties.setProperty("initialSize","100");
+        gaussProperties.setProperty("maxActive","100");
+
+        return DruidUtil.init(mysqlProperties,gaussProperties);
+
     }
 
 
@@ -88,5 +130,21 @@ public class MigrateApi {
             // Note: this may or may not be necessary in your particular application
             response.type("application/json");
         });
+    }
+
+    public static void main(String[] args) {
+
+        /*        enableCORS("*","POST","*");
+
+        post("/doMigrate", (request, response) -> {
+            System.out.println(request.params());
+            return "ok";
+        });
+
+        get("/doMigrate", (request, response) -> {
+            System.out.println(request.params());
+            return "ok";
+        });*/
+
     }
 }

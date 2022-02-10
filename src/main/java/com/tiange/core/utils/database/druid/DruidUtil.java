@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * 基于 阿里巴巴 Druid
  * 数据库连接池工具
  */
 public class DruidUtil {
@@ -26,9 +25,12 @@ public class DruidUtil {
     private static DataSource GaussDataSource;
 
     //日志工具
-    private final Logger logger = LoggerFactory.getLogger(DruidUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(DruidUtil.class);
 
-    //读取配置文件 初始化连接池
+    /**
+     * 读取配置文件 初始化连接池
+     * @return 是否初始化成功
+     */
     public static boolean init() {
         try {
             System.out.println("初始化连接池 开始");
@@ -39,7 +41,7 @@ public class DruidUtil {
             //初始化Opengauss 数据源
             Properties gaussProperties = SystemProperties.getDruidOpengausProperties();
             GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
-            System.out.println("初始化连接池 结束");
+            logger.info("初始化连接池 结束");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -56,15 +58,14 @@ public class DruidUtil {
      */
     public static boolean init(Properties mysqlProperties,Properties gaussProperties ) {
         try {
-            System.out.println("初始化连接池 开始");
+            logger.info("初始化连接池 开始");
             //初始化MySQL数据源
-            //Properties mysqlProperties = SystemProperties.getDruidMysqlProperties();
             mysqlDataSource = DruidDataSourceFactory.createDataSource(mysqlProperties);
 
             //初始化Opengauss 数据源
-            //Properties gaussProperties = SystemProperties.getDruidOpengausProperties();
             GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
-            System.out.println("初始化连接池 结束");
+
+            logger.info("初始化连接池 结束");
         } catch (Exception e) {
             e.printStackTrace();
             return false;

@@ -9,15 +9,6 @@ import com.tiange.core.utils.database.druid.DruidUtil;
 /*数据迁移，启动类*/
 public class Main {
 
-    /**
-     * 初始化迁移工具
-     */
-    public static void initMigrateTool() {
-        //加载日志配置文件
-        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
-        //初始化数据库连接池
-        DruidUtil.init();
-    }
 
 
     /**
@@ -25,7 +16,10 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        initMigrateTool();
+        //加载日志配置文件
+        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
+        //初始化数据库连接池
+        DruidUtil.init();
 
         //迁移元数据
         MysqlDatabase mysqlDatabase = MetaDataMigrateService.migrateTables();
@@ -34,6 +28,7 @@ public class Main {
         //迁移数据
         DataMigrateService.migrateData(mysqlDatabase);
 
+        //todo 销毁资源
 
     }
 }
