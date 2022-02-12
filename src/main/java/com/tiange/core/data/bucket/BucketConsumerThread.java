@@ -31,9 +31,11 @@ public class BucketConsumerThread extends Thread {
 
 
     public void run() {
-        //todo  刚开始总是会卡顿一会儿
+
+        //TODO  刚开始总是会卡顿一会儿
 
         channelManager.startWorkers();
+
         boolean test = true;
         try {
             while (true) {
@@ -45,10 +47,9 @@ public class BucketConsumerThread extends Thread {
                     //bucket读取完毕
                     break;
                 }
-                //logger.info("获取bucket{}", bucket.getNumber());
-                if (test) {
-                    //  continue;
-                }
+
+                logger.info("获取bucket{}", bucket.getNumber());
+
                 //将 bucket 分成若干个 page 放入 channel
                 int pageSize = Integer.parseInt(SystemProperties.dataMigrate("pageSize"));
 

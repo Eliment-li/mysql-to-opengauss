@@ -1,103 +1,116 @@
 package com.tiange.api;
 
 import ch.qos.logback.classic.util.ContextInitializer;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.tiange.Main;
-import com.tiange.core.migrate.DataMigrateService;
+import com.tiange.core.data.bucket.BucketConsumerThread;
 import com.tiange.core.migrate.MetaDataMigrateService;
 import com.tiange.core.mysql.database.MysqlDatabase;
 import com.tiange.core.utils.database.druid.DruidUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import spark.Request;
+import spark.Spark;
 
-import java.util.HashMap;
+
+import java.sql.SQLException;
 import java.util.Properties;
 
 import static spark.Spark.*;
 
+/**
+ * 对外提供 HTTP 请求的服务，方便对接其他系统。
+ */
 public class MigrateApi {
 
-
-
+    //日志工具
+    private static  final Logger logger = LoggerFactory.getLogger(BucketConsumerThread.class);
 
     /**
-     * 初始化 http服务
+     * 启动 httpserver
      */
-    public static void  initHttpServer(){
-
-
-
+    public  void  initHttpServer(){
 
         //加载日志配置文件
         System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "config/logback.xml");
 
-
+        exception(Exception.class, (e, req, res) -> e.printStackTrace());
+        port(4567);
+        //允许跨域
         enableCORS("*","POST","*");
 
+
+        // handle post request
         post("/doMigrate", (request, response) -> {
 
+            JSONObject result=new JSONObject();//处理结果
 
-            JSONObject result=new JSONObject();
+            try{
+                //配置数据库
+                configDatabase(request);
+                //迁移元数据
 
-            //设置配置文件
-            boolean isDatabaseOK=initDatabase((HashMap<String, String>) request.params());
+                MysqlDatabase mysqlDatabase = MetaDataMigrateService.migrateTables();
+                MetaDataMigrateService.migrateKeys();
 
-            if (!isDatabaseOK){
+                //迁移数据
+               // DataMigrateService.migrateData(mysqlDatabase);
+            }
+            catch (SQLException e){
+                e.printStackTrace();
                 result.put("success",false);
-                result.put("msg","数据库连接失败");
+                result.put("msg",e.toString());
                 return result.toJSONString();
             }
 
+            logger.info("传输完毕");
 
-            //迁移元数据
-            MysqlDatabase mysqlDatabase = MetaDataMigrateService.migrateTables();
-            MetaDataMigrateService.migrateKeys();
-
-            //迁移数据
-            DataMigrateService.migrateData(mysqlDatabase);
-
-            //todo 销毁资源
-
-            result.put("success",true);
-            result.put("msg","迁移成功！");
+            result.put("success",false);
+            result.put("msg","传输完毕");
             return result.toJSONString();
-        });
+
+        });//end post
 
     }
 
-    private static boolean initDatabase(HashMap<String,String> parameters){
+    /**
+     * 配置数据库
+     * @param request 请求
+     *
+     * @return 是否初始化成功
+     */
+    private  boolean configDatabase(Request request) throws Exception{
         Properties mysqlProperties=new Properties();
 
         //mysql config
-        String mysqlUrl="jdbc:mysql://"+parameters.get("from_host")
-                +":"+parameters.get("from_port")
-                +"/"+parameters.get("database_name")+""
+        String mysqlUrl="jdbc:mysql://"+request.queryParams("from_host")
+                +":"+request.queryParams("from_port")
+                +"/"+request.queryParams("from_database_name")+""
                 +"?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8";
 
         mysqlProperties.setProperty("url",mysqlUrl);
-        mysqlProperties.setProperty("username",parameters.get("from_username"));
-        mysqlProperties.setProperty("password",parameters.get("from_password"));
-        mysqlProperties.setProperty("initialSize","100");
+        mysqlProperties.setProperty("username",request.queryParams("from_username")+"");
+        mysqlProperties.setProperty("password",request.queryParams("from_password")+"");
+        mysqlProperties.setProperty("dataBaseName",request.queryParams("from_database_name")+"");
+        mysqlProperties.setProperty("initialSize","10");
         mysqlProperties.setProperty("maxActive","100");
 
-
         //openGauss config
-
-        String gaussUrl="jdbc:postgresql://"+parameters.get("to_host")
-                +":"+parameters.get("to_port")
-                +"/"+parameters.get("to_database_name");
+        String gaussUrl="jdbc:postgresql://"+request.queryParams("to_host")
+                +":"+request.queryParams("to_port")
+                +"/"+request.queryParams("to_database_name");
 
         Properties gaussProperties=new Properties();
 
-        gaussProperties.setProperty("url",mysqlUrl);
-        gaussProperties.setProperty("username",parameters.get("from_username"));
-        gaussProperties.setProperty("password",parameters.get("from_password"));
+        gaussProperties.setProperty("url",gaussUrl);
+        gaussProperties.setProperty("username",request.queryParams("to_username")+"");
+        gaussProperties.setProperty("password",request.queryParams("to_password")+"");
+        gaussProperties.setProperty("dataBaseName","jack"+"");//实际上是模式名
         gaussProperties.setProperty("initialSize","100");
         gaussProperties.setProperty("maxActive","100");
 
         return DruidUtil.init(mysqlProperties,gaussProperties);
 
     }
-
 
     /**
      * 解决前端跨域请求问题
@@ -106,7 +119,7 @@ public class MigrateApi {
      * @param methods Access-Control-Request-Method的值 （允许哪种方法请求？）
      * @param headers Access-Control-Allow-Headers的值 如果没有特殊需要，传入 “*”即可
      */
-    private static void enableCORS(final String origin, final String methods, final String headers) {
+    private  void enableCORS(final String origin, final String methods, final String headers) {
 
         options("/*", (request, response) -> {
 
@@ -133,18 +146,6 @@ public class MigrateApi {
     }
 
     public static void main(String[] args) {
-
-        /*        enableCORS("*","POST","*");
-
-        post("/doMigrate", (request, response) -> {
-            System.out.println(request.params());
-            return "ok";
-        });
-
-        get("/doMigrate", (request, response) -> {
-            System.out.println(request.params());
-            return "ok";
-        });*/
-
+       new MigrateApi().initHttpServer();
     }
 }

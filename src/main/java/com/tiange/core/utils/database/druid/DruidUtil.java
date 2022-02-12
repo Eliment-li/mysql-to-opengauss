@@ -1,6 +1,7 @@
 package com.tiange.core.utils.database.druid;
 
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.tiange.core.opengauss.column.GaussColumn;
 import com.tiange.core.utils.others.SystemProperties;
@@ -34,6 +35,7 @@ public class DruidUtil {
     public static boolean init() {
         try {
             System.out.println("初始化连接池 开始");
+
             //初始化MySQL数据源
             Properties mysqlProperties = SystemProperties.getDruidMysqlProperties();
             mysqlDataSource = DruidDataSourceFactory.createDataSource(mysqlProperties);
@@ -41,6 +43,7 @@ public class DruidUtil {
             //初始化Opengauss 数据源
             Properties gaussProperties = SystemProperties.getDruidOpengausProperties();
             GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
+
             logger.info("初始化连接池 结束");
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,10 +57,10 @@ public class DruidUtil {
      * 根据传递的参数，初始化数据库连接池
      * @param mysqlProperties mysql 数据库配置
      * @param gaussProperties opengauss 数据库配置
-     * @return
+     * @return 是否初始化成功
      */
-    public static boolean init(Properties mysqlProperties,Properties gaussProperties ) {
-        try {
+    public static boolean init(Properties mysqlProperties,Properties gaussProperties ) throws Exception {
+
             logger.info("初始化连接池 开始");
             //初始化MySQL数据源
             mysqlDataSource = DruidDataSourceFactory.createDataSource(mysqlProperties);
@@ -66,10 +69,7 @@ public class DruidUtil {
             GaussDataSource = DruidDataSourceFactory.createDataSource(gaussProperties);
 
             logger.info("初始化连接池 结束");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+
         return true;
     }
     //获取 mysql 连接
@@ -82,7 +82,6 @@ public class DruidUtil {
         Connection conn = GaussDataSource.getConnection();
         return conn;
     }
-
 
     //释放连接池资源
     public static void closeResource(Connection connection, Statement pre) {
@@ -130,7 +129,7 @@ public class DruidUtil {
         String sql = "SELECT\n" +
                 "\t*\n" +
                 "FROM\n" +
-                "\tinformation_schema.columns\n" +
+                "\t information_schema.columns\n" +
                 "WHERE\n" +
                 "\ttable_name = 'string'\n" +
                 "ORDER BY\n" +

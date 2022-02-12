@@ -22,11 +22,11 @@ public class Main {
         DruidUtil.init();
 
         //迁移元数据
-        MysqlDatabase mysqlDatabase = MetaDataMigrateService.migrateTables();
+      MysqlDatabase mysqlDatabase = MetaDataMigrateService.migrateTables();
         MetaDataMigrateService.migrateKeys();
 
         //迁移数据
-        DataMigrateService.migrateData(mysqlDatabase);
+        //DataMigrateService.migrateData(mysqlDatabase);
 
         //todo 销毁资源
 
