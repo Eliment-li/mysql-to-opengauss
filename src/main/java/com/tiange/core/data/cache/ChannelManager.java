@@ -39,6 +39,8 @@ public class ChannelManager {
         verifyChannel.startWorkers();
     }
 
+    //TODO 主动销毁线程
+
     public QueryChannel getQueryChannel() {
         return this.queryChannel;
     }

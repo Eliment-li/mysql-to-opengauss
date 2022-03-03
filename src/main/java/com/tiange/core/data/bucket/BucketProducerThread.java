@@ -9,9 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Exchanger;
 
+
+
 public class BucketProducerThread extends Thread {
     /*
-     *当线程A调用Exchange对象的exchange()方法后，他会陷入阻塞状态，直到线程B也调用了exchange()方法，然后以线程安全的方式交换数据，之后线程A和B继续运行。
+     * 当线程A调用Exchange对象的exchange()方法后，他会陷入阻塞状态，
+     * 直到线程B也调用了exchange()方法，然后以线程安全的方式交换数据，
+     * 之后线程A和B继续运行。
      */
     private final Exchanger<Bucket> exchanger;
     private Bucket bucket;
@@ -48,12 +52,13 @@ public class BucketProducerThread extends Thread {
 
                     } else {
                         break;
-                        // bucket = exchanger.exchange(null);
                     }
                 }//end while
             }
 
+            //往交换区放置null, 暗示所有数据读取完毕，消费者线程可以结束。
             exchanger.exchange(null);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +70,6 @@ public class BucketProducerThread extends Thread {
      * @return 数据块
      */
     private Bucket getNextBucket() throws SQLException {
-
 
         List<MysqlTable> tables = mysqlDatabase.getMysqlTables();
 
@@ -86,16 +90,29 @@ public class BucketProducerThread extends Thread {
                 }
             }
 
-
         }
 
         return bucket;
     }
 
+    /**
+     * 该 bucket 是否还存在，由于bucket 是顺序读取，
+     * 如果该 bucket 不存在，说明表中数据已经读取完毕
+     *
+     * 注：该函数功能 与 getNextBucket()方法存在重合，
+     * 应当将这两个方法优化为同一个方法。
+     *
+     * @param bucket 数据块
+     *
+     * @return 是否存在
+     */
     private boolean hasBucket(Bucket bucket) {
 
+        //要查询的数据库表名
         String tableName = bucket.mysqlTable.getTable_name();
         long bucketSize = bucket.getSize();
+
+        //拼接 sql
         StringBuilder sql = new StringBuilder("select * from " + tableName + "  ");
 
         if (bucket.getNumber() <= 1) {
@@ -104,6 +121,7 @@ public class BucketProducerThread extends Thread {
 
             bucket.setStart(0);
             bucket.setEnd(bucketSize);
+
         } else {
             long offset = (bucket.getNumber() - 1) * bucketSize;
             sql.append(" limit " + offset + "," + (bucketSize));
@@ -112,7 +130,7 @@ public class BucketProducerThread extends Thread {
             bucket.setEnd(offset + bucketSize);
         }
 
-        //todo 此处可优化
+        //执行查询
         List<Map<String, Object>> result = MySqlDbUtil.queryForMapList(sql.toString());
 
         return result.size() > 0;
