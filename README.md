@@ -1,5 +1,4 @@
 # Mysql 到 openGauss 的迁移工具
-### 2021鲲鹏应用创新大赛作品 队名：天歌-郑州大学
 
 #### 功能介绍：
 
@@ -48,5 +47,4 @@
 
 - Github 地址：https://github.com/Eliment-li/mysql-to-opengauss.git
 
-- 联系方式：felix.litian@foxmail.com
 
